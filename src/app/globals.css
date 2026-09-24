@@ -1,26 +1,376 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   Design tokens.
+
+   Colour values are OKLCH. Every text/background pair used in the product is
+   verified against WCAG AA (4.5:1) by `npm run check:contrast`. If you change a
+   colour here, run that script before committing.
+--------------------------------------------------------------------------- */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Calendar event types. Each has a strong tone (border, icon, text) and a
+     soft tone (chip background). Never the only signal — see EventChip. */
+  --color-lecture: var(--event-lecture);
+  --color-lecture-soft: var(--event-lecture-soft);
+  --color-study: var(--event-study);
+  --color-study-soft: var(--event-study-soft);
+  --color-deadline: var(--event-deadline);
+  --color-deadline-soft: var(--event-deadline-soft);
+  --color-exam: var(--event-exam);
+  --color-exam-soft: var(--event-exam-soft);
+  --color-break: var(--event-break);
+  --color-break-soft: var(--event-break-soft);
+  --color-personal: var(--event-personal);
+  --color-personal-soft: var(--event-personal-soft);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-heading: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.625rem;
+
+  --background: oklch(0.986 0.0019 84.56);
+  --foreground: oklch(0.2544 0.0268 266.51);
+  --card: oklch(1 0 89.88);
+  --card-foreground: oklch(0.2544 0.0268 266.51);
+  --popover: oklch(1 0 89.88);
+  --popover-foreground: oklch(0.2544 0.0268 266.51);
+
+  --primary: oklch(0.4934 0.1673 282.11);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.968 0.004 264.5);
+  --secondary-foreground: oklch(0.2544 0.0268 266.51);
+  --muted: oklch(0.9672 0.0040 264.54);
+  --muted-foreground: oklch(0.5146 0.0243 264.34);
+  --accent: oklch(0.958 0.012 282.1);
+  --accent-foreground: oklch(0.4934 0.1673 282.11);
+
+  --destructive: oklch(0.5366 0.1854 26.11);
+  --destructive-foreground: oklch(1 0 0);
+  --success: oklch(0.5157 0.0912 158.88);
+  --success-foreground: oklch(1 0 0);
+  --warning: oklch(0.5433 0.1159 66.98);
+  --warning-foreground: oklch(1 0 0);
+
+  --border: oklch(0.9196 0.0064 264.53);
+  --input: oklch(0.9196 0.0064 264.53);
+  --ring: oklch(0.4934 0.1673 282.11);
+
+  --event-lecture: oklch(0.5345 0.1287 253.84);
+  --event-lecture-soft: oklch(0.958 0.024 253.84);
+  --event-study: oklch(0.543 0.1703 299.98);
+  --event-study-soft: oklch(0.958 0.026 299.98);
+  --event-deadline: oklch(0.5441 0.1408 48.69);
+  --event-deadline-soft: oklch(0.961 0.028 48.69);
+  --event-exam: oklch(0.5366 0.1854 26.11);
+  --event-exam-soft: oklch(0.958 0.026 26.11);
+  --event-break: oklch(0.5196 0.0728 187.58);
+  --event-break-soft: oklch(0.958 0.022 187.58);
+  --event-personal: oklch(0.5404 0.0257 264.33);
+  --event-personal-soft: oklch(0.958 0.008 264.33);
+
+  --sidebar: oklch(0.978 0.003 84.56);
+  --sidebar-foreground: oklch(0.2544 0.0268 266.51);
+  --sidebar-primary: oklch(0.4934 0.1673 282.11);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.951 0.014 282.1);
+  --sidebar-accent-foreground: oklch(0.4934 0.1673 282.11);
+  --sidebar-border: oklch(0.916 0.005 264.53);
+  --sidebar-ring: oklch(0.4934 0.1673 282.11);
+}
+
+.dark {
+  --background: oklch(0.1972 0.0107 270.82);
+  --foreground: oklch(0.9597 0.0037 264.54);
+  --card: oklch(0.2392 0.0138 270.78);
+  --card-foreground: oklch(0.9597 0.0037 264.54);
+  --popover: oklch(0.2392 0.0138 270.78);
+  --popover-foreground: oklch(0.9597 0.0037 264.54);
+
+  --primary: oklch(0.6695 0.1452 285.57);
+  --primary-foreground: oklch(0.1972 0.0107 270.82);
+  --secondary: oklch(0.279 0.014 270.8);
+  --secondary-foreground: oklch(0.9597 0.0037 264.54);
+  --muted: oklch(0.2785 0.0140 270.87);
+  --muted-foreground: oklch(0.7137 0.0186 264.45);
+  --accent: oklch(0.302 0.028 285.57);
+  --accent-foreground: oklch(0.9597 0.0037 264.54);
+
+  --destructive: oklch(0.6672 0.1562 22.23);
+  --destructive-foreground: oklch(0.1972 0.0107 270.82);
+  --success: oklch(0.7711 0.1063 160.71);
+  --success-foreground: oklch(0.1972 0.0107 270.82);
+  --warning: oklch(0.8075 0.1377 78.05);
+  --warning-foreground: oklch(0.1972 0.0107 270.82);
+
+  --border: oklch(0.3288 0.0185 270.8);
+  --input: oklch(0.3288 0.0185 270.8);
+  --ring: oklch(0.6695 0.1452 285.57);
+
+  --event-lecture: oklch(0.6994 0.1081 252.61);
+  --event-lecture-soft: oklch(0.302 0.042 252.61);
+  --event-study: oklch(0.7086 0.127 302.46);
+  --event-study-soft: oklch(0.302 0.048 302.46);
+  --event-deadline: oklch(0.7407 0.1386 54.2);
+  --event-deadline-soft: oklch(0.302 0.046 54.2);
+  --event-exam: oklch(0.6672 0.1562 22.23);
+  --event-exam-soft: oklch(0.302 0.05 22.23);
+  --event-break: oklch(0.7574 0.1044 187.68);
+  --event-break-soft: oklch(0.302 0.038 187.68);
+  --event-personal: oklch(0.688 0.0203 264.43);
+  --event-personal-soft: oklch(0.302 0.012 264.43);
+
+  --sidebar: oklch(0.223 0.012 270.8);
+  --sidebar-foreground: oklch(0.9597 0.0037 264.54);
+  --sidebar-primary: oklch(0.6695 0.1452 285.57);
+  --sidebar-primary-foreground: oklch(0.1972 0.0107 270.82);
+  --sidebar-accent: oklch(0.296 0.026 285.57);
+  --sidebar-accent-foreground: oklch(0.9597 0.0037 264.54);
+  --sidebar-border: oklch(0.3288 0.0185 270.8);
+  --sidebar-ring: oklch(0.6695 0.1452 285.57);
+}
+
+/* ------------------------------------------------------------------------ */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* A visible focus ring on every interactive element. Keyboard users must
+     always be able to see where they are. */
+  :focus-visible {
+    @apply outline-ring outline-2 outline-offset-2;
+  }
+
+  /* Typography: clear hierarchy without shouting. */
+  h1 {
+    @apply font-heading text-2xl font-semibold tracking-tight text-balance sm:text-3xl;
+  }
+
+  h2 {
+    @apply font-heading text-lg font-semibold tracking-tight sm:text-xl;
+  }
+
+  h3 {
+    @apply font-heading text-base font-semibold tracking-tight;
+  }
+
+  /* Times and dates must be scannable in a vertical column, so digits get a
+     fixed width and never jitter between values. */
+  time,
+  [data-numeric] {
+    @apply font-mono tabular-nums;
+    font-variant-numeric: tabular-nums;
   }
 }
 
-body {
-  background: var(--background);
+@layer utilities {
+  /* Small uppercase label used for section headers and field labels. */
+  .label-caps {
+    @apply font-mono text-[0.6875rem] font-medium tracking-wider uppercase;
+    @apply text-muted-foreground;
+  }
+
+  .text-numeric {
+    @apply font-mono tabular-nums;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   FullCalendar theming.
+
+   FullCalendar ships its own palette. Rather than fight it per-element, we
+   remap its CSS variables onto our design tokens, so the calendar follows light
+   and dark mode automatically.
+--------------------------------------------------------------------------- */
+
+.fc {
+  --fc-border-color: var(--border);
+  --fc-page-bg-color: var(--card);
+  --fc-neutral-bg-color: var(--muted);
+  --fc-today-bg-color: color-mix(in oklch, var(--primary) 6%, transparent);
+  --fc-now-indicator-color: var(--destructive);
+  --fc-event-selected-overlay-color: color-mix(in oklch, var(--primary) 12%, transparent);
+  --fc-small-font-size: 0.75rem;
+
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+}
+
+/* Times and dates use the monospace face so columns line up and digits do not
+   jitter as the view changes. */
+.fc .fc-timegrid-slot-label-cushion,
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number,
+.fc .fc-list-day-text,
+.fc .fc-list-event-time {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-foreground);
+}
+
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number {
+  padding: 0.375rem 0.5rem;
+  text-decoration: none;
+}
+
+.fc .fc-scrollgrid,
+.fc .fc-scrollgrid td,
+.fc .fc-scrollgrid th {
+  border-color: var(--border);
+}
+
+/* Remove the outer frame; the surrounding card already provides one. */
+.fc .fc-scrollgrid {
+  border-left-width: 0;
+  border-top-width: 0;
+}
+
+.fc .fc-timegrid-slot {
+  height: 2.25rem;
+}
+
+/* ---- Events -------------------------------------------------------------- */
+
+.fc .sp-event {
+  border: none;
+  border-left: 3px solid var(--event-color, var(--primary));
+  background-color: var(--event-soft, var(--muted));
+  border-radius: 0.25rem;
+  padding: 1px 3px;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: none;
+}
+
+.fc .sp-event .fc-event-main,
+.fc .sp-event .fc-event-title,
+.fc .sp-event .fc-event-time {
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+.fc .sp-event .fc-event-time {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+/* A movable commitment is drawn with a dashed edge, so "the planner may
+   schedule over this" is visible without relying on colour. */
+.fc .sp-event-movable {
+  border-left-style: dashed;
+}
+
+.fc .sp-event-lecture {
+  --event-color: var(--event-lecture);
+  --event-soft: var(--event-lecture-soft);
+}
+.fc .sp-event-seminar {
+  --event-color: var(--event-lecture);
+  --event-soft: var(--event-lecture-soft);
+}
+.fc .sp-event-lab {
+  --event-color: var(--event-break);
+  --event-soft: var(--event-break-soft);
+}
+.fc .sp-event-exam {
+  --event-color: var(--event-exam);
+  --event-soft: var(--event-exam-soft);
+}
+.fc .sp-event-deadline {
+  --event-color: var(--event-deadline);
+  --event-soft: var(--event-deadline-soft);
+}
+.fc .sp-event-personal {
+  --event-color: var(--event-personal);
+  --event-soft: var(--event-personal-soft);
+}
+.fc .sp-event-other {
+  --event-color: var(--event-personal);
+  --event-soft: var(--event-personal-soft);
+}
+
+/* ---- Agenda (list) view -------------------------------------------------- */
+
+.fc .fc-list {
+  border-color: var(--border);
+}
+
+.fc .fc-list-day-cushion {
+  background-color: var(--muted);
+}
+
+.fc .fc-list-event:hover td {
+  background-color: var(--muted);
+}
+
+.fc .fc-list-empty {
+  background-color: transparent;
+  color: var(--muted-foreground);
+}
+
+/* Respect the operating-system setting for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

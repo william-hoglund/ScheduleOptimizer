@@ -1,0 +1,1067 @@
+{
+  "app": {
+    "name": "Studieplaneraren",
+    "tagline": "Dina studier, äntligen under kontroll."
+  },
+  "nav": {
+    "dashboard": "Idag",
+    "calendar": "Kalender",
+    "courses": "Kurser",
+    "deadlines": "Deadlines",
+    "planner": "Planering",
+    "insights": "Statistik",
+    "settings": "Inställningar",
+    "openMenu": "Öppna meny",
+    "closeMenu": "Stäng meny",
+    "mainNavigation": "Huvudmeny",
+    "userMenu": "Kontomeny",
+    "notifications": "Notiser",
+    "search": "Sök",
+    "searchPlaceholder": "Sök kurser, deadlines, studiepass",
+    "signOut": "Logga ut",
+    "theme": "Utseende",
+    "themeLight": "Ljust",
+    "themeDark": "Mörkt",
+    "themeSystem": "System",
+    "language": "Språk",
+    "importExport": "Import och export",
+    "todos": "Den här veckan"
+  },
+  "landing": {
+    "signIn": "Logga in",
+    "getStarted": "Skapa konto",
+    "hero": {
+      "eyebrow": "För dig som läser flera kurser samtidigt",
+      "title": "Dina studier, äntligen under kontroll.",
+      "subtitle": "Koppla ditt schema, berätta vad du arbetar mot, och få en studieplan som ryms i den tid du faktiskt har — och som ändrar sig när livet gör det.",
+      "primaryCta": "Skapa konto",
+      "secondaryCta": "Se hur det fungerar",
+      "note": "Gratis under utvecklingen. Inget kort behövs."
+    },
+    "problem": {
+      "title": "Planeringen ska inte ta längre tid än studierna",
+      "body": "Tre kurser, två deadlines, ett schema som ändras varje vecka och en molnig känsla av att ligga efter. Det mesta av kraften går åt till att lista ut vad som ska göras i stället för att göra det.",
+      "points": {
+        "scattered": {
+          "title": "Allt ligger på olika ställen",
+          "body": "Föreläsningar i en kalender, deadlines på en kurssida, egna planer på ett papper."
+        },
+        "unrealistic": {
+          "title": "Planer som aldrig var möjliga",
+          "body": "Det är lätt att skriva in trettio timmars arbete i en vecka som bara har tolv lediga."
+        },
+        "fragile": {
+          "title": "Ett missat pass välter allt",
+          "body": "Missa en tisdag och hela planen måste skrivas om för hand."
+        }
+      }
+    },
+    "how": {
+      "title": "Så fungerar det",
+      "subtitle": "Tre steg, en gång. Sedan sköter den sig själv.",
+      "steps": {
+        "one": {
+          "number": "01",
+          "title": "Hämta in ditt schema",
+          "body": "Importera schemat från universitetet, koppla Google Kalender eller lägg in kurserna för hand. Allt hamnar i samma kalender."
+        },
+        "two": {
+          "number": "02",
+          "title": "Sätt dina villkor",
+          "body": "När du fokuserar bäst, hur långa passen ska vara, hur mycket du klarar på en dag och vilka kurser som väger tyngst just nu."
+        },
+        "three": {
+          "number": "03",
+          "title": "Få en plan du kan hålla",
+          "body": "Studiepass placerade runt det du redan har, med pauser skyddade och skäl angivna för varje placering."
+        },
+        "four": {
+          "number": "04",
+          "title": "Håll igång",
+          "body": "Gå med i en studiegrupp med vänner eller kurskamrater och se hur ni var för sig lyckas hålla er egen plan. Frivilligt, och privat inom gruppen."
+        }
+      }
+    },
+    "example": {
+      "title": "Så ser en genererad vecka ut",
+      "subtitle": "Studiepass placerade runt fasta åtaganden, med resonemanget synligt.",
+      "explanationLabel": "Därför ser den ut så här",
+      "explanation": "Statistik har tenta om nio dagar och får därför de två längsta förmiddagspassen när din energi är som högst. Databaser är utspritt på tre kortare block eftersom repetition med mellanrum fastnar bättre än ett långt pass. Torsdagen är lättare — du har markerat den som en dag med låg energi.",
+      "courses": {
+        "statistics": "Statistik",
+        "databases": "Databaser"
+      },
+      "legend": {
+        "lecture": "Föreläsning",
+        "study": "Studiepass",
+        "deadline": "Deadline",
+        "exam": "Tenta",
+        "break": "Paus"
+      }
+    },
+    "groups": {
+      "title": "Ensam är där planer tyst rinner ut i sanden",
+      "subtitle": "Lägg till dem du ändå pluggar med. Ni behåller var och en er egen plan och ert eget tempo — gruppen gör det bara svårare att glida iväg.",
+      "groupName": "Statistik — lässgrupp",
+      "members": "{count, plural, one {# medlem} other {# medlemmar}}",
+      "goalLabel": "Gruppens mål den här veckan",
+      "goalValue": "{completed} av {total} pass",
+      "rankHeader": "Hållit planen",
+      "you": "Du",
+      "note": "Rankas på hur mycket av din egen plan du höll — aldrig på timmar, aldrig på betyg. En medvetet lugn vecka kostar dig ingenting.",
+      "points": {
+        "fair": {
+          "title": "En lugnare vecka är ingen förlust",
+          "body": "Att planera sex timmar och hålla allihop ger samma resultat som att planera trettio och hålla allihop."
+        },
+        "private": {
+          "title": "Privat och frivilligt",
+          "body": "Små grupper med inbjudan. Du väljer vad du delar och kan pausa utan att lämna."
+        },
+        "together": {
+          "title": "Ett gemensamt mål, inte bara en lista",
+          "body": "Gruppen har ett mål den når tillsammans, så en tung vecka för dig är något de andra kan bära."
+        }
+      }
+    },
+    "features": {
+      "title": "Vad den faktiskt gör",
+      "items": {
+        "combined": {
+          "title": "En kalender för allt",
+          "body": "Flera program, importerade scheman, privata händelser och studiepass i samma vy."
+        },
+        "realistic": {
+          "title": "Den säger till när det inte får plats",
+          "body": "Behöver du trettio timmar och har tolv säger den det — och föreslår konkreta sätt att täcka glappet."
+        },
+        "adaptive": {
+          "title": "Den återhämtar sig från ett missat pass",
+          "body": "Boka om det du missade och ändra så lite som möjligt av resten av veckan."
+        },
+        "explained": {
+          "title": "Varje placering har ett skäl",
+          "body": "Se varför ett pass hamnade där det hamnade, på vanlig svenska, och ändra när du tycker annorlunda."
+        },
+        "recovery": {
+          "title": "Pauser är en del av planen",
+          "body": "Lunch, vila och återhämtning är skyddad tid, inte det som råkar bli över."
+        },
+        "portable": {
+          "title": "Ta den med dig",
+          "body": "Exportera till din kalender, en PDF eller en bild. Din plan är inte inlåst här."
+        }
+      }
+    },
+    "cta": {
+      "title": "Börja med en vecka",
+      "body": "Lägg in dina kurser, importera ett schema och se hur en realistisk vecka ser ut. Det tar ungefär fem minuter.",
+      "button": "Skapa konto"
+    },
+    "footer": {
+      "product": "Produkt",
+      "features": "Funktioner",
+      "howItWorks": "Så fungerar det",
+      "legal": "Juridik",
+      "privacy": "Integritet",
+      "terms": "Villkor",
+      "rights": "Byggd för studenter.",
+      "notAffiliated": "Ett fristående projekt utan koppling till något universitet."
+    },
+    "audiences": {
+      "title": "Två sorters veckor, en planerare",
+      "subtitle": "Planeringen är densamma. Det som skiljer är vart tiden tar vägen innan du kommer åt den — och vad som är värt att mäta när du gör det.",
+      "student": {
+        "title": "Studerar på heltid",
+        "body": "Flera kurser, ett schema som ändras och deadlines som kommer samtidigt. Det svåra är inte arbetet — det är att veta vad man ska göra en tisdag eftermiddag.",
+        "points": {
+          "timetable": "Importera varje programs schema; två utbildningar samtidigt är normalt här, och krockar visas i stället för att döljas.",
+          "exams": "Tentor och inlämningar sätter takten, så veckorna före fylls före veckorna efter.",
+          "balance": "Helgerna är dina om du inte säger något annat."
+        },
+        "measures": "Vad som mäts",
+        "metric": "Hur mycket av din egen plan du höll",
+        "cta": "Börja som student"
+      },
+      "professional": {
+        "title": "Studerar vid sidan av jobbet",
+        "body": "En certifiering, ett språk, en examen på kvällarna. Det svåra är att dagen redan är förbrukad när du kommer åt den.",
+        "points": {
+          "afterWork": "Koppla jobbkalendern så tar en hel dag på kontoret kvällen med sig — inga studier planeras ovanpå den.",
+          "realistic": "Passen är längre och senare, och veckomålet börjar på det som överlever en arbetsvecka i stället för det som låter ambitiöst.",
+          "protect": "Möten, ansökningar och bokade tider hamnar i samma lista, så planen böjer sig runt dem i stället för att strunta i dem."
+        },
+        "measures": "Vad som mäts",
+        "metric": "Timmar som överlevde arbetsveckan",
+        "cta": "Börja som yrkesverksam"
+      }
+    }
+  },
+  "auth": {
+    "fields": {
+      "fullName": "Namn",
+      "email": "E-post",
+      "password": "Lösenord",
+      "newPassword": "Nytt lösenord",
+      "confirmPassword": "Bekräfta nytt lösenord",
+      "passwordHint": "Minst 8 tecken."
+    },
+    "login": {
+      "title": "Välkommen tillbaka",
+      "subtitle": "Logga in och fortsätt där du slutade.",
+      "submit": "Logga in",
+      "pending": "Loggar in",
+      "forgot": "Glömt lösenordet?",
+      "noAccount": "Har du inget konto?",
+      "createAccount": "Skapa ett"
+    },
+    "register": {
+      "title": "Skapa ditt konto",
+      "subtitle": "Några uppgifter nu, och din första plan om ungefär fem minuter.",
+      "submit": "Skapa konto",
+      "pending": "Skapar ditt konto",
+      "haveAccount": "Har du redan ett konto?",
+      "signIn": "Logga in",
+      "checkEmailTitle": "Bekräfta din e-post",
+      "checkEmailBody": "Vi skickade en länk till {email}. Öppna den för att slutföra registreringen.",
+      "checkEmailHint": "Kom inget fram? Titta i skräpposten — det kan ta en minut."
+    },
+    "forgot": {
+      "title": "Återställ ditt lösenord",
+      "subtitle": "Ange din e-post så skickar vi en länk.",
+      "submit": "Skicka återställningslänk",
+      "pending": "Skickar",
+      "sentTitle": "Kolla din e-post",
+      "sentBody": "Om det finns ett konto för {email} är en länk på väg.",
+      "backToLogin": "Tillbaka till inloggning"
+    },
+    "reset": {
+      "title": "Välj ett nytt lösenord",
+      "subtitle": "Ta något du inte använt någon annanstans.",
+      "submit": "Spara nytt lösenord",
+      "pending": "Sparar",
+      "successTitle": "Lösenordet är uppdaterat",
+      "successBody": "Du är inloggad och redo.",
+      "continue": "Fortsätt"
+    },
+    "validation": {
+      "emailInvalid": "Ange en giltig e-postadress.",
+      "passwordTooShort": "Använd minst 8 tecken.",
+      "passwordsDoNotMatch": "Lösenorden stämmer inte överens.",
+      "nameRequired": "Ange ditt namn."
+    },
+    "errors": {
+      "invalid_credentials": "E-postadressen och lösenordet stämmer inte. Kontrollera båda och försök igen.",
+      "email_taken": "Det finns redan ett konto med den e-postadressen. Prova att logga in i stället.",
+      "weak_password": "Lösenordet är för lätt att gissa. Prova ett längre.",
+      "email_not_confirmed": "Bekräfta din e-post först — leta efter länken i inkorgen.",
+      "rate_limited": "För många försök. Vänta en minut och försök igen.",
+      "invalid_input": "Kontrollera fälten ovan och försök igen.",
+      "expired_link": "Länken har gått ut. Begär en ny.",
+      "unknown": "Något gick fel. Ingenting sparades — försök gärna igen."
+    },
+    "signOut": "Logga ut",
+    "account": "Konto"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Idag",
+      "description": "Det som behöver din uppmärksamhet just nu.",
+      "emptyTitle": "Inget planerat än",
+      "emptyBody": "När du har lagt in kurser och genererat en plan visas din dag här."
+    },
+    "calendar": {
+      "title": "Kalender",
+      "description": "Föreläsningar, deadlines, tentor och studiepass på ett ställe.",
+      "emptyTitle": "Din kalender är tom",
+      "emptyBody": "Importera ett schema eller lägg till en händelse så dyker den upp här."
+    },
+    "planner": {
+      "title": "Planering",
+      "description": "Skapa en studieplan som ryms i den tid du faktiskt har.",
+      "emptyTitle": "Ingen plan än",
+      "emptyBody": "Lägg in kurser och deadlines först, generera sedan din första vecka."
+    },
+    "courses": {
+      "title": "Kurser",
+      "description": "Dina program och kurserna som ingår i dem.",
+      "emptyTitle": "Inga kurser än",
+      "emptyBody": "Lägg till en kurs för att följa arbetsbörda, deadlines och framsteg."
+    },
+    "deadlines": {
+      "title": "Deadlines",
+      "description": "Inlämningar, tentor och allt annat med ett slutdatum.",
+      "emptyTitle": "Inga deadlines än",
+      "emptyBody": "Lägg till en inlämning eller tenta så planeras studietiden runt den."
+    },
+    "insights": {
+      "title": "Statistik",
+      "description": "Hur din planerade tid står sig mot tiden du faktiskt studerade.",
+      "emptyTitle": "Inte tillräckligt med data än",
+      "emptyBody": "Statistik visas när du har genomfört några studiepass."
+    },
+    "settings": {
+      "title": "Inställningar",
+      "description": "Din profil, studiepreferenser, integrationer och integritet.",
+      "emptyTitle": "Inställningar kommer med ditt konto",
+      "emptyBody": "När du kan logga in hamnar din profil och dina studiepreferenser här."
+    },
+    "importExport": {
+      "title": "Import och export",
+      "description": "Hämta in ditt schema från universitetet och ta med dig din plan ut.",
+      "emptyTitle": "Inget importerat än",
+      "emptyBody": "Ladda upp en .ics-fil eller klistra in en prenumerationslänk, så dyker schemat upp i kalendern."
+    },
+    "todos": {
+      "title": "Den här veckan",
+      "description": "Ansökningar, bokade tider och allt annat som ska få plats runt studierna.",
+      "emptyTitle": "Inget på listan",
+      "emptyBody": "Lägg till det som måste hända den här veckan så planeras det in."
+    }
+  },
+  "tasks": {
+    "add": "Lägg till uppgift",
+    "edit": "Ändra uppgift",
+    "addFirst": "Lägg till din första deadline",
+    "empty": "Inga deadlines än",
+    "emptyBody": "Lägg till en inlämning eller tenta så planeras studietiden runt den.",
+    "addSubtask": "Lägg till deluppgift",
+    "subtaskOf": "Del av {title}",
+    "subtaskCount": "{count, plural, one {# deluppgift} other {# deluppgifter}}",
+    "deleteTitle": "Ta bort uppgiften?",
+    "deleteBody": "Detta tar permanent bort {title} och alla deluppgifter under den.",
+    "deleteConfirm": "Ta bort",
+    "markDone": "Markera klar",
+    "markNotDone": "Öppna igen",
+    "remaining": "{minutes} min kvar",
+    "ofEstimate": "{done} av {total} min",
+    "noDeadline": "Ingen deadline",
+    "overdue": "Försenad",
+    "dueToday": "Ska vara klar idag",
+    "dueTomorrow": "Ska vara klar imorgon",
+    "dueInDays": "Om {days, plural, one {# dag} other {# dagar}}",
+    "groups": {
+      "overdue": "Försenade",
+      "thisWeek": "Den här veckan",
+      "later": "Senare",
+      "noDeadline": "Utan deadline",
+      "completed": "Klara"
+    },
+    "fields": {
+      "title": "Vad ska göras?",
+      "titlePlaceholder": "Lämna in labbrapport 2",
+      "course": "Kurs",
+      "noCourse": "Ingen kurs",
+      "type": "Typ",
+      "status": "Status",
+      "priority": "Prioritet",
+      "difficulty": "Svårighetsgrad",
+      "deadline": "Deadline",
+      "estimatedMinutes": "Uppskattad tid",
+      "estimatedHint": "Minuter. En gissning duger — planen justeras efterhand.",
+      "completedMinutes": "Tid gjord",
+      "method": "Studieteknik",
+      "noMethod": "Låt planeringen välja",
+      "description": "Anteckningar"
+    },
+    "types": {
+      "assignment": "Inlämning",
+      "exam": "Tenta",
+      "reading": "Läsning",
+      "project": "Projekt",
+      "lab": "Laboration",
+      "presentation": "Presentation",
+      "revision": "Repetition",
+      "other": "Annat",
+      "application": "Ansökan",
+      "appointment": "Bokad tid",
+      "admin": "Administration",
+      "errand": "Ärende"
+    },
+    "statuses": {
+      "not_started": "Inte påbörjad",
+      "in_progress": "Pågår",
+      "completed": "Klar",
+      "cancelled": "Inställd"
+    },
+    "methods": {
+      "pomodoro": "Pomodoro",
+      "active_recall": "Aktiv återkallning",
+      "spaced_repetition": "Spridd repetition",
+      "deep_work": "Djupt arbete",
+      "interleaving": "Varvad träning",
+      "group_work": "Grupparbete"
+    }
+  },
+  "calendar": {
+    "views": {
+      "day": "Dag",
+      "week": "Vecka",
+      "month": "Månad",
+      "agenda": "Agenda"
+    },
+    "today": "Idag",
+    "previous": "Föregående",
+    "next": "Nästa",
+    "addEvent": "Lägg till händelse",
+    "editEvent": "Ändra händelse",
+    "empty": "Inget inplanerat",
+    "emptyBody": "Lägg till en föreläsning eller ett privat åtagande så planeras studietiden runt det.",
+    "deleteTitle": "Ta bort händelsen?",
+    "deleteBody": "Detta tar permanent bort {title} från din kalender.",
+    "deleteConfirm": "Ta bort",
+    "importedNotice": "Importerad från {source}. Ändra den där den kommer ifrån, eller ta bort den här.",
+    "filters": {
+      "course": "Kurs",
+      "allCourses": "Alla kurser",
+      "type": "Typ",
+      "allTypes": "Alla typer",
+      "clear": "Rensa filter",
+      "calendar": "Kalender",
+      "allCalendars": "Alla kalendrar"
+    },
+    "fields": {
+      "title": "Rubrik",
+      "titlePlaceholder": "Föreläsning i statistik",
+      "type": "Typ",
+      "course": "Kurs",
+      "noCourse": "Ingen kurs",
+      "location": "Plats",
+      "start": "Börjar",
+      "end": "Slutar",
+      "isFixed": "Tiden är fast",
+      "isFixedHint": "På betyder att studietid aldrig planeras över den. Stäng av för något du skulle kunna flytta.",
+      "description": "Anteckningar"
+    },
+    "types": {
+      "lecture": "Föreläsning",
+      "seminar": "Seminarium",
+      "lab": "Laboration",
+      "exam": "Tenta",
+      "deadline": "Deadline",
+      "personal": "Privat",
+      "other": "Annat"
+    },
+    "movedBack": "Ändringen kunde inte sparas, så händelsen flyttades tillbaka."
+  },
+  "planner": {
+    "setup": {
+      "title": "Vad ska vi planera?",
+      "period": "Period",
+      "startDate": "Från",
+      "endDate": "Till",
+      "quickWeek": "Den här veckan",
+      "quickNextWeek": "Nästa vecka",
+      "quickFortnight": "Kommande två veckor",
+      "courses": "Fokusera på",
+      "allCourses": "Alla mina kurser",
+      "coursesHint": "Lämna tomt för att planera allt.",
+      "adjust": "Justera bara för den här gången",
+      "adjustHint": "Ändringar här gäller bara den här planen. Dina sparade inställningar påverkas inte.",
+      "generate": "Skapa en plan",
+      "generating": "Räknar ut din vecka"
+    },
+    "summary": {
+      "title": "Ditt planförslag",
+      "sessions": "{count, plural, one {# pass} other {# pass}}",
+      "totalTime": "{hours} h {minutes} min studier",
+      "across": "fördelat på {days, plural, one {# dag} other {# dagar}}",
+      "coverage": "{percent} % av arbetet täckt"
+    },
+    "warnings": {
+      "title": "Värt att veta",
+      "not_enough_time": "Allt får inte plats. Du behöver {requiredHours} h och har ungefär {usableHours} h studietid under perioden.",
+      "task_at_risk": "Det finns inte tillräckligt med tid före deadline för att hinna klart i lugn takt.",
+      "task_unschedulable": "Ingen plats hittades för den här alls.",
+      "deadline_passed": "Den här deadlinen har redan passerat.",
+      "no_availability": "Det finns ingen ledig studietid under perioden. Kontrollera dina studiedagar och tider.",
+      "over_daily_limit": "En dag överskred ditt maximum. Det är ett fel — hör gärna av dig.",
+      "dependency_cycle": "Några uppgifter beror på varandra i en cirkel, så ordningen kunde inte räknas ut.",
+      "horizon_too_short": "Perioden är för kort för det arbete du har.",
+      "days_taken_by_commitments": "{blocked, plural, =0 {} one {# dag går åt till jobb eller andra åtaganden} other {# dagar går åt till jobb eller andra åtaganden}}{reduced, plural, =0 {} one {, och # är en kort dag} other {, och # är korta dagar}}. Studietiden planerades runt dem."
+    },
+    "remedies": {
+      "title": "Vad som skulle hjälpa",
+      "increase_available_time": "Frigör ungefär {hours} timmar till under perioden.",
+      "allow_weekends": "Tillåt helger — bara det skulle täcka det mesta av glappet.",
+      "extend_daily_limit": "Höj ditt dagsmaximum över {current} minuter.",
+      "reduce_scope": "Stryk eller korta ned {count, plural, one {# obetygsatt uppgift} other {# obetygsatta uppgifter}}.",
+      "prioritise_graded": "Sätt {count, plural, one {den # betygsatta uppgiften} other {de # betygsatta uppgifterna}} först och låt resten vänta.",
+      "start_earlier": "Börja tidigare på dagen.",
+      "ask_for_extension": "Be om förlängd tid. Glappet är för stort för att lösas med omplanering.",
+      "relax_day_rule": "Mjuka upp en kalenders dagsregel under Import och export om den blockerar mer än den borde."
+    },
+    "reasons": {
+      "deadline_pressure": "Tidigt placerad — {daysLeft, plural, =0 {deadline direkt efter} one {# dags marginal kvar} other {# dagars marginal kvar}}",
+      "high_energy_match": "Din energi är som högst runt {hour}:00",
+      "preferred_time": "En tid du markerat som föredragen",
+      "spaced_repetition": "Ett av {parts} utspridda pass, så att det fastnar",
+      "spread_before_deadline": "Utspritt i stället för hopklumpat",
+      "first_available": "Första luckan som passade",
+      "preserved_locked": "Du har låst den här",
+      "preserved_manual": "Du flyttade den själv",
+      "preserved_completed": "Redan gjort"
+    },
+    "preview": {
+      "empty": "Inget kunde planeras in",
+      "emptyBody": "Det fanns ingen ledig tid under perioden, eller inget kvar att göra. Kontrollera dina studiedagar, eller lägg till en deadline först.",
+      "noPlanTitle": "Ingen plan än",
+      "noPlanBody": "Välj en period ovan och skapa din första plan. Ingenting sparas i kalendern förrän du godkänner.",
+      "preservedLabel": "Behållet sedan tidigare",
+      "lock": "Lås tiden",
+      "unlock": "Lås upp",
+      "locked": "Låst",
+      "reject": "Ta bort",
+      "minutes": "{minutes} min"
+    },
+    "actions": {
+      "approve": "Godkänn planen",
+      "approving": "Sparar i kalendern",
+      "alternative": "Visa ett annat förslag",
+      "generatingAlternative": "Letar efter ett annat upplägg",
+      "discard": "Börja om",
+      "approved": "Tillagd i kalendern",
+      "approvedBody": "Dina pass ligger i kalendern nu. Flytta eller lås det du vill."
+    }
+  },
+  "sessions": {
+    "today": {
+      "title": "Idag",
+      "empty": "Inget inplanerat idag",
+      "emptyBody": "En ledig dag, eller inget planerat än. Du kan skapa en plan när du vill.",
+      "next": "Härnäst",
+      "now": "Pågår nu",
+      "done": "Klart",
+      "remaining": "{count, plural, one {# pass kvar idag} other {# pass kvar idag}}",
+      "count": "{count, plural, one {# pass} other {# pass}}"
+    },
+    "outcome": {
+      "prompt": "Hur gick det?",
+      "completed": "Gjorde det",
+      "partial": "Gjorde en del",
+      "missed": "Missade det",
+      "dismiss": "Behövs inte längre",
+      "howLong": "Hur länge studerade du?",
+      "save": "Spara",
+      "cancel": "Avbryt",
+      "recorded": "Sparat",
+      "taskFinished": "Då är uppgiften klar."
+    },
+    "unresolved": {
+      "title": "Några pass har passerat",
+      "body": "Berätta vad som hände så hinner planen ikapp. Ingenting markeras som missat åt dig.",
+      "count": "{count, plural, one {# pass} other {# pass}}"
+    },
+    "reschedule": {
+      "offer": "Hitta en ny tid",
+      "title": "Så här skulle det ändras",
+      "checking": "Letar efter en ny tid",
+      "nothingFound": "Ingen ledig tid hittades för det här före deadline.",
+      "nothingFoundBody": "Du skulle kunna frigöra tid, tillåta helger eller minska vad uppgiften kräver.",
+      "removed": "Flyttas från",
+      "added": "Flyttas till",
+      "unchanged": "Allt annat ligger kvar exakt där det är.",
+      "apply": "Genomför ändringarna",
+      "applying": "Uppdaterar din plan",
+      "cancel": "Låt det vara",
+      "applied": "Din plan har uppdaterats"
+    },
+    "status": {
+      "planned": "Planerat",
+      "completed": "Klart",
+      "missed": "Missat",
+      "partial": "Delvis gjort",
+      "cancelled": "Inställt"
+    }
+  },
+  "notifications": {
+    "title": "Notiser",
+    "empty": "Inget nytt",
+    "emptyBody": "Påminnelser och planändringar dyker upp här.",
+    "markAllRead": "Markera alla som lästa",
+    "unread": "{count} olästa",
+    "open": "Notiser"
+  },
+  "validation": {
+    "required": "Det här behövs.",
+    "tooLong": "Det är för långt.",
+    "nameTooLong": "Håll det under 120 tecken.",
+    "invalidNumber": "Ange ett tal.",
+    "outOfRange": "Värdet ligger utanför det tillåtna intervallet.",
+    "endBeforeStart": "Slutet måste komma efter starten.",
+    "sessionLengthsIncoherent": "Det kortaste passet får inte vara längre än det föredragna, och det föredragna inte längre än det längsta.",
+    "studyWindowTooShort": "Ditt tidsfönster är kortare än ett enda pass.",
+    "dailyLessThanSession": "Ditt dagsmaximum är mindre än ett enda pass.",
+    "pickAtLeastOneDay": "Välj minst en dag.",
+    "invalidTimezone": "Välj en giltig tidszon.",
+    "invalidInput": "Kontrollera fälten ovan och försök igen.",
+    "unexpected": "Något gick fel. Ingenting sparades — försök gärna igen."
+  },
+  "days": {
+    "1": "Måndag",
+    "2": "Tisdag",
+    "3": "Onsdag",
+    "4": "Torsdag",
+    "5": "Fredag",
+    "6": "Lördag",
+    "7": "Söndag",
+    "short1": "Mån",
+    "short2": "Tis",
+    "short3": "Ons",
+    "short4": "Tors",
+    "short5": "Fre",
+    "short6": "Lör",
+    "short7": "Sön"
+  },
+  "preferences": {
+    "sessionSection": "Passlängd",
+    "sessionHint": "Hur långt ett enskilt block av fokuserat arbete ska vara.",
+    "minimumSession": "Kortast",
+    "preferredSession": "Föredraget",
+    "maximumSession": "Längst",
+    "loadSection": "Hur mycket, och när",
+    "maximumDaily": "Mest per dag",
+    "weeklyTarget": "Veckomål",
+    "earliestStart": "Inte före",
+    "latestEnd": "Inte efter",
+    "daysSection": "Studiedagar",
+    "daysHint": "Dagar som planeringen får använda.",
+    "weekendAllowed": "Helger är tillåtna",
+    "weekendAllowedHint": "Av som standard. Planeringen använder bara helger om den måste.",
+    "breakSection": "Pauser",
+    "breakMethod": "Pausrytm",
+    "breakMethods": {
+      "pomodoro": "Pomodoro — 25 min fokus, 5 min paus",
+      "fifty_ten": "50 / 10 — längre sjok",
+      "ninety_twenty": "90 / 20 — djupt arbete",
+      "none": "Ingen fast rytm"
+    },
+    "energySection": "Energi under dagen",
+    "energyHint": "Tyngre arbete placeras där din energi är som högst.",
+    "morning": "Förmiddag",
+    "afternoon": "Eftermiddag",
+    "evening": "Kväll",
+    "energyLevels": {
+      "high": "Hög",
+      "medium": "Medel",
+      "low": "Låg"
+    },
+    "flexibilitySection": "Hur fast ska planen vara?",
+    "flexibility": "Flexibilitet",
+    "flexibilityLevels": {
+      "strict": "Strikt — håll dig nära planen",
+      "balanced": "Balanserad",
+      "flexible": "Flexibel — flytta runt fritt"
+    },
+    "buffer": "Bufferttid",
+    "bufferHint": "Andel av din lediga tid som medvetet lämnas tom, så att en tung dag inte välter veckan.",
+    "minutesSuffix": "min",
+    "hoursSuffix": "h",
+    "percentSuffix": "%"
+  },
+  "courses": {
+    "add": "Lägg till kurs",
+    "edit": "Ändra kurs",
+    "addFirst": "Lägg till din första kurs",
+    "empty": "Inga kurser än",
+    "emptyBody": "Lägg till en kurs för att följa arbetsbörda, deadlines och framsteg.",
+    "archivedSection": "Arkiverade",
+    "showArchived": "Visa arkiverade",
+    "hideArchived": "Dölj arkiverade",
+    "archive": "Arkivera",
+    "unarchive": "Återställ",
+    "deleteTitle": "Ta bort kursen?",
+    "deleteBody": "Detta tar permanent bort {name} och allt som hör till — uppgifter, deadlines och studiehistorik. Arkivering behåller uppgifterna i stället.",
+    "deleteConfirm": "Ta bort permanent",
+    "fields": {
+      "name": "Kursnamn",
+      "namePlaceholder": "Statistik för ingenjörer",
+      "code": "Kurskod",
+      "codePlaceholder": "MSG830",
+      "program": "Program",
+      "noProgram": "Inget program",
+      "description": "Anteckningar",
+      "difficulty": "Svårighetsgrad",
+      "priority": "Prioritet",
+      "targetGrade": "Målbetyg",
+      "weeklyHours": "Timmar per vecka",
+      "weeklyHoursHint": "Ungefär hur mycket tid kursen kräver utanför föreläsningarna.",
+      "startDate": "Börjar",
+      "endDate": "Slutar"
+    },
+    "scale": {
+      "difficulty1": "Lätt",
+      "difficulty2": "Hanterbar",
+      "difficulty3": "Måttlig",
+      "difficulty4": "Svår",
+      "difficulty5": "Mycket svår",
+      "priority1": "Låg",
+      "priority2": "Mindre",
+      "priority3": "Normal",
+      "priority4": "Hög",
+      "priority5": "Kritisk"
+    },
+    "perWeek": "{hours} h per vecka",
+    "countLabel": "{count, plural, one {# kurs} other {# kurser}}"
+  },
+  "onboarding": {
+    "pageTitle": "Kom igång",
+    "stepLabel": "Steg {current} av {total}",
+    "back": "Tillbaka",
+    "continue": "Fortsätt",
+    "saving": "Sparar",
+    "skip": "Hoppa över",
+    "optional": "Frivilligt",
+    "basics": {
+      "title": "Först det grundläggande",
+      "subtitle": "Så att tider och påminnelser hamnar där du förväntar dig.",
+      "name": "Vad ska vi kalla dig?",
+      "timezone": "Tidszon",
+      "timezoneHint": "Allt visas i den här zonen. Vi gissade utifrån din webbläsare.",
+      "language": "Språk",
+      "segment": "Var studerar du ifrån?",
+      "segmentHint": "Det sätter dina utgångstider och vad som mäts. Du kan ändra det när som helst.",
+      "segments": {
+        "student": "Jag studerar",
+        "professional": "Jag jobbar och studerar vid sidan av"
+      }
+    },
+    "studies": {
+      "title": "Var studerar du?",
+      "subtitle": "Används för att gruppera dina kurser. Du kan lägga till fler senare, eller lämna tomt.",
+      "institution": "Universitet eller skola",
+      "institutionPlaceholder": "Chalmers tekniska högskola",
+      "program": "Program",
+      "programPlaceholder": "Industriell ekonomi"
+    },
+    "courses": {
+      "title": "Vad läser du just nu?",
+      "subtitle": "Lägg in kurserna du läser den här terminen. Två eller tre räcker gott till att börja med.",
+      "empty": "Inga kurser tillagda än.",
+      "needOne": "Lägg till minst en kurs för att fortsätta — annars har planeringen inget att arbeta med.",
+      "added": "{count, plural, one {# kurs tillagd} other {# kurser tillagda}}"
+    },
+    "preferences": {
+      "title": "Hur vill du studera?",
+      "subtitle": "Ungefärliga svar duger. Du kan ändra allt senare, och planeringen anpassar sig efterhand."
+    },
+    "done": {
+      "title": "Det var allt",
+      "subtitle": "Dina inställningar är sparade. Så här ser det ut hittills.",
+      "profileSummary": "Profil",
+      "coursesSummary": "Kurser",
+      "preferencesSummary": "Studiepreferenser",
+      "sessionSummary": "{preferred} min pass, upp till {daily} min per dag",
+      "daysSummary": "{days}",
+      "nextUp": "Härnäst: lägg in deadlines och tentor, och generera din första plan.",
+      "finish": "Till min översikt"
+    }
+  },
+  "settings": {
+    "tabs": {
+      "profile": "Profil",
+      "preferences": "Studiepreferenser",
+      "privacy": "Integritet"
+    },
+    "profile": {
+      "title": "Din profil",
+      "subtitle": "Namn, tidszon och språk.",
+      "email": "E-post",
+      "emailHint": "Adressen du loggar in med. Att ändra den stöds inte än."
+    },
+    "preferencesIntro": "De här formar varje plan systemet skapar. Att ändra dem skriver inte om befintliga planer förrän du genererar på nytt.",
+    "save": "Spara ändringar",
+    "saving": "Sparar",
+    "saved": "Sparat",
+    "privacy": {
+      "exportTitle": "Dina uppgifter",
+      "exportBody": "Ladda ned allt det här kontot innehåller, som en JSON-fil. Det är samma data som appen läser, direkt ur databasen — inget sammanfattat, inget utelämnat.",
+      "includesSchedule": "Kurser, deadlines, kalenderhändelser och studiepass",
+      "includesPlanning": "Dina inställningar, varje genererad plan och underlaget den byggdes på",
+      "includesAccount": "Profil, aviseringar, samtycken, gruppmedlemskap och händelseloggen",
+      "excludesTokens": "Ingår inte: åtkomsttoken för anslutna kalendrar. De är krypterade och kan aldrig läsas av webbläsaren, vilket är hela poängen med dem.",
+      "download": "Ladda ned mina uppgifter",
+      "deleteTitle": "Radera kontot",
+      "deleteBody": "Inte byggt än. När det är det kommer det att radera varje rad i den filen permanent — kurser, planer, pass och själva kontot — utan möjlighet att ångra."
+    }
+  },
+  "common": {
+    "skipToContent": "Hoppa till innehållet",
+    "loading": "Laddar",
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "delete": "Ta bort",
+    "edit": "Ändra",
+    "back": "Tillbaka",
+    "next": "Nästa",
+    "skip": "Hoppa över",
+    "retry": "Försök igen",
+    "confirm": "Bekräfta",
+    "close": "Stäng",
+    "minutes": "{count, plural, one {# minut} other {# minuter}}",
+    "hours": "{count, plural, one {# timme} other {# timmar}}"
+  },
+  "errors": {
+    "generic": {
+      "title": "Något gick fel",
+      "body": "Åtgärden slutfördes inte. Ingenting sparades."
+    },
+    "notFound": {
+      "title": "Sidan hittades inte",
+      "body": "Sidan finns inte, eller så har den flyttat.",
+      "action": "Tillbaka till idag"
+    },
+    "offline": {
+      "title": "Ingen anslutning",
+      "body": "Kontrollera nätverket och försök igen."
+    }
+  },
+  "empty": {
+    "generic": {
+      "title": "Inget här än",
+      "body": "Här kommer ditt innehåll att visas."
+    }
+  },
+  "insights": {
+    "plannedToday": "Planerat idag",
+    "doneToday": "Gjort idag",
+    "nextDeadline": "Nästa deadline",
+    "title": "Statistik",
+    "notEnough": "Inte tillräckligt med data än",
+    "notEnoughBody": "Statistik visas när du har genomfört några studiepass. Inget här är ett betyg — det är bara vad som hände.",
+    "period": "Senaste 4 veckorna",
+    "adherence": "Hållit planen",
+    "adherenceHint": "Hur mycket av det du planerat du faktiskt gjorde. Att planera mindre är inte att prestera sämre.",
+    "plannedTime": "Planerad tid",
+    "completedTime": "Studerad tid",
+    "averageSession": "Typiskt pass",
+    "sessionsDone": "Genomförda pass",
+    "sessionsMissed": "Missade pass",
+    "rescheduled": "Flyttade till ny tid",
+    "bestTime": "Du följer planen bäst på",
+    "bestTimeUnknown": "Inte tillräckligt många pass än för att se ett mönster",
+    "bands": {
+      "morning": "förmiddagen",
+      "afternoon": "eftermiddagen",
+      "evening": "kvällen"
+    },
+    "activity": "Aktivitet",
+    "activityHint": "Varje stapel är en dag. Tomma dagar visas, de göms inte.",
+    "atRisk": "Kanske inte hinns med",
+    "atRiskHint": "Tiden kvar före de här deadlinesen är mindre än arbetet som återstår.",
+    "atRiskItem": "{minutes} min kvar, ska vara klart om {days, plural, one {# dag} other {# dagar}}",
+    "nothingAtRisk": "Allt ryms för närvarande i den tid du har.",
+    "nextDeadlineLoad": "Före din nästa deadline",
+    "nextDeadlineLoadValue": "{minutes} min arbete kvar",
+    "minutesShort": "{minutes} min"
+  },
+  "groups": {
+    "title": "Studiegrupper",
+    "subtitle": "Privata grupper som rankas på hur mycket av din egen plan du höll — aldrig på timmar, aldrig på betyg.",
+    "empty": "Du är inte med i någon grupp",
+    "emptyBody": "Skapa en och dela koden, eller gå med via en kod du fått av en kompis.",
+    "create": "Skapa en grupp",
+    "creating": "Skapar",
+    "join": "Gå med via kod",
+    "joining": "Går med",
+    "nameLabel": "Gruppens namn",
+    "namePlaceholder": "Lässgrupp i statistik",
+    "goalLabel": "Pass gruppen siktar på varje vecka",
+    "codeLabel": "Inbjudningskod",
+    "codeHint": "Dela den här med dem du vill ha med i gruppen.",
+    "codePlaceholder": "ABC1234",
+    "codeNotFound": "Ingen grupp har den koden. Kontrollera den och försök igen.",
+    "copyCode": "Kopiera kod",
+    "copied": "Kopierad",
+    "members": "{count, plural, one {# medlem} other {# medlemmar}}",
+    "goalLabelShort": "Gruppens mål den här veckan",
+    "goalValue": "{completed} av {total} pass",
+    "rankHeader": "Hållit planen",
+    "you": "Du",
+    "paused": "Pausad",
+    "pause": "Pausa min plats",
+    "resume": "Kom tillbaka på listan",
+    "pauseHint": "Du är kvar i gruppen men syns inte på listan. En tung vecka ska inte betyda att man lämnar.",
+    "leave": "Lämna gruppen",
+    "leaveConfirm": "Lämna gruppen?",
+    "leaveBody": "Du slutar synas på listan. Du kan gå med igen senare med samma kod.",
+    "noScores": "Ingen har registrerat någon studietid den här veckan än.",
+    "fairnessNote": "Rankas på hur stor andel av din egen plan du höll. En medvetet lugn vecka kostar dig ingenting."
+  },
+  "importExport": {
+    "import": {
+      "title": "Importera ett schema",
+      "description": "Ladda upp .ics-filen från universitetet, eller klistra in länken till den. Inget sparas förrän du har gått igenom det.",
+      "fileTitle": "Ladda upp en fil",
+      "fileHint": "En .ics-fil exporterad från TimeEdit, Google Kalender, Outlook eller liknande.",
+      "urlTitle": "Klistra in en länk",
+      "urlHint": "En prenumerationslänk som börjar med webcal:// eller https://. En TimeEdit-sida fungerar också — kalendern bakom den hittas åt dig.",
+      "urlLabel": "Kalenderlänk",
+      "urlPlaceholder": "https://cloud.timeedit.net/…",
+      "fetch": "Hämta",
+      "fetching": "Hämtar…",
+      "reviewTitle": "Importerad kalender",
+      "summary": "{total} händelser · {added} nya · {known} redan kända",
+      "selectAll": "Markera alla",
+      "selectNone": "Avmarkera alla",
+      "fixedLabel": "Behandla dessa som fasta åtaganden",
+      "fixedHint": "På betyder att studietid aldrig planeras över dem. Stäng av för sådant du kan flytta.",
+      "allDay": "Heldag",
+      "courseUnmatched": "{code} — ingen kurs än",
+      "status": {
+        "new": "Ny",
+        "alreadyImported": "Redan importerad",
+        "matchesExisting": "Finns redan i kalendern",
+        "repeatedInFile": "Förekommer två gånger i filen"
+      },
+      "warnings": {
+        "unknownTimezone": "{count, plural, one {# händelse använder en tidszon vi inte känner igen} other {# händelser använder en tidszon vi inte känner igen}} — din egen användes i stället, så kontrollera de tiderna.",
+        "unsupportedRecurrence": "{count, plural, one {# återkommande händelse har en regel som är för komplex att räkna ut} other {# återkommande händelser har regler som är för komplexa att räkna ut}}. Bara det första tillfället listas.",
+        "recurrenceCapped": "En återkommande händelse klipptes efter 400 tillfällen.",
+        "skippedInvalid": "{count, plural, one {# post hoppades över} other {# poster hoppades över}} eftersom start- eller sluttiden inte gick att tolka.",
+        "truncated": "Filen innehöll fler händelser än en import tillåter. Resten utelämnades."
+      },
+      "confirm": "Importera {count, plural, one {# händelse} other {# händelser}}",
+      "confirming": "Importerar…",
+      "startOver": "Börja om",
+      "noEvents": "Inga händelser hittades i den kalendern.",
+      "doneTitle": "Importerat",
+      "doneBody": "{inserted, plural, one {# händelse tillagd} other {# händelser tillagda}}, {updated, plural, one {# uppdaterad} other {# uppdaterade}}.",
+      "viewCalendar": "Öppna kalendern",
+      "importMore": "Importera något annat",
+      "errors": {
+        "notCalendar": "Det där är ingen kalender. Kontrollera länken eller filen och försök igen.",
+        "invalidUrl": "Den länken går inte att använda. Den måste börja med https:// eller webcal://.",
+        "privateAddress": "Länken pekar på en privat adress, så den hämtades inte.",
+        "unreachable": "Kalendern gick inte att hämta. Kontrollera länken, eller ladda ned filen och ladda upp den i stället.",
+        "tooLarge": "Filen är för stor för att importeras.",
+        "invalidInput": "Något i förfrågan var inte giltigt.",
+        "unexpected": "Något gick fel. Inget importerades."
+      },
+      "targetLabel": "Importera till",
+      "targetNew": "En ny kalender",
+      "targetHint": "Att hålla varje schema i sin egen kalender gör att ett kan importeras om utan att röra det andra.",
+      "clash": "Krockar med {title}",
+      "clashSummary": "{count, plural, one {# händelse krockar} other {# händelser krockar}} med något du redan har. Inget löses åt dig — importera båda och välj, eller hoppa över en."
+    },
+    "export": {
+      "title": "Exportera",
+      "description": "Ta med dig ditt schema — till en annan kalenderapp, till papper eller som en bild.",
+      "startLabel": "Från",
+      "endLabel": "Till",
+      "endBeforeStart": "Slutet måste komma efter början.",
+      "includeLegend": "Vad som ska ingå",
+      "includeSessions": "Studiepass",
+      "includeEvents": "Föreläsningar och andra händelser",
+      "pickOne": "Välj minst ett.",
+      "ics": "Kalenderfil (.ics)",
+      "pdf": "PDF",
+      "png": "Bild (PNG)",
+      "rendering": "Förbereder…",
+      "hint": "Filen .ics kan importeras i Google Kalender, Apple Kalender och Outlook.",
+      "failed": "Exporten kunde inte skapas. Försök igen.",
+      "documentTitle": "Studieplan",
+      "documentSubtitle": "{start} – {end}",
+      "nothingInRange": "Inget är inplanerat under den här perioden.",
+      "pageLabel": "Sida {page} av {total}",
+      "calendarName": "Studieplan",
+      "minutes": "{minutes} min",
+      "status": {
+        "planned": "Planerat",
+        "completed": "Genomfört",
+        "missed": "Missat",
+        "partial": "Delvis genomfört",
+        "cancelled": "Inställt"
+      }
+    },
+    "calendars": {
+      "title": "Dina kalendrar",
+      "description": "En per schema och en för jobbet. Att hålla isär dem är det som gör att ett schema kan importeras om för sig — och att en arbetsdag betyder något för planeraren.",
+      "empty": "Inga kalendrar än",
+      "emptyBody": "Importera ett schema nedan så blir det en kalender du kan hantera här.",
+      "events": "{count, plural, one {# händelse} other {# händelser}}",
+      "neverImported": "Tillagd för hand",
+      "kinds": {
+        "study": "Studier",
+        "work": "Jobb",
+        "personal": "Privat"
+      },
+      "effects": {
+        "none": "Ingen dagsregel",
+        "reduce": "Korta ned dagen",
+        "block": "Ta hela dagen"
+      },
+      "rule": {
+        "none": "Blockerar bara de timmar den upptar.",
+        "reduce": "Efter {hours} h på en dag planeras bara {minutes} min studier.",
+        "block": "Efter {hours} h på en dag planeras inga studier alls."
+      },
+      "edit": "Ändra",
+      "save": "Spara",
+      "saving": "Sparar…",
+      "cancel": "Avbryt",
+      "delete": "Ta bort",
+      "deleteTitle": "Ta bort {name}?",
+      "deleteBody": "Den innehåller {count, plural, one {# händelse} other {# händelser}}. Välj vad som ska hända med dem.",
+      "deleteKeepEvents": "Behåll händelserna i kalendern",
+      "deleteWithEvents": "Radera händelserna också",
+      "deleteConfirm": "Ta bort kalendern",
+      "deleting": "Tar bort…",
+      "fields": {
+        "name": "Namn",
+        "namePlaceholder": "Maskinteknik HT26",
+        "kind": "Vad är det",
+        "effect": "En dag full av den här kalendern",
+        "effectHint": "Åtta timmar på kontoret lämnar ingen användbar kväll. Ett kort möte gör det.",
+        "threshold": "Räknas som en hel dag efter",
+        "thresholdHint": "Timmar av kalenderns händelser på en dag innan regeln gäller.",
+        "reduced": "Studietid kvar en sådan dag",
+        "reducedHint": "Minuter. Noll betyder inga alls."
+      },
+      "hours": "{hours} h"
+    }
+  },
+  "todos": {
+    "weekLoad": "Ungefär {hours} h {minutes} min ärenden kvar att få plats med den här veckan.",
+    "add": "Lägg till",
+    "adding": "Lägger till…",
+    "empty": "Inget på listan",
+    "emptyBody": "Ansökningar, tider, blanketter — allt som måste hända den här veckan och konkurrerar med studierna om samma timmar.",
+    "itemCount": "{count, plural, one {# sak} other {# saker}}",
+    "minutes": "{minutes} min",
+    "atTime": "kl.",
+    "byTime": "senast",
+    "blocksTime": "Fast tid",
+    "markDone": "Markera {title} som klar",
+    "remove": "Ta bort {title}",
+    "switchToTime": "Den sker på en bestämd tid",
+    "switchToDeadline": "Den har bara en deadline",
+    "types": {
+      "application": "Ansökan",
+      "appointment": "Bokad tid",
+      "admin": "Administration",
+      "errand": "Ärende"
+    },
+    "buckets": {
+      "overdue": "Försenat",
+      "today": "I dag",
+      "thisWeek": "Den här veckan",
+      "later": "Senare",
+      "someday": "Inget datum än",
+      "done": "Klart"
+    },
+    "fields": {
+      "title": "Vad behöver göras",
+      "titlePlaceholder": "Skicka praktikansökan",
+      "type": "Typ",
+      "minutes": "Tid som behövs",
+      "minutesHint": "Minuter. Lämnas den orörd används {minutes} för den här typen.",
+      "deadline": "Senast",
+      "deadlineHint": "Valfritt. Planeraren hittar plats för den innan dess.",
+      "fixedStart": "Börjar",
+      "fixedStartHint": "Studietid planeras aldrig ovanpå den."
+    },
+    "tileLabel": "Ärenden denna vecka",
+    "tileHint": "Planeras runt din studietid"
+  }
+}

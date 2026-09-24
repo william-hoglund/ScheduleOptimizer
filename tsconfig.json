@@ -1,11 +1,20 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2022",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+
+    /* Beyond `strict`. These catch the mistakes that actually bite in a
+       scheduling engine: reading past the end of an array, forgetting a case in
+       a switch over event types, silently shadowing a base method. */
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "allowUnreachableCode": false,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",

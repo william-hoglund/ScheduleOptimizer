@@ -1,0 +1,6 @@
+.next
+node_modules
+public
+*.md
+package-lock.json
+src/components/ui

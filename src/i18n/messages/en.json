@@ -1,0 +1,1067 @@
+{
+  "app": {
+    "name": "Study Planner",
+    "tagline": "Your studies, finally under control."
+  },
+  "nav": {
+    "dashboard": "Today",
+    "calendar": "Calendar",
+    "courses": "Courses",
+    "deadlines": "Deadlines",
+    "planner": "Planner",
+    "insights": "Insights",
+    "settings": "Settings",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "mainNavigation": "Main navigation",
+    "userMenu": "Account menu",
+    "notifications": "Notifications",
+    "search": "Search",
+    "searchPlaceholder": "Search courses, deadlines, sessions",
+    "signOut": "Sign out",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "language": "Language",
+    "importExport": "Import & export",
+    "todos": "This week"
+  },
+  "landing": {
+    "signIn": "Sign in",
+    "getStarted": "Create an account",
+    "hero": {
+      "eyebrow": "For students juggling more than one course",
+      "title": "Your studies, finally under control.",
+      "subtitle": "Connect your schedule, tell it what you are working towards, and get a study plan that fits the time you actually have — and adjusts when life changes.",
+      "primaryCta": "Create an account",
+      "secondaryCta": "See how it works",
+      "note": "Free while in development. No card required."
+    },
+    "problem": {
+      "title": "Planning shouldn't take longer than studying",
+      "body": "Three courses, two deadlines, a lecture schedule that shifts every week, and a vague sense of being behind. Most of the effort goes into working out what to do rather than doing it.",
+      "points": {
+        "scattered": {
+          "title": "Everything lives somewhere else",
+          "body": "Lectures in one calendar, deadlines in a course page, your own plans on paper."
+        },
+        "unrealistic": {
+          "title": "Plans that were never possible",
+          "body": "It is easy to write down thirty hours of work into a week that only has twelve free."
+        },
+        "fragile": {
+          "title": "One missed session breaks everything",
+          "body": "Miss a Tuesday and the whole plan needs rewriting by hand."
+        }
+      }
+    },
+    "how": {
+      "title": "How it works",
+      "subtitle": "Three steps, once. After that it maintains itself.",
+      "steps": {
+        "one": {
+          "number": "01",
+          "title": "Bring your schedule",
+          "body": "Import your university timetable, connect Google Calendar, or add courses by hand. Everything lands in one calendar."
+        },
+        "two": {
+          "number": "02",
+          "title": "Set your terms",
+          "body": "When you focus best, how long a session should be, how much you can do in a day, and which courses matter most right now."
+        },
+        "three": {
+          "number": "03",
+          "title": "Get a plan you can keep",
+          "body": "Study sessions placed around what you already have, with breaks protected and reasons given for every placement."
+        },
+        "four": {
+          "number": "04",
+          "title": "Keep it going",
+          "body": "Join a study group with friends or coursemates and see how you are each doing at sticking to your own plan. Optional, and private to the group."
+        }
+      }
+    },
+    "example": {
+      "title": "What a generated week looks like",
+      "subtitle": "Study sessions placed around fixed commitments, with the reasoning shown.",
+      "explanationLabel": "Why it looks like this",
+      "explanation": "Statistics has an exam in nine days, so it gets the two longest morning sessions when your energy is highest. Databases is spread across three shorter blocks because spaced revision holds better than one long push. Thursday is left lighter — you marked it as a low-energy day.",
+      "courses": {
+        "statistics": "Statistics",
+        "databases": "Databases"
+      },
+      "legend": {
+        "lecture": "Lecture",
+        "study": "Study session",
+        "deadline": "Deadline",
+        "exam": "Exam",
+        "break": "Break"
+      }
+    },
+    "groups": {
+      "title": "Studying alone is where plans quietly die",
+      "subtitle": "Add the people you already study with. You each keep your own plan and your own pace — the group just makes it harder to drift.",
+      "groupName": "Statistics — reading group",
+      "members": "{count, plural, one {# member} other {# members}}",
+      "goalLabel": "Group goal this week",
+      "goalValue": "{completed} of {total} sessions",
+      "rankHeader": "Plan followed",
+      "you": "You",
+      "note": "Ranked on how much of your own plan you kept — never on hours, never on grades. A deliberately light week costs you nothing.",
+      "points": {
+        "fair": {
+          "title": "A lighter week is not a loss",
+          "body": "Planning six hours and keeping all of them scores the same as planning thirty and keeping all of them."
+        },
+        "private": {
+          "title": "Private and opt-in",
+          "body": "Small invite-only groups. You choose what to share, and you can pause without leaving."
+        },
+        "together": {
+          "title": "A shared goal, not just a ranking",
+          "body": "The group has a target it reaches together, so a bad week for you is something the others can carry."
+        }
+      }
+    },
+    "features": {
+      "title": "What it actually does",
+      "items": {
+        "combined": {
+          "title": "One calendar for everything",
+          "body": "Several degree programs, imported timetables, personal events and study sessions in a single view."
+        },
+        "realistic": {
+          "title": "It tells you when it doesn't fit",
+          "body": "If you need thirty hours and have twelve, it says so — and offers concrete ways to close the gap."
+        },
+        "adaptive": {
+          "title": "It recovers from a missed session",
+          "body": "Reschedule what you missed while changing as little of the rest of the week as possible."
+        },
+        "explained": {
+          "title": "Every placement has a reason",
+          "body": "See why a session landed where it did, in plain language, and override it whenever you disagree."
+        },
+        "recovery": {
+          "title": "Breaks are part of the plan",
+          "body": "Lunch, rest and recovery are protected time, not whatever is left over."
+        },
+        "portable": {
+          "title": "Take it with you",
+          "body": "Export to your calendar, a PDF, or an image. Your plan is not locked in here."
+        }
+      }
+    },
+    "cta": {
+      "title": "Start with one week",
+      "body": "Add your courses, import a timetable, and see what a realistic week looks like. It takes about five minutes.",
+      "button": "Create an account"
+    },
+    "footer": {
+      "product": "Product",
+      "features": "Features",
+      "howItWorks": "How it works",
+      "legal": "Legal",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "rights": "Built for students.",
+      "notAffiliated": "An independent project, not affiliated with any university."
+    },
+    "audiences": {
+      "title": "Two kinds of week, one planner",
+      "subtitle": "The scheduling is the same either way. What differs is where your time goes before you get to it — and what is worth measuring once you do.",
+      "student": {
+        "title": "Studying full time",
+        "body": "Several courses, a timetable that shifts, and deadlines that arrive together. The hard part is not the work — it is knowing what to do on a Tuesday afternoon.",
+        "points": {
+          "timetable": "Import each programme's timetable; two degrees at once is normal here, and clashes are flagged rather than hidden.",
+          "exams": "Exams and assignments set the pace, so the weeks before one fill up before the weeks after.",
+          "balance": "Weekends stay yours unless you say otherwise."
+        },
+        "measures": "What it tracks",
+        "metric": "How much of your own plan you kept",
+        "cta": "Start as a student"
+      },
+      "professional": {
+        "title": "Studying alongside a job",
+        "body": "A certification, a language, a degree done in the evenings. The hard part is that the day is already spent by the time you get to it.",
+        "points": {
+          "afterWork": "Connect your work calendar and a full day at the office takes the evening with it — no study is planned on top of it.",
+          "realistic": "Sessions are longer and later, and the weekly target starts at what survives a working week rather than what sounds ambitious.",
+          "protect": "Meetings, applications and appointments go in the same list, so the plan bends around them instead of ignoring them."
+        },
+        "measures": "What it tracks",
+        "metric": "Hours that survived the working week",
+        "cta": "Start as a professional"
+      }
+    }
+  },
+  "auth": {
+    "fields": {
+      "fullName": "Name",
+      "email": "Email",
+      "password": "Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "passwordHint": "At least 8 characters."
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to pick up where you left off.",
+      "submit": "Sign in",
+      "pending": "Signing in",
+      "forgot": "Forgot your password?",
+      "noAccount": "No account yet?",
+      "createAccount": "Create one"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "A few details now, and your first plan in about five minutes.",
+      "submit": "Create account",
+      "pending": "Creating your account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "checkEmailTitle": "Confirm your email",
+      "checkEmailBody": "We sent a link to {email}. Open it to finish setting up your account.",
+      "checkEmailHint": "Nothing arrived? Check your spam folder — it can take a minute."
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email and we will send you a link.",
+      "submit": "Send reset link",
+      "pending": "Sending",
+      "sentTitle": "Check your email",
+      "sentBody": "If an account exists for {email}, a reset link is on its way.",
+      "backToLogin": "Back to sign in"
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "subtitle": "Pick something you have not used elsewhere.",
+      "submit": "Save new password",
+      "pending": "Saving",
+      "successTitle": "Password updated",
+      "successBody": "You are signed in and ready to go.",
+      "continue": "Continue"
+    },
+    "validation": {
+      "emailInvalid": "Enter a valid email address.",
+      "passwordTooShort": "Use at least 8 characters.",
+      "passwordsDoNotMatch": "The two passwords do not match.",
+      "nameRequired": "Enter your name."
+    },
+    "errors": {
+      "invalid_credentials": "That email and password do not match. Check both and try again.",
+      "email_taken": "There is already an account with that email. Try signing in instead.",
+      "weak_password": "That password is too easy to guess. Try a longer one.",
+      "email_not_confirmed": "Confirm your email first — check your inbox for the link.",
+      "rate_limited": "Too many attempts. Wait a minute and try again.",
+      "invalid_input": "Check the fields above and try again.",
+      "expired_link": "That link has expired. Request a new one.",
+      "unknown": "Something went wrong. Nothing was saved — please try again."
+    },
+    "signOut": "Sign out",
+    "account": "Account"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Today",
+      "description": "What needs your attention right now.",
+      "emptyTitle": "Nothing planned yet",
+      "emptyBody": "Once you have added courses and generated a plan, your day appears here."
+    },
+    "calendar": {
+      "title": "Calendar",
+      "description": "Lectures, deadlines, exams and study sessions in one place.",
+      "emptyTitle": "Your calendar is empty",
+      "emptyBody": "Import a timetable or add an event, and it will show up here."
+    },
+    "planner": {
+      "title": "Planner",
+      "description": "Generate a study plan that fits the time you actually have.",
+      "emptyTitle": "No plan yet",
+      "emptyBody": "Add your courses and deadlines first, then generate your first week."
+    },
+    "courses": {
+      "title": "Courses",
+      "description": "Your degree programs and the courses inside them.",
+      "emptyTitle": "No courses yet",
+      "emptyBody": "Add a course to start tracking its workload, deadlines and progress."
+    },
+    "deadlines": {
+      "title": "Deadlines",
+      "description": "Assignments, exams and everything else with a due date.",
+      "emptyTitle": "No deadlines yet",
+      "emptyBody": "Add an assignment or exam and your study time will be planned around it."
+    },
+    "insights": {
+      "title": "Insights",
+      "description": "How your planned time compares with the time you actually studied.",
+      "emptyTitle": "Not enough data yet",
+      "emptyBody": "Statistics appear once you have completed a few study sessions."
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Your profile, study preferences, integrations and privacy.",
+      "emptyTitle": "Settings arrive with your account",
+      "emptyBody": "Once you can sign in, your profile and study preferences will live here."
+    },
+    "importExport": {
+      "title": "Import & export",
+      "description": "Bring your university timetable in, and take your plan out.",
+      "emptyTitle": "Nothing imported yet",
+      "emptyBody": "Upload an .ics file or paste a subscription link, and your timetable appears on the calendar."
+    },
+    "todos": {
+      "title": "This week",
+      "description": "Applications, appointments and everything else that has to fit around your studying.",
+      "emptyTitle": "Nothing on the list",
+      "emptyBody": "Add the things that have to happen this week and they will be planned around."
+    }
+  },
+  "tasks": {
+    "add": "Add task",
+    "edit": "Edit task",
+    "addFirst": "Add your first deadline",
+    "empty": "No deadlines yet",
+    "emptyBody": "Add an assignment or exam and your study time will be planned around it.",
+    "addSubtask": "Add subtask",
+    "subtaskOf": "Part of {title}",
+    "subtaskCount": "{count, plural, one {# subtask} other {# subtasks}}",
+    "deleteTitle": "Delete this task?",
+    "deleteBody": "This permanently removes {title} and any subtasks under it.",
+    "deleteConfirm": "Delete",
+    "markDone": "Mark done",
+    "markNotDone": "Reopen",
+    "remaining": "{minutes} min left",
+    "ofEstimate": "{done} of {total} min",
+    "noDeadline": "No deadline",
+    "overdue": "Overdue",
+    "dueToday": "Due today",
+    "dueTomorrow": "Due tomorrow",
+    "dueInDays": "In {days, plural, one {# day} other {# days}}",
+    "groups": {
+      "overdue": "Overdue",
+      "thisWeek": "This week",
+      "later": "Later",
+      "noDeadline": "No deadline",
+      "completed": "Completed"
+    },
+    "fields": {
+      "title": "What needs doing?",
+      "titlePlaceholder": "Hand in lab report 2",
+      "course": "Course",
+      "noCourse": "No course",
+      "type": "Type",
+      "status": "Status",
+      "priority": "Priority",
+      "difficulty": "Difficulty",
+      "deadline": "Deadline",
+      "estimatedMinutes": "Estimated time",
+      "estimatedHint": "Minutes. Your best guess is fine — the plan adjusts as you go.",
+      "completedMinutes": "Time done",
+      "method": "Study method",
+      "noMethod": "Let the planner choose",
+      "description": "Notes"
+    },
+    "types": {
+      "assignment": "Assignment",
+      "exam": "Exam",
+      "reading": "Reading",
+      "project": "Project",
+      "lab": "Lab",
+      "presentation": "Presentation",
+      "revision": "Revision",
+      "other": "Other",
+      "application": "Application",
+      "appointment": "Appointment",
+      "admin": "Admin",
+      "errand": "Errand"
+    },
+    "statuses": {
+      "not_started": "Not started",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "methods": {
+      "pomodoro": "Pomodoro",
+      "active_recall": "Active recall",
+      "spaced_repetition": "Spaced repetition",
+      "deep_work": "Deep work",
+      "interleaving": "Interleaving",
+      "group_work": "Group work"
+    }
+  },
+  "calendar": {
+    "views": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "agenda": "Agenda"
+    },
+    "today": "Today",
+    "previous": "Previous",
+    "next": "Next",
+    "addEvent": "Add event",
+    "editEvent": "Edit event",
+    "empty": "Nothing scheduled",
+    "emptyBody": "Add a lecture or a personal commitment, and study time will be planned around it.",
+    "deleteTitle": "Delete this event?",
+    "deleteBody": "This permanently removes {title} from your calendar.",
+    "deleteConfirm": "Delete",
+    "importedNotice": "Imported from {source}. Edit it where it came from, or delete it here.",
+    "filters": {
+      "course": "Course",
+      "allCourses": "All courses",
+      "type": "Type",
+      "allTypes": "All types",
+      "clear": "Clear filters",
+      "calendar": "Calendar",
+      "allCalendars": "All calendars"
+    },
+    "fields": {
+      "title": "Title",
+      "titlePlaceholder": "Statistics lecture",
+      "type": "Type",
+      "course": "Course",
+      "noCourse": "No course",
+      "location": "Location",
+      "start": "Starts",
+      "end": "Ends",
+      "isFixed": "This time is fixed",
+      "isFixedHint": "On means study time is never planned over it. Turn off for something you could move.",
+      "description": "Notes"
+    },
+    "types": {
+      "lecture": "Lecture",
+      "seminar": "Seminar",
+      "lab": "Lab",
+      "exam": "Exam",
+      "deadline": "Deadline",
+      "personal": "Personal",
+      "other": "Other"
+    },
+    "movedBack": "That change could not be saved, so the event was put back."
+  },
+  "planner": {
+    "setup": {
+      "title": "What are we planning?",
+      "period": "Period",
+      "startDate": "From",
+      "endDate": "To",
+      "quickWeek": "This week",
+      "quickNextWeek": "Next week",
+      "quickFortnight": "Next two weeks",
+      "courses": "Focus on",
+      "allCourses": "All my courses",
+      "coursesHint": "Leave empty to plan for everything.",
+      "adjust": "Adjust just for this run",
+      "adjustHint": "Changes here apply to this plan only. Your saved preferences stay as they are.",
+      "generate": "Generate a plan",
+      "generating": "Working out your week"
+    },
+    "summary": {
+      "title": "Your proposed plan",
+      "sessions": "{count, plural, one {# session} other {# sessions}}",
+      "totalTime": "{hours}h {minutes}m of study",
+      "across": "across {days, plural, one {# day} other {# days}}",
+      "coverage": "{percent}% of the work covered"
+    },
+    "warnings": {
+      "title": "Worth knowing",
+      "not_enough_time": "This does not all fit. You need {requiredHours}h and have about {usableHours}h of study time in this period.",
+      "task_at_risk": "There is not enough time before its deadline for this to be finished comfortably.",
+      "task_unschedulable": "No room was found for this at all.",
+      "deadline_passed": "This deadline has already passed.",
+      "no_availability": "There is no free study time in this period. Check your study days and hours.",
+      "over_daily_limit": "A day went over your maximum. This is a bug — please tell us.",
+      "dependency_cycle": "Some tasks depend on each other in a loop, so their order could not be worked out.",
+      "horizon_too_short": "This period is too short for the work you have.",
+      "days_taken_by_commitments": "{blocked, plural, =0 {} one {# day is taken by work or other commitments} other {# days are taken by work or other commitments}}{reduced, plural, =0 {} one {, and # is a short day} other {, and # are short days}}. Study time was planned around them."
+    },
+    "remedies": {
+      "title": "What would help",
+      "increase_available_time": "Free up about {hours} more hours in this period.",
+      "allow_weekends": "Allow weekends — that alone could cover most of the gap.",
+      "extend_daily_limit": "Raise your daily maximum above {current} minutes.",
+      "reduce_scope": "Drop or shorten {count, plural, one {# ungraded task} other {# ungraded tasks}}.",
+      "prioritise_graded": "Put the {count, plural, one {# graded piece} other {# graded pieces}} first and let the rest slip.",
+      "start_earlier": "Start earlier in the day.",
+      "ask_for_extension": "Ask for an extension. The gap is too large to close by rearranging.",
+      "relax_day_rule": "Soften a calendar's day rule under Import & export if it is blocking more than it should."
+    },
+    "reasons": {
+      "deadline_pressure": "Placed early — {daysLeft, plural, =0 {the deadline is right after} one {# day of slack left} other {# days of slack left}}",
+      "high_energy_match": "Your energy is highest around {hour}:00",
+      "preferred_time": "A time you marked as preferred",
+      "spaced_repetition": "One of {parts} spaced sessions, so it sticks",
+      "spread_before_deadline": "Spread out rather than crammed",
+      "first_available": "The first slot that fitted",
+      "preserved_locked": "You locked this",
+      "preserved_manual": "You moved this yourself",
+      "preserved_completed": "Already done"
+    },
+    "preview": {
+      "empty": "Nothing could be scheduled",
+      "emptyBody": "There was no free time in this period, or nothing left to do. Check your study days, or add a deadline first.",
+      "noPlanTitle": "No plan yet",
+      "noPlanBody": "Choose a period above and generate your first plan. Nothing is saved to your calendar until you approve it.",
+      "preservedLabel": "Kept from before",
+      "lock": "Lock this time",
+      "unlock": "Unlock",
+      "locked": "Locked",
+      "reject": "Remove",
+      "minutes": "{minutes} min"
+    },
+    "actions": {
+      "approve": "Approve this plan",
+      "approving": "Saving to your calendar",
+      "alternative": "Show me another option",
+      "generatingAlternative": "Finding another arrangement",
+      "discard": "Start over",
+      "approved": "Added to your calendar",
+      "approvedBody": "Your sessions are on the calendar now. Move or lock anything you like."
+    }
+  },
+  "sessions": {
+    "today": {
+      "title": "Today",
+      "empty": "Nothing scheduled today",
+      "emptyBody": "A free day, or nothing planned yet. You can generate a plan whenever you like.",
+      "next": "Next up",
+      "now": "On now",
+      "done": "Done",
+      "remaining": "{count, plural, one {# session left today} other {# sessions left today}}",
+      "count": "{count, plural, one {# session} other {# sessions}}"
+    },
+    "outcome": {
+      "prompt": "How did this go?",
+      "completed": "Did it",
+      "partial": "Did some of it",
+      "missed": "Missed it",
+      "dismiss": "No longer needed",
+      "howLong": "How long did you study?",
+      "save": "Save",
+      "cancel": "Cancel",
+      "recorded": "Recorded",
+      "taskFinished": "That finishes the task."
+    },
+    "unresolved": {
+      "title": "Some sessions have passed",
+      "body": "Tell us what happened and the plan will catch up. Nothing is marked missed on your behalf.",
+      "count": "{count, plural, one {# session} other {# sessions}}"
+    },
+    "reschedule": {
+      "offer": "Find a new time",
+      "title": "Here is what would change",
+      "checking": "Looking for a new time",
+      "nothingFound": "No free time was found for this before its deadline.",
+      "nothingFoundBody": "You could free up time, allow weekends, or reduce what this task needs.",
+      "removed": "Moved from",
+      "added": "Moved to",
+      "unchanged": "Everything else stays exactly where it is.",
+      "apply": "Make these changes",
+      "applying": "Updating your plan",
+      "cancel": "Leave it as it is",
+      "applied": "Your plan has been updated"
+    },
+    "status": {
+      "planned": "Planned",
+      "completed": "Done",
+      "missed": "Missed",
+      "partial": "Partly done",
+      "cancelled": "Cancelled"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Nothing new",
+    "emptyBody": "Reminders and plan changes will appear here.",
+    "markAllRead": "Mark all as read",
+    "unread": "{count} unread",
+    "open": "Notifications"
+  },
+  "validation": {
+    "required": "This is required.",
+    "tooLong": "That is too long.",
+    "nameTooLong": "Keep it under 120 characters.",
+    "invalidNumber": "Enter a number.",
+    "outOfRange": "That value is outside the allowed range.",
+    "endBeforeStart": "The end must come after the start.",
+    "sessionLengthsIncoherent": "The shortest session must not be longer than the preferred one, and the preferred not longer than the longest.",
+    "studyWindowTooShort": "Your study window is shorter than one session.",
+    "dailyLessThanSession": "Your daily maximum is less than a single session.",
+    "pickAtLeastOneDay": "Choose at least one day.",
+    "invalidTimezone": "Choose a valid time zone.",
+    "invalidInput": "Check the fields above and try again.",
+    "unexpected": "Something went wrong. Nothing was saved — please try again."
+  },
+  "days": {
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday",
+    "7": "Sunday",
+    "short1": "Mon",
+    "short2": "Tue",
+    "short3": "Wed",
+    "short4": "Thu",
+    "short5": "Fri",
+    "short6": "Sat",
+    "short7": "Sun"
+  },
+  "preferences": {
+    "sessionSection": "Session length",
+    "sessionHint": "How long a single block of focused work should be.",
+    "minimumSession": "Shortest",
+    "preferredSession": "Preferred",
+    "maximumSession": "Longest",
+    "loadSection": "How much, and when",
+    "maximumDaily": "Most per day",
+    "weeklyTarget": "Weekly target",
+    "earliestStart": "Not before",
+    "latestEnd": "Not after",
+    "daysSection": "Study days",
+    "daysHint": "Days the planner may use.",
+    "weekendAllowed": "Weekends are allowed",
+    "weekendAllowedHint": "Off by default. The planner will only use a weekend if it has to.",
+    "breakSection": "Breaks",
+    "breakMethod": "Break rhythm",
+    "breakMethods": {
+      "pomodoro": "Pomodoro — 25 min focus, 5 min break",
+      "fifty_ten": "50 / 10 — longer stretches",
+      "ninety_twenty": "90 / 20 — deep work",
+      "none": "No fixed rhythm"
+    },
+    "energySection": "Energy through the day",
+    "energyHint": "Harder work gets placed where your energy is highest.",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "energyLevels": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "flexibilitySection": "How firm should the plan be?",
+    "flexibility": "Flexibility",
+    "flexibilityLevels": {
+      "strict": "Strict — keep to the plan closely",
+      "balanced": "Balanced",
+      "flexible": "Flexible — move things around freely"
+    },
+    "buffer": "Buffer time",
+    "bufferHint": "Share of your free time left deliberately empty, so one bad day does not break the week.",
+    "minutesSuffix": "min",
+    "hoursSuffix": "h",
+    "percentSuffix": "%"
+  },
+  "courses": {
+    "add": "Add course",
+    "edit": "Edit course",
+    "addFirst": "Add your first course",
+    "empty": "No courses yet",
+    "emptyBody": "Add a course to start tracking its workload, deadlines and progress.",
+    "archivedSection": "Archived",
+    "showArchived": "Show archived",
+    "hideArchived": "Hide archived",
+    "archive": "Archive",
+    "unarchive": "Restore",
+    "deleteTitle": "Delete this course?",
+    "deleteBody": "This permanently removes {name} and everything attached to it — tasks, deadlines and study history. Archiving keeps the record instead.",
+    "deleteConfirm": "Delete permanently",
+    "fields": {
+      "name": "Course name",
+      "namePlaceholder": "Statistics for Engineers",
+      "code": "Course code",
+      "codePlaceholder": "MSG830",
+      "program": "Degree program",
+      "noProgram": "No program",
+      "description": "Notes",
+      "difficulty": "Difficulty",
+      "priority": "Priority",
+      "targetGrade": "Target grade",
+      "weeklyHours": "Hours per week",
+      "weeklyHoursHint": "Roughly how much time this course needs outside lectures.",
+      "startDate": "Starts",
+      "endDate": "Ends"
+    },
+    "scale": {
+      "difficulty1": "Easy",
+      "difficulty2": "Manageable",
+      "difficulty3": "Moderate",
+      "difficulty4": "Hard",
+      "difficulty5": "Very hard",
+      "priority1": "Low",
+      "priority2": "Minor",
+      "priority3": "Normal",
+      "priority4": "High",
+      "priority5": "Critical"
+    },
+    "perWeek": "{hours}h per week",
+    "countLabel": "{count, plural, one {# course} other {# courses}}"
+  },
+  "onboarding": {
+    "pageTitle": "Set up your account",
+    "stepLabel": "Step {current} of {total}",
+    "back": "Back",
+    "continue": "Continue",
+    "saving": "Saving",
+    "skip": "Skip this",
+    "optional": "Optional",
+    "basics": {
+      "title": "First, the basics",
+      "subtitle": "So times and reminders land when you expect them.",
+      "name": "What should we call you?",
+      "timezone": "Time zone",
+      "timezoneHint": "Everything is shown in this zone. We guessed from your browser.",
+      "language": "Language",
+      "segment": "Where are you studying from?",
+      "segmentHint": "It sets your starting hours and what gets measured. You can change it any time.",
+      "segments": {
+        "student": "I'm a student",
+        "professional": "I'm working and studying alongside it"
+      }
+    },
+    "studies": {
+      "title": "Where do you study?",
+      "subtitle": "Used to group your courses. You can add more later, or leave this blank.",
+      "institution": "University or school",
+      "institutionPlaceholder": "Chalmers University of Technology",
+      "program": "Degree program",
+      "programPlaceholder": "Industrial Engineering and Management"
+    },
+    "courses": {
+      "title": "What are you studying right now?",
+      "subtitle": "Add the courses you are taking this term. Two or three is plenty to start.",
+      "empty": "No courses added yet.",
+      "needOne": "Add at least one course to continue — the planner has nothing to work with otherwise.",
+      "added": "{count, plural, one {# course added} other {# courses added}}"
+    },
+    "preferences": {
+      "title": "How do you like to study?",
+      "subtitle": "Rough answers are fine. You can change any of this later, and the planner adapts as it learns."
+    },
+    "done": {
+      "title": "That is everything",
+      "subtitle": "Your setup is saved. Here is what we have so far.",
+      "profileSummary": "Profile",
+      "coursesSummary": "Courses",
+      "preferencesSummary": "Study preferences",
+      "sessionSummary": "{preferred} min sessions, up to {daily} min a day",
+      "daysSummary": "{days}",
+      "nextUp": "Next: add your deadlines and exams, then generate your first plan.",
+      "finish": "Go to my dashboard"
+    }
+  },
+  "settings": {
+    "tabs": {
+      "profile": "Profile",
+      "preferences": "Study preferences",
+      "privacy": "Privacy"
+    },
+    "profile": {
+      "title": "Your profile",
+      "subtitle": "Name, time zone and language.",
+      "email": "Email",
+      "emailHint": "Sign-in address. Changing this is not supported yet."
+    },
+    "preferencesIntro": "These shape every plan the system generates. Changing them does not rewrite existing plans until you regenerate.",
+    "save": "Save changes",
+    "saving": "Saving",
+    "saved": "Saved",
+    "privacy": {
+      "exportTitle": "Your data",
+      "exportBody": "Download everything this account holds, as one JSON file. It is the same data the app reads, straight from the database — nothing summarised, nothing left out.",
+      "includesSchedule": "Courses, deadlines, calendar events and study sessions",
+      "includesPlanning": "Your preferences, every generated plan and the input each one was built from",
+      "includesAccount": "Profile, notifications, consents, group memberships and the audit log",
+      "excludesTokens": "Not included: access tokens for connected calendars. They are encrypted and never readable by the browser, which is the point of them.",
+      "download": "Download my data",
+      "deleteTitle": "Deleting your account",
+      "deleteBody": "Not built yet. When it is, it will permanently remove every row in that file — courses, plans, sessions and the account itself — with no way to undo it."
+    }
+  },
+  "common": {
+    "skipToContent": "Skip to content",
+    "loading": "Loading",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "skip": "Skip",
+    "retry": "Try again",
+    "confirm": "Confirm",
+    "close": "Close",
+    "minutes": "{count, plural, one {# minute} other {# minutes}}",
+    "hours": "{count, plural, one {# hour} other {# hours}}"
+  },
+  "errors": {
+    "generic": {
+      "title": "Something went wrong",
+      "body": "The action didn't complete. Nothing was saved."
+    },
+    "notFound": {
+      "title": "Page not found",
+      "body": "That page doesn't exist, or it moved.",
+      "action": "Back to today"
+    },
+    "offline": {
+      "title": "No connection",
+      "body": "Check your network and try again."
+    }
+  },
+  "empty": {
+    "generic": {
+      "title": "Nothing here yet",
+      "body": "This is where your content will appear."
+    }
+  },
+  "insights": {
+    "plannedToday": "Planned today",
+    "doneToday": "Done today",
+    "nextDeadline": "Next deadline",
+    "title": "Insights",
+    "notEnough": "Not enough data yet",
+    "notEnoughBody": "Statistics appear once you have completed a few study sessions. Nothing here is a score — it is just what happened.",
+    "period": "Last 4 weeks",
+    "adherence": "Plan followed",
+    "adherenceHint": "How much of what you planned you actually did. Planning less is not doing worse.",
+    "plannedTime": "Time planned",
+    "completedTime": "Time studied",
+    "averageSession": "Typical session",
+    "sessionsDone": "Sessions completed",
+    "sessionsMissed": "Sessions missed",
+    "rescheduled": "Moved to a new time",
+    "bestTime": "You follow through most in the",
+    "bestTimeUnknown": "Not enough sessions yet to see a pattern",
+    "bands": {
+      "morning": "morning",
+      "afternoon": "afternoon",
+      "evening": "evening"
+    },
+    "activity": "Activity",
+    "activityHint": "Each bar is a day. Empty days are shown, not hidden.",
+    "atRisk": "Might not fit",
+    "atRiskHint": "The time left before these deadlines is less than the work remaining.",
+    "atRiskItem": "{minutes} min left, due in {days, plural, one {# day} other {# days}}",
+    "nothingAtRisk": "Everything currently fits in the time you have.",
+    "nextDeadlineLoad": "Before your next deadline",
+    "nextDeadlineLoadValue": "{minutes} min of work remaining",
+    "minutesShort": "{minutes} min"
+  },
+  "groups": {
+    "title": "Study groups",
+    "subtitle": "Private groups ranked on how much of your own plan you kept — never on hours, never on grades.",
+    "empty": "You are not in a group",
+    "emptyBody": "Create one and share the code, or join with a code a friend sent you.",
+    "create": "Create a group",
+    "creating": "Creating",
+    "join": "Join with a code",
+    "joining": "Joining",
+    "nameLabel": "Group name",
+    "namePlaceholder": "Statistics reading group",
+    "goalLabel": "Sessions the group aims for each week",
+    "codeLabel": "Invite code",
+    "codeHint": "Share this with the people you want in the group.",
+    "codePlaceholder": "ABC1234",
+    "codeNotFound": "No group has that code. Check it and try again.",
+    "copyCode": "Copy code",
+    "copied": "Copied",
+    "members": "{count, plural, one {# member} other {# members}}",
+    "goalLabelShort": "Group goal this week",
+    "goalValue": "{completed} of {total} sessions",
+    "rankHeader": "Plan followed",
+    "you": "You",
+    "paused": "Paused",
+    "pause": "Pause my place",
+    "resume": "Rejoin the board",
+    "pauseHint": "You stay in the group but drop off the board. A hard week should not mean leaving.",
+    "leave": "Leave group",
+    "leaveConfirm": "Leave this group?",
+    "leaveBody": "You will stop appearing on the board. You can rejoin later with the same code.",
+    "noScores": "No one has recorded any study time this week yet.",
+    "fairnessNote": "Ranked on the share of your own plan you kept. A deliberately light week costs you nothing."
+  },
+  "importExport": {
+    "import": {
+      "title": "Import a timetable",
+      "description": "Upload the .ics file your university gives you, or paste the link to it. Nothing is saved until you have looked through it.",
+      "fileTitle": "Upload a file",
+      "fileHint": "An .ics file exported from TimeEdit, Google Calendar, Outlook or anything similar.",
+      "urlTitle": "Paste a link",
+      "urlHint": "A webcal:// or https:// subscription link. A TimeEdit page works too — the calendar behind it is found for you.",
+      "urlLabel": "Calendar link",
+      "urlPlaceholder": "https://cloud.timeedit.net/…",
+      "fetch": "Fetch",
+      "fetching": "Fetching…",
+      "reviewTitle": "Imported calendar",
+      "summary": "{total} events · {added} new · {known} already known",
+      "selectAll": "Select all",
+      "selectNone": "Select none",
+      "fixedLabel": "Treat these as fixed commitments",
+      "fixedHint": "On means study time is never planned over them. Turn it off for events you could move.",
+      "allDay": "All day",
+      "courseUnmatched": "{code} — no course yet",
+      "status": {
+        "new": "New",
+        "alreadyImported": "Already imported",
+        "matchesExisting": "Already on your calendar",
+        "repeatedInFile": "Listed twice in this file"
+      },
+      "warnings": {
+        "unknownTimezone": "{count, plural, one {# event uses a time zone we don't recognise} other {# events use a time zone we don't recognise}} — yours was used instead, so check those times.",
+        "unsupportedRecurrence": "{count, plural, one {# repeating event has a rule too complex to expand} other {# repeating events have rules too complex to expand}}. Only the first occurrence is listed.",
+        "recurrenceCapped": "A repeating event was cut off after 400 occurrences.",
+        "skippedInvalid": "{count, plural, one {# entry was skipped} other {# entries were skipped}} for having no usable start or end time.",
+        "truncated": "The file held more events than one import allows. The rest was left out."
+      },
+      "confirm": "Import {count, plural, one {# event} other {# events}}",
+      "confirming": "Importing…",
+      "startOver": "Start over",
+      "noEvents": "No events were found in that calendar.",
+      "doneTitle": "Imported",
+      "doneBody": "{inserted, plural, one {# event added} other {# events added}}, {updated, plural, one {# updated} other {# updated}}.",
+      "viewCalendar": "Open the calendar",
+      "importMore": "Import something else",
+      "errors": {
+        "notCalendar": "That isn't a calendar. Check the link or the file and try again.",
+        "invalidUrl": "That link can't be used. It has to start with https:// or webcal://.",
+        "privateAddress": "That link points at a private address, so it wasn't fetched.",
+        "unreachable": "The calendar couldn't be fetched. Check the link, or download the file and upload it instead.",
+        "tooLarge": "That file is too large to import.",
+        "invalidInput": "Something in that request wasn't valid.",
+        "unexpected": "Something went wrong. Nothing was imported."
+      },
+      "targetLabel": "Import into",
+      "targetNew": "A new calendar",
+      "targetHint": "Keeping each timetable in its own calendar means one can be re-imported without touching the other.",
+      "clash": "Clashes with {title}",
+      "clashSummary": "{count, plural, one {# event clashes} other {# events clash}} with something already on your calendar. Nothing is resolved for you — import both and choose, or leave one out."
+    },
+    "export": {
+      "title": "Export",
+      "description": "Take your schedule with you — into another calendar app, onto paper, or as an image.",
+      "startLabel": "From",
+      "endLabel": "To",
+      "endBeforeStart": "The end must come after the start.",
+      "includeLegend": "What to include",
+      "includeSessions": "Study sessions",
+      "includeEvents": "Lectures and other events",
+      "pickOne": "Choose at least one.",
+      "ics": "Calendar file (.ics)",
+      "pdf": "PDF",
+      "png": "Image (PNG)",
+      "rendering": "Preparing…",
+      "hint": "The .ics file imports into Google Calendar, Apple Calendar and Outlook.",
+      "failed": "That export couldn't be produced. Please try again.",
+      "documentTitle": "Study plan",
+      "documentSubtitle": "{start} – {end}",
+      "nothingInRange": "Nothing is scheduled in this period.",
+      "pageLabel": "Page {page} of {total}",
+      "calendarName": "Study plan",
+      "minutes": "{minutes} min",
+      "status": {
+        "planned": "Planned",
+        "completed": "Completed",
+        "missed": "Missed",
+        "partial": "Partly done",
+        "cancelled": "Cancelled"
+      }
+    },
+    "calendars": {
+      "title": "Your calendars",
+      "description": "One per timetable and one for work. Keeping them apart is what lets a schedule be re-imported on its own — and lets a working day mean something to the planner.",
+      "empty": "No calendars yet",
+      "emptyBody": "Import a timetable below and it becomes a calendar you can manage here.",
+      "events": "{count, plural, one {# event} other {# events}}",
+      "neverImported": "Added by hand",
+      "kinds": {
+        "study": "Studies",
+        "work": "Work",
+        "personal": "Personal"
+      },
+      "effects": {
+        "none": "No day rule",
+        "reduce": "Shorten the day",
+        "block": "Take the whole day"
+      },
+      "rule": {
+        "none": "Blocks only the hours it occupies.",
+        "reduce": "Past {hours}h in a day, only {minutes} min of study is planned.",
+        "block": "Past {hours}h in a day, no study is planned at all."
+      },
+      "edit": "Edit",
+      "save": "Save",
+      "saving": "Saving…",
+      "cancel": "Cancel",
+      "delete": "Remove",
+      "deleteTitle": "Remove {name}?",
+      "deleteBody": "It holds {count, plural, one {# event} other {# events}}. Choose what happens to them.",
+      "deleteKeepEvents": "Keep the events on my calendar",
+      "deleteWithEvents": "Delete the events too",
+      "deleteConfirm": "Remove calendar",
+      "deleting": "Removing…",
+      "fields": {
+        "name": "Name",
+        "namePlaceholder": "Mech Eng HT26",
+        "kind": "What is it",
+        "effect": "A day full of this calendar",
+        "effectHint": "Eight hours at the office does not leave a usable evening. A short meeting does.",
+        "threshold": "Counts as a full day after",
+        "thresholdHint": "Hours of this calendar's events in one day before the rule applies.",
+        "reduced": "Study left on such a day",
+        "reducedHint": "Minutes. Zero means none at all."
+      },
+      "hours": "{hours}h"
+    }
+  },
+  "todos": {
+    "weekLoad": "About {hours}h {minutes}m of errands still to fit into this week.",
+    "add": "Add",
+    "adding": "Adding…",
+    "empty": "Nothing on the list",
+    "emptyBody": "Applications, appointments, forms — anything that has to happen this week and competes with studying for the same hours.",
+    "itemCount": "{count, plural, one {# item} other {# items}}",
+    "minutes": "{minutes} min",
+    "atTime": "at",
+    "byTime": "by",
+    "blocksTime": "Fixed time",
+    "markDone": "Mark {title} as done",
+    "remove": "Remove {title}",
+    "switchToTime": "It happens at a set time",
+    "switchToDeadline": "It just has a deadline",
+    "types": {
+      "application": "Application",
+      "appointment": "Appointment",
+      "admin": "Admin",
+      "errand": "Errand"
+    },
+    "buckets": {
+      "overdue": "Late",
+      "today": "Today",
+      "thisWeek": "This week",
+      "later": "Later",
+      "someday": "No date yet",
+      "done": "Done"
+    },
+    "fields": {
+      "title": "What needs doing",
+      "titlePlaceholder": "Send the internship application",
+      "type": "Kind",
+      "minutes": "Time needed",
+      "minutesHint": "Minutes. Left alone it uses {minutes} for this kind.",
+      "deadline": "Due by",
+      "deadlineHint": "Optional. The planner finds room for it before this.",
+      "fixedStart": "Starts at",
+      "fixedStartHint": "Study time is never planned over it."
+    },
+    "tileLabel": "Errands this week",
+    "tileHint": "Planned around your study time"
+  }
+}
