@@ -1,9 +1,10 @@
 "use client";
 
-import { Check, ListTodo, Pencil, Plus, Trash2 } from "lucide-react";
+import { Check, ListTodo, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 
+import { TaskBreakdownDialog } from "./task-breakdown-dialog";
 import { TaskFormDialog } from "./task-form-dialog";
 import { EmptyState } from "@/components/common/empty-state";
 import { Button } from "@/components/ui/button";
@@ -76,6 +77,7 @@ function TaskRowItem({
   courseColor,
   nowIso,
   timeZone,
+  aiEnabled,
   depth = 0,
 }: {
   task: TaskRow;
@@ -85,6 +87,7 @@ function TaskRowItem({
   courseColor: string | null;
   nowIso: string;
   timeZone: string;
+  aiEnabled: boolean;
   depth?: number;
 }) {
   const t = useTranslations("tasks");
@@ -177,6 +180,20 @@ function TaskRowItem({
               />
             ) : null}
 
+            {/* Breaking a subtask down further would nest past the one level
+                the planner and this list both assume. */}
+            {depth === 0 && aiEnabled && !isDone ? (
+              <TaskBreakdownDialog
+                taskId={task.id}
+                trigger={{
+                  variant: "ghost",
+                  size: "icon-sm",
+                  ariaLabel: t("breakdown.trigger"),
+                  icon: <Sparkles className="size-3.5" aria-hidden="true" />,
+                }}
+              />
+            ) : null}
+
             <TaskFormDialog
               courses={courses}
               task={task}
@@ -237,6 +254,7 @@ function TaskRowItem({
           courseColor={courseColor}
           nowIso={nowIso}
           timeZone={timeZone}
+          aiEnabled={aiEnabled}
           depth={depth + 1}
         />
       ))}
@@ -249,11 +267,13 @@ export function TaskList({
   courses,
   nowIso,
   timeZone,
+  aiEnabled = false,
 }: {
   tasks: TaskRow[];
   courses: CourseRow[];
   nowIso: string;
   timeZone: string;
+  aiEnabled?: boolean;
 }) {
   const t = useTranslations("tasks");
 
@@ -313,6 +333,7 @@ export function TaskList({
                     courseColor={course?.color ?? null}
                     nowIso={nowIso}
                     timeZone={timeZone}
+                    aiEnabled={aiEnabled}
                   />
                 );
               })}

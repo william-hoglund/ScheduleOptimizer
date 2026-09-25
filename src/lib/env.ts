@@ -38,6 +38,19 @@ const serverSchema = z.object({
   // Optional until Session 7. Only the handful of jobs that must bypass Row
   // Level Security need it, and they check for it explicitly.
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20).optional(),
+
+  // AI layer (Session 10). Both keys are optional — the product works with AI
+  // disabled — but whichever one AI_PROVIDER points at must be present for a
+  // feature to turn itself on. See lib/ai/index.ts#isAiEnabled.
+  AI_PROVIDER: z.enum(["openai", "anthropic"]).default("openai"),
+  OPENAI_API_KEY: z.string().min(20).optional(),
+  ANTHROPIC_API_KEY: z.string().min(20).optional(),
+  // Pinned to a dated snapshot rather than a moving alias, so a model upgrade
+  // is a deliberate env change, not a silent behaviour shift the next time the
+  // provider promotes a new default. Bump these whenever you want the newer
+  // model — nothing else in the code needs to change.
+  OPENAI_MODEL: z.string().min(1).default("gpt-4o-2024-08-06"),
+  ANTHROPIC_MODEL: z.string().min(1).default("claude-sonnet-5"),
 });
 
 function parse<T extends z.ZodType>(schema: T, values: unknown, label: string): z.infer<T> {
@@ -77,6 +90,11 @@ export function getServerEnv() {
     {
       NODE_ENV: process.env.NODE_ENV,
       SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || undefined,
+      AI_PROVIDER: process.env.AI_PROVIDER || undefined,
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY || undefined,
+      ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || undefined,
+      OPENAI_MODEL: process.env.OPENAI_MODEL || undefined,
+      ANTHROPIC_MODEL: process.env.ANTHROPIC_MODEL || undefined,
     },
     "server",
   );

@@ -4,11 +4,14 @@ import { getTranslations } from "next-intl/server";
 import { EmptyState } from "@/components/common/empty-state";
 import { PageHeader } from "@/components/layout/page-header";
 import { createPageMetadata } from "@/components/layout/placeholder-page";
+import { PlanExplanationCard } from "@/components/planner/plan-explanation";
 import { PlannerSetupForm } from "@/components/planner/planner-setup-form";
 import { PlanPreview } from "@/components/planner/plan-preview";
 import { PlanWarnings } from "@/components/planner/plan-warnings";
+import { isAiEnabled } from "@/lib/ai";
 import { utcToLocalDate } from "@/lib/calendar/time";
 import type { FeasibilityReport, PlannerWarning } from "@/lib/planner/types";
+import type { PlanExplanation } from "@/lib/ai";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { requireUserContext } from "@/server/auth";
 import { nowIso } from "@/server/clock";
@@ -17,6 +20,16 @@ import { getDraftPlan } from "@/server/planner-service";
 import { listTasks } from "@/server/task-service";
 
 export const generateMetadata = () => createPageMetadata("planner");
+
+function safeParseExplanation(raw: string): PlanExplanation | null {
+  try {
+    return JSON.parse(raw) as PlanExplanation;
+  } catch {
+    // A cached explanation we cannot read is not worth breaking the page over
+    // — the "Explain this plan" button below will simply regenerate it.
+    return null;
+  }
+}
 
 /** The newest draft, which is what the student is currently reviewing. */
 async function findLatestDraft(userId: string): Promise<string | null> {
@@ -94,6 +107,10 @@ export default async function PlannerPage() {
 
   const taskTitles = new Map(tasks.map((task) => [task.id, task.title]));
 
+  const cachedExplanation: PlanExplanation | null = draft?.plan.explanation
+    ? safeParseExplanation(draft.plan.explanation)
+    : null;
+
   const totalMinutes = draft?.sessions.reduce((sum, s) => sum + s.planned_minutes, 0) ?? 0;
   const dayCount = new Set(draft?.sessions.map((s) => utcToLocalDate(s.start_at, timeZone)) ?? [])
     .size;
@@ -113,23 +130,29 @@ export default async function PlannerPage() {
       ) : null}
 
       {draft ? (
-        <PlanPreview
-          planId={draft.plan.id}
-          sessions={draft.sessions}
-          courses={courses}
-          timeZone={timeZone}
-          runOptions={{
-            startDate: draft.plan.start_date,
-            endDate: draft.plan.end_date,
-            courseIds: [],
-            overrides: {},
-          }}
-          summary={{
-            totalMinutes,
-            dayCount,
-            coveragePercent: run?.coveragePercent ?? 0,
-          }}
-        />
+        <div className="space-y-6">
+          {isAiEnabled() ? (
+            <PlanExplanationCard planId={draft.plan.id} initial={cachedExplanation} />
+          ) : null}
+
+          <PlanPreview
+            planId={draft.plan.id}
+            sessions={draft.sessions}
+            courses={courses}
+            timeZone={timeZone}
+            runOptions={{
+              startDate: draft.plan.start_date,
+              endDate: draft.plan.end_date,
+              courseIds: [],
+              overrides: {},
+            }}
+            summary={{
+              totalMinutes,
+              dayCount,
+              coveragePercent: run?.coveragePercent ?? 0,
+            }}
+          />
+        </div>
       ) : (
         <EmptyState
           icon={Sparkles}

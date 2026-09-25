@@ -25,7 +25,8 @@
     "themeSystem": "System",
     "language": "Språk",
     "importExport": "Import och export",
-    "todos": "Den här veckan"
+    "todos": "Den här veckan",
+    "advisor": "Rådgivare"
   },
   "landing": {
     "signIn": "Logga in",
@@ -317,6 +318,12 @@
       "description": "Ansökningar, bokade tider och allt annat som ska få plats runt studierna.",
       "emptyTitle": "Inget på listan",
       "emptyBody": "Lägg till det som måste hända den här veckan så planeras det in."
+    },
+    "advisor": {
+      "title": "Rådgivare",
+      "description": "Fråga om din plan, dina kurser, uppgifter och deadlines.",
+      "emptyTitle": "Rådgivaren är inte konfigurerad än",
+      "emptyBody": "Det här kräver en AI-leverantörsnyckel konfigurerad på servern innan den kan svara."
     }
   },
   "tasks": {
@@ -340,6 +347,16 @@
     "dueToday": "Ska vara klar idag",
     "dueTomorrow": "Ska vara klar imorgon",
     "dueInDays": "Om {days, plural, one {# dag} other {# dagar}}",
+    "breakdown": {
+      "trigger": "Dela upp med AI",
+      "title": "Dela upp den här",
+      "description": "Föreslagna deluppgifter — kryssa i de som är värda att spara.",
+      "loading": "Tänker igenom stegen…",
+      "accept": "Lägg till {count, plural, one {# deluppgift} other {# deluppgifter}}",
+      "minutes": "{minutes} min",
+      "unavailable": "AI är inte konfigurerat för det här än.",
+      "failed": "Kunde inte komma på en uppdelning just nu — försök igen strax."
+    },
     "groups": {
       "overdue": "Försenade",
       "thisWeek": "Den här veckan",
@@ -467,6 +484,13 @@
       "totalTime": "{hours} h {minutes} min studier",
       "across": "fördelat på {days, plural, one {# dag} other {# dagar}}",
       "coverage": "{percent} % av arbetet täckt"
+    },
+    "explain": {
+      "cta": "Förklara den här planen",
+      "generating": "Läser igenom din vecka…",
+      "title": "Så här ser veckan ut",
+      "unavailable": "AI är inte konfigurerat för det här än.",
+      "failed": "Kunde inte förklara planen just nu — försök igen strax."
     },
     "warnings": {
       "title": "Värt att veta",
@@ -1063,5 +1087,20 @@
     },
     "tileLabel": "Ärenden denna vecka",
     "tileHint": "Planeras runt din studietid"
+  },
+  "ai": {
+    "advisor": {
+      "intro": "Fråga om din plan, dina kurser, uppgifter eller deadlines — till exempel \"prioritera min databaskurs den här veckan\".",
+      "placeholder": "Fråga om din plan, dina kurser, uppgifter eller deadlines…",
+      "ask": "Fråga",
+      "asking": "Tänker…",
+      "unavailable": "AI är inte konfigurerat för det här än.",
+      "failed": "Något gick fel — försök igen strax.",
+      "apply": "Verkställ",
+      "applying": "Verkställer…",
+      "applied": "Klart.",
+      "dismiss": "Avfärda",
+      "applyFailed": "Kunde inte verkställa det — din data kan ha ändrats. Försök fråga igen."
+    }
   }
 }

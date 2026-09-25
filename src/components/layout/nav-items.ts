@@ -3,6 +3,7 @@ import {
   ArrowDownUp,
   CheckSquare,
   BarChart3,
+  Bot,
   CalendarDays,
   GraduationCap,
   LayoutGrid,
@@ -22,6 +23,7 @@ export type NavLabelKey =
   | "todos"
   | "insights"
   | "importExport"
+  | "advisor"
   | "settings";
 
 export type NavItem = {
@@ -46,6 +48,7 @@ export const primaryNavItems: readonly NavItem[] = [
 export const secondaryNavItems: readonly NavItem[] = [
   { href: "/insights", labelKey: "insights", icon: BarChart3 },
   { href: "/import-export", labelKey: "importExport", icon: ArrowDownUp },
+  { href: "/advisor", labelKey: "advisor", icon: Bot },
   { href: "/settings", labelKey: "settings", icon: Settings },
 ];
 

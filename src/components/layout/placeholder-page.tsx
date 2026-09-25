@@ -14,6 +14,7 @@ export type PageKey =
   | "todos"
   | "insights"
   | "importExport"
+  | "advisor"
   | "settings";
 
 export async function createPageMetadata(pageKey: PageKey): Promise<Metadata> {

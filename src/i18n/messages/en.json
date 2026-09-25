@@ -25,7 +25,8 @@
     "themeSystem": "System",
     "language": "Language",
     "importExport": "Import & export",
-    "todos": "This week"
+    "todos": "This week",
+    "advisor": "Advisor"
   },
   "landing": {
     "signIn": "Sign in",
@@ -317,6 +318,12 @@
       "description": "Applications, appointments and everything else that has to fit around your studying.",
       "emptyTitle": "Nothing on the list",
       "emptyBody": "Add the things that have to happen this week and they will be planned around."
+    },
+    "advisor": {
+      "title": "Advisor",
+      "description": "Ask about your plan, courses, tasks and deadlines.",
+      "emptyTitle": "The advisor isn't set up yet",
+      "emptyBody": "This needs an AI provider key configured on the server before it can answer."
     }
   },
   "tasks": {
@@ -340,6 +347,16 @@
     "dueToday": "Due today",
     "dueTomorrow": "Due tomorrow",
     "dueInDays": "In {days, plural, one {# day} other {# days}}",
+    "breakdown": {
+      "trigger": "Break down with AI",
+      "title": "Break this down",
+      "description": "Suggested subtasks — tick the ones worth keeping.",
+      "loading": "Thinking through the steps…",
+      "accept": "Add {count, plural, one {# subtask} other {# subtasks}}",
+      "minutes": "{minutes} min",
+      "unavailable": "AI isn't set up for this yet.",
+      "failed": "Couldn't come up with a breakdown just now — try again shortly."
+    },
     "groups": {
       "overdue": "Overdue",
       "thisWeek": "This week",
@@ -467,6 +484,13 @@
       "totalTime": "{hours}h {minutes}m of study",
       "across": "across {days, plural, one {# day} other {# days}}",
       "coverage": "{percent}% of the work covered"
+    },
+    "explain": {
+      "cta": "Explain this plan",
+      "generating": "Reading through your week…",
+      "title": "What this week looks like",
+      "unavailable": "AI isn't set up for this yet.",
+      "failed": "Couldn't explain this plan just now — try again shortly."
     },
     "warnings": {
       "title": "Worth knowing",
@@ -1063,5 +1087,20 @@
     },
     "tileLabel": "Errands this week",
     "tileHint": "Planned around your study time"
+  },
+  "ai": {
+    "advisor": {
+      "intro": "Ask about your plan, courses, tasks or deadlines — for example, \"prioritise my databases course this week\".",
+      "placeholder": "Ask about your plan, courses, tasks or deadlines…",
+      "ask": "Ask",
+      "asking": "Thinking…",
+      "unavailable": "AI isn't set up for this yet.",
+      "failed": "Something went wrong — try again shortly.",
+      "apply": "Apply",
+      "applying": "Applying…",
+      "applied": "Done.",
+      "dismiss": "Dismiss",
+      "applyFailed": "Couldn't apply that — your data may have changed. Try asking again."
+    }
   }
 }

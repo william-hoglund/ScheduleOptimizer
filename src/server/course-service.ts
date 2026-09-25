@@ -93,6 +93,23 @@ export async function updateCourse(
   return data;
 }
 
+/** Quick, single-field update — the advisor's "make this course higher priority" applies here. */
+export async function setCoursePriority(
+  userId: string,
+  courseId: string,
+  priority: number,
+): Promise<void> {
+  const supabase = await createServerSupabaseClient();
+
+  const { error } = await supabase
+    .from("courses")
+    .update({ priority })
+    .eq("id", courseId)
+    .eq("user_id", userId);
+
+  if (error) throw new Error(`Could not update course priority: ${error.message}`);
+}
+
 /**
  * Archiving rather than deleting is the default action in the UI: a finished
  * course still owns tasks and completed study sessions that the student's

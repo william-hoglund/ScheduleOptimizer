@@ -5,6 +5,7 @@ import { TaskFormDialog } from "@/components/deadlines/task-form-dialog";
 import { TaskList } from "@/components/deadlines/task-list";
 import { PageHeader } from "@/components/layout/page-header";
 import { createPageMetadata } from "@/components/layout/placeholder-page";
+import { isAiEnabled } from "@/lib/ai";
 import { requireUserContext } from "@/server/auth";
 import { nowIso } from "@/server/clock";
 import { listCourses } from "@/server/course-service";
@@ -42,7 +43,13 @@ export default async function DeadlinesPage() {
         }
       />
 
-      <TaskList tasks={tasks} courses={courses} nowIso={now} timeZone={timeZone} />
+      <TaskList
+        tasks={tasks}
+        courses={courses}
+        nowIso={now}
+        timeZone={timeZone}
+        aiEnabled={isAiEnabled()}
+      />
     </div>
   );
 }
