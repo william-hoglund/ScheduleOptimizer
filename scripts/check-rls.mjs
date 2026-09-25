@@ -49,6 +49,7 @@ const TABLES = [
   "task_dependencies",
   "calendar_connections",
   "calendar_events",
+  "calendar_sources",
   "study_preferences",
   "availability_rules",
   "study_plans",
