@@ -1,7 +1,11 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
 <!-- END:nextjs-agent-rules -->
 
 # AI Study Planner — working notes
@@ -301,6 +305,22 @@ for them by hand.
   the build step for a reason that looks like a phantom module resolution
   error, check `ps aux` for a second `tsc`/`next build` before debugging the
   code.
+- **A scripted `sed -i` edit to `.env.local` can silently corrupt a line** if
+  two such edits race (e.g. two backgrounded shell commands touching the file
+  around the same time) — `AI_PROVIDER=openai` became `AI_PROVIDER=openaiNo `
+  in Session 14, which `lib/env.ts`'s zod validation caught loudly at the
+  server boundary (exactly what it exists to do), but only once a page
+  requiring it was loaded. After any scripted `.env.local` edit, sanity-check
+  the touched line with `grep '^VAR=' .env.local | od -c` — a human glance at
+  a `cat` of the file is not enough to catch a few stray bytes.
+- **`next dev` can get extremely slow** (a `GET` taking 15–85 seconds, split
+  almost entirely into "next.js" time rather than "application-code" time in
+  its own request log) after a long session of heavy navigation and repeated
+  recompiles, with no error and no crash — it just eventually finishes. Seen
+  in Session 14 after ~20 minutes of continuous browser-driven testing
+  against one `next dev` instance. Confirm it's this and not a real hang by
+  checking the request log's own timing breakdown before assuming the code
+  is broken; restarting the dev server clears it.
 - **`next` CLI commands need `NEXT_TELEMETRY_DISABLED=1`** or they hang for
   minutes with no output at all.
 - **Do not poll a compiling dev server with short-timeout `curl`.** An aborted
