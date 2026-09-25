@@ -226,14 +226,81 @@ for them by hand.
   90-minute sessions, 17:30–22:00 and weekends on. If you find yourself
   branching inside `lib/planner/`, the feature is in the wrong place.
 
+## The AI layer (`src/lib/ai/`, Session 10)
+
+- **Every AI feature returns structured data, validated with Zod before
+  anything downstream sees it.** No feature renders a model's free text
+  directly except the advisor's own reply — that is the one place a
+  student's own words reach a model, which is why it is the only one with a
+  scope guard.
+- **The advisor's guard is layered, not a keyword blocklist**:
+  `precheckAdvisorMessage` (empty/oversized input, before any request is
+  made), the response schema's required `inScope` field (the model must
+  commit to a scope judgement, it cannot just drift off-topic silently), and
+  `finalizeAdvisorReply`, which **discards the model's own `message` text
+  outright** and substitutes a fixed, translated string whenever `inScope`
+  is false. Never remove that substitution "to trust the model more" — it is
+  the actual guarantee, the system prompt is only a request.
+- **The AI never writes to the database.** An advisor action is executed by
+  calling the exact same action or setter a human's own UI already calls
+  (`generateDraftPlan`, `setCoursePriority`), and `resolvePlannerCommand` in
+  `lib/ai/resolve-command.ts` re-validates every id in it against the
+  student's real data — once when proposed, again when applied. Adding a
+  new advisor action means adding a variant to `plannerCommandSchema`, a
+  case in `resolvePlannerCommand`, and a case in `applyResolvedCommand` —
+  never a new direct-write path.
+- **OpenAI's strict Structured Outputs mode requires every property at every
+  level of nesting to be listed as `required`** — no `.optional()` anywhere
+  in `lib/ai/schemas/*`, including inside `plannerCommandSchema`'s
+  discriminated union branches. `tests/ai/schemas.test.ts` walks the whole
+  generated JSON Schema tree checking this; a shallow top-level check would
+  have missed a loose branch inside a union.
+- **Both providers are called with the raw API, not the `openai` package's
+  own zod helper.** `z.toJSONSchema()` (native to zod 4) builds the schema
+  by hand, which avoids two packages needing to agree on a third one's
+  bundled zod version — the kind of thing a routine `npm update` breaks
+  silently.
+- **Models are pinned via `OPENAI_MODEL` / `ANTHROPIC_MODEL` env vars**, not
+  hardcoded. Bump the env var to move to a newer model; nothing in the code
+  should need to change.
+- **The plan explanation is cached on `study_plans.explanation`** — read it
+  back before generating a new one. It never goes stale under a student
+  because approving or regenerating a plan always makes a new `study_plans`
+  row.
+- **Every AI feature degrades to hidden, never to a crash.** `isAiEnabled()`
+  is the one question a page needs to ask; a missing key or a failed
+  generation returns `null`/a friendly error, following the same pattern as
+  `calendar_sources` and study groups elsewhere in this file.
+
 ## This machine
 
-- **`node_modules` has been silently damaged twice** — once emptied, once
-  filled with 1,218 duplicate `" 2"` directories. Symptoms are not obvious:
-  `next dev` starts and never binds, `vitest` hangs at 0% CPU, `tsc` reports
-  `Cannot find type definition file for 'node 2'`. Check `du -sh node_modules`
-  (healthy ≈ 700 MB) and `find node_modules -name "* 2" | wc -l` before
-  debugging anything else; `rm -rf node_modules && npm ci` fixes both.
+- **`node_modules` has been silently damaged three times now** — emptied
+  once, filled with 1,218 duplicate `" 2"` directories once, and 438 more of
+  the same in Session 14. Symptoms are not obvious: `next dev` starts and
+  never binds, `vitest` hangs at 0% CPU, `tsc` reports `Cannot find type
+  definition file for 'node 2'`. Check `du -sh node_modules` (healthy ≈ 700
+  MB) and `find node_modules -name "* 2" | wc -l` before debugging anything
+  else; `rm -rf node_modules && npm ci` fixes it every time it has happened
+  so far. Given it has now recurred a third time on this same machine and
+  same `~/Desktop` location, moving the project off Desktop (already
+  suggested in Session 13) is worth doing rather than continuing to treat
+  each recurrence as a one-off.
+- **`next dev`'s Turbopack cache can also get into a bad state** on its own,
+  separate from `node_modules`: a fresh `.next/dev` write can panic with
+  "Stale NFS file handle", or the dev server can report real, intact source
+  files as "has no exports at all" for a few requests after a crash-restart.
+  Neither means the file is actually broken — confirm with `wc -l` and
+  `grep "^export"` on the file, or with a clean `npm run build` (which uses
+  a different, non-incremental compile path) before assuming a code change
+  broke something. `rm -rf .next` and a fresh `next dev` clears it.
+- **Never run two `tsc`-based commands at once, including `next build`'s own
+  internal type-check.** Starting a standalone `npm run typecheck` while
+  `npm run verify`'s `next build` step is still running produced a real,
+  reproducible `next build` failure ("is not a module") in Session 14 that
+  disappeared the moment the build ran alone. If `npm run verify` fails on
+  the build step for a reason that looks like a phantom module resolution
+  error, check `ps aux` for a second `tsc`/`next build` before debugging the
+  code.
 - **`next` CLI commands need `NEXT_TELEMETRY_DISABLED=1`** or they hang for
   minutes with no output at all.
 - **Do not poll a compiling dev server with short-timeout `curl`.** An aborted
