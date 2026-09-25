@@ -806,7 +806,14 @@
       "excludesTokens": "Not included: access tokens for connected calendars. They are encrypted and never readable by the browser, which is the point of them.",
       "download": "Download my data",
       "deleteTitle": "Deleting your account",
-      "deleteBody": "Not built yet. When it is, it will permanently remove every row in that file — courses, plans, sessions and the account itself — with no way to undo it."
+      "deleteBody": "Permanently removes every row in the file above — courses, plans, sessions and the account itself. There is no way to undo it, and no grace period.",
+      "deleteButton": "Delete my account",
+      "deleteConfirmTitle": "This cannot be undone",
+      "deleteConfirmBody": "Every course, task, plan, study session and setting on this account is deleted immediately and permanently. There is no recovery, no grace period, and no way to log back in afterwards.",
+      "deleteConfirmLabel": "Type {email} to confirm",
+      "deleteUnavailable": "Account deletion isn't set up on this server yet.",
+      "deleteFailed": "Something went wrong and nothing was deleted. Try again shortly.",
+      "deleting": "Deleting…"
     }
   },
   "common": {

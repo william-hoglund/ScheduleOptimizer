@@ -806,7 +806,14 @@
       "excludesTokens": "Ingår inte: åtkomsttoken för anslutna kalendrar. De är krypterade och kan aldrig läsas av webbläsaren, vilket är hela poängen med dem.",
       "download": "Ladda ned mina uppgifter",
       "deleteTitle": "Radera kontot",
-      "deleteBody": "Inte byggt än. När det är det kommer det att radera varje rad i den filen permanent — kurser, planer, pass och själva kontot — utan möjlighet att ångra."
+      "deleteBody": "Raderar permanent varje rad i filen ovan — kurser, planer, pass och själva kontot. Det går inte att ångra, och det finns ingen betänketid.",
+      "deleteButton": "Radera mitt konto",
+      "deleteConfirmTitle": "Det här går inte att ångra",
+      "deleteConfirmBody": "Varje kurs, uppgift, plan, studiepass och inställning på det här kontot raderas omedelbart och permanent. Ingen återställning, ingen betänketid, och ingen möjlighet att logga in igen efteråt.",
+      "deleteConfirmLabel": "Skriv {email} för att bekräfta",
+      "deleteUnavailable": "Kontoradering är inte konfigurerat på servern än.",
+      "deleteFailed": "Något gick fel och inget raderades. Försök igen strax.",
+      "deleting": "Raderar…"
     }
   },
   "common": {

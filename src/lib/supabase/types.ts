@@ -589,6 +589,11 @@ export type Database = {
         Args: Record<string, never>;
         Returns: undefined;
       };
+      /** Deletes the caller's own auth.users row; every table cascades from it. See 0010_account_deletion.sql. */
+      delete_my_account: {
+        Args: Record<string, never>;
+        Returns: undefined;
+      };
     };
     Enums: Record<never, never>;
     CompositeTypes: Record<never, never>;

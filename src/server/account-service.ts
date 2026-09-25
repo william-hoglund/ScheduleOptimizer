@@ -106,3 +106,37 @@ export async function exportAccountData(
     unavailable,
   };
 }
+
+/**
+ * "Delete everything, permanently."
+ *
+ * Calls `delete_my_account()` (0010_account_deletion.sql), a `security
+ * definer` function that removes the caller's own `auth.users` row. Every
+ * table in this schema cascades from that row, so this one call is the whole
+ * deletion — no per-table cleanup lives here or ever should.
+ *
+ * No service-role key involved: the function runs with the privileges of
+ * whoever created it, scoped to the caller by `auth.uid()` inside the
+ * function itself, not by anything passed in from here.
+ */
+export async function deleteAccount(): Promise<
+  { ok: true } | { ok: false; error: "notAvailable" | "unexpected" }
+> {
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase.rpc("delete_my_account");
+
+  if (error) {
+    // PostgREST wraps a missing function as PGRST202 ("Could not find the
+    // function ... in the schema cache"), not the raw Postgres 42883 — caught
+    // live in Session 14 before the migration was applied. Degrade like every
+    // other not-yet-migrated feature in this app, rather than showing the
+    // student a raw database error.
+    if (error.code === "PGRST202") {
+      return { ok: false, error: "notAvailable" };
+    }
+    console.error(`[account-service] deleteAccount failed (${error.code}):`, error.message);
+    return { ok: false, error: "unexpected" };
+  }
+
+  return { ok: true };
+}

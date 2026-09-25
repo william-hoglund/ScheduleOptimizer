@@ -2,17 +2,21 @@ import { Download, ShieldCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { ButtonAnchor } from "@/components/common/button-link";
+import { DeleteAccountDialog } from "@/components/settings/delete-account-dialog";
+import { requireUser } from "@/server/auth";
 
 /**
  * What we hold, and how to take it away with you.
  *
  * The download is a plain link to a route handler, so it works like any other
- * download and needs no JavaScript. Deletion is named here even though it is
- * not built: a privacy page that quietly omits it would be the one place a
- * student is most entitled to a straight answer.
+ * download and needs no JavaScript. Deletion asks for a typed confirmation
+ * (see DeleteAccountDialog) rather than the single-click pattern used
+ * elsewhere — this is the one thing in the product that cannot be undone by
+ * recreating the row.
  */
 export async function PrivacyPanel() {
   const t = await getTranslations("settings.privacy");
+  const user = await requireUser();
 
   return (
     <div className="space-y-8">
@@ -40,6 +44,7 @@ export async function PrivacyPanel() {
       <section className="space-y-3">
         <h2 className="text-base font-semibold">{t("deleteTitle")}</h2>
         <p className="text-muted-foreground max-w-prose text-sm">{t("deleteBody")}</p>
+        <DeleteAccountDialog email={user.email ?? ""} />
       </section>
     </div>
   );
