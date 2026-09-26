@@ -2,17 +2,24 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { z } from "zod";
 
+import { generateDraftPlan } from "@/features/planner/actions";
 import { LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE } from "@/i18n/config";
+import { utcToLocalDate } from "@/lib/calendar/time";
 import { institutionSchema, programSchema } from "@/lib/validation/academic";
 import { actionOk, fromZodError, guarded, type ActionResult } from "@/lib/validation/action-result";
+import { V } from "@/lib/validation/messages";
 import { studyPreferencesSchema } from "@/lib/validation/preferences";
 import { profileSchema } from "@/lib/validation/profile";
+import { defaultTaskInput } from "@/lib/validation/task";
 import { createInstitution, createProgram } from "@/server/academic-service";
-import { requireUser } from "@/server/auth";
+import { requireUser, requireUserContext } from "@/server/auth";
+import { nowIso } from "@/server/clock";
 import { saveStudyPreferences } from "@/server/preference-service";
 import { updateProfile } from "@/server/profile-service";
-import { LAST_STEP } from "./steps";
+import { createTask } from "@/server/task-service";
+import { LAST_STEP, numberFromStep } from "./steps";
 
 /**
  * Onboarding.
@@ -124,8 +131,58 @@ export async function savePreferences(input: unknown): Promise<ActionResult<unde
 
   const result = await guarded(async () => {
     await saveStudyPreferences(user.id, parsed.data);
+    await updateProfile(user.id, { onboarding_step: numberFromStep("plan") });
+  });
+  if (!result.ok) return result;
+
+  revalidatePath("/onboarding");
+  return actionOk();
+}
+
+const firstDeadlineSchema = z.object({
+  title: z.string().trim().min(1, V.required).max(200, V.nameTooLong),
+  deadlineLocal: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, V.outOfRange),
+});
+
+/**
+ * The payoff step: one deadline in, a real plan out, before the student has
+ * even reached the dashboard. Best-effort on purpose — `generateDraftPlan`
+ * has its own validation and failure handling, and a plan that doesn't
+ * generate for some reason must not be allowed to strand the student in
+ * onboarding. The "done" step simply has nothing to show if this didn't work.
+ */
+export async function saveFirstDeadlineAndPlan(input: unknown): Promise<ActionResult<undefined>> {
+  const { user, timeZone } = await requireUserContext();
+
+  const parsed = firstDeadlineSchema.safeParse(input);
+  if (!parsed.success) return fromZodError(parsed.error);
+
+  const result = await guarded(async () => {
+    await createTask(
+      user.id,
+      { ...defaultTaskInput, title: parsed.data.title, deadlineLocal: `${parsed.data.deadlineLocal}T23:59` },
+      timeZone,
+    );
+
+    const today = utcToLocalDate(nowIso(), timeZone);
+    const endDate = new Date(Date.parse(`${today}T00:00:00Z`) + 6 * 86_400_000)
+      .toISOString()
+      .slice(0, 10);
+
+    await generateDraftPlan({ startDate: today, endDate, courseIds: [], overrides: {} });
+
     await updateProfile(user.id, { onboarding_step: LAST_STEP });
   });
+  if (!result.ok) return result;
+
+  revalidatePath("/onboarding");
+  return actionOk();
+}
+
+export async function skipPlanStep(): Promise<ActionResult<undefined>> {
+  const user = await requireUser();
+
+  const result = await guarded(() => updateProfile(user.id, { onboarding_step: LAST_STEP }));
   if (!result.ok) return result;
 
   revalidatePath("/onboarding");

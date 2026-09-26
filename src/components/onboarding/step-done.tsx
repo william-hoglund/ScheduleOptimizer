@@ -24,11 +24,14 @@ export function StepDone({
   courseCount,
   sessionSummary,
   daysSummary,
+  planSummary,
 }: {
   name: string;
   courseCount: number;
   sessionSummary: string;
   daysSummary: string;
+  /** Null when the plan step was skipped, or generation didn't produce anything to show. */
+  planSummary: string | null;
 }) {
   const t = useTranslations("onboarding");
   const tCourses = useTranslations("courses");
@@ -54,14 +57,15 @@ export function StepDone({
         />
         <SummaryRow label={t("done.preferencesSummary")} value={sessionSummary} />
         <SummaryRow label={tPreferences("daysSection")} value={daysSummary} />
+        {planSummary ? <SummaryRow label={t("done.planLabel")} value={planSummary} /> : null}
       </div>
 
       <p className="text-muted-foreground flex items-start gap-2 text-sm">
         <Check className="text-success mt-0.5 size-4 shrink-0" aria-hidden="true" />
-        {t("done.nextUp")}
+        {planSummary ? t("done.nextUpWithPlan") : t("done.nextUp")}
       </p>
 
-      <StepNav step={5}>
+      <StepNav step={6}>
         <Button
           type="button"
           disabled={isPending}

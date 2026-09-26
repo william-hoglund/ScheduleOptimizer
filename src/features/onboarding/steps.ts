@@ -4,13 +4,22 @@
  * The number is stored in `profiles.onboarding_step` after each save, so
  * closing the tab halfway through resumes rather than restarts.
  *
- * The brief describes six steps. Two of them — connecting a calendar, and
- * generating a first plan — depend on machinery that does not exist yet
- * (Sessions 6 and 10). Rather than show steps whose buttons do nothing, they
- * are inserted when they work. Everything here is real today.
+ * The brief describes six steps, and this is now all six: "generating a
+ * first plan" was deferred from Session 1 because it needed the scheduling
+ * engine and the AI layer, neither of which existed yet (Sessions 5/6 and
+ * 10). It landed in Session 14, once both did. "Connecting a calendar" is
+ * still deferred — it needs Google OAuth credentials, which is a Session 11
+ * dependency, not a code one.
  */
 
-export const ONBOARDING_STEPS = ["basics", "studies", "courses", "preferences", "done"] as const;
+export const ONBOARDING_STEPS = [
+  "basics",
+  "studies",
+  "courses",
+  "preferences",
+  "plan",
+  "done",
+] as const;
 
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
 

@@ -769,6 +769,15 @@
       "title": "Hur vill du studera?",
       "subtitle": "Ungefärliga svar duger. Du kan ändra allt senare, och planeringen anpassar sig efterhand."
     },
+    "plan": {
+      "title": "Nu ser vi det i praktiken",
+      "subtitle": "Lägg till en sak som är på gång, så bygger vi en riktig plan runt den.",
+      "fieldLabel": "Vad är på gång?",
+      "fieldPlaceholder": "Labbrapport, tenta, ansökningsdeadline…",
+      "deadline": "Ska vara klart",
+      "submit": "Visa min plan",
+      "generating": "Bygger din plan…"
+    },
     "done": {
       "title": "Det var allt",
       "subtitle": "Dina inställningar är sparade. Så här ser det ut hittills.",
@@ -777,7 +786,10 @@
       "preferencesSummary": "Studiepreferenser",
       "sessionSummary": "{preferred} min pass, upp till {daily} min per dag",
       "daysSummary": "{days}",
-      "nextUp": "Härnäst: lägg in deadlines och tentor, och generera din första plan.",
+      "planLabel": "Din första plan",
+      "planSummary": "{hours} h {minutes} min fördelat på {days, plural, one {# dag} other {# dagar}}",
+      "nextUp": "Härnäst: lägg in deadlines och tentor, så fyller planen i sig runt dem.",
+      "nextUpWithPlan": "Din första plan väntar på sidan Planering — granska den och godkänn de pass som passar dig.",
       "finish": "Till min översikt"
     }
   },

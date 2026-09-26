@@ -21,16 +21,16 @@ test("a new student can register, complete onboarding, and reach the dashboard",
   await page.getByRole("button", { name: "Create account" }).click();
 
   // Step 1: basics. Timezone/segment/locale defaults are fine as-is.
-  await expect(page.getByText("STEP 1 OF 5")).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText("STEP 1 OF 6")).toBeVisible({ timeout: 15_000 });
   await page.getByLabel("What should we call you?").fill("E2E Test Student");
   await page.getByRole("button", { name: "Continue" }).click();
 
   // Step 2: institution/program — optional, skip it.
-  await expect(page.getByText("STEP 2 OF 5")).toBeVisible();
+  await expect(page.getByText("STEP 2 OF 6")).toBeVisible();
   await page.getByRole("button", { name: "Skip this" }).click();
 
   // Step 3: at least one course is required before Continue is enabled.
-  await expect(page.getByText("STEP 3 OF 5")).toBeVisible();
+  await expect(page.getByText("STEP 3 OF 6")).toBeVisible();
   await page.getByRole("button", { name: "Add course" }).click();
   await page.getByPlaceholder("Statistics for Engineers").fill("E2E Test Course");
   await page.getByPlaceholder("MSG830").fill("E2E101");
@@ -39,10 +39,18 @@ test("a new student can register, complete onboarding, and reach the dashboard",
   await page.getByRole("button", { name: "Continue" }).click();
 
   // Step 4: study preferences — defaults are fine.
-  await expect(page.getByText("STEP 4 OF 5")).toBeVisible();
+  await expect(page.getByText("STEP 4 OF 6")).toBeVisible();
   await page.getByRole("button", { name: "Continue" }).click();
 
-  // Step 5: done.
+  // Step 5: the payoff — one deadline generates a real first plan.
+  await expect(page.getByText("STEP 5 OF 6")).toBeVisible();
+  await page.getByLabel("What's coming up?").fill("E2E Test Assignment");
+  await page.getByRole("button", { name: "Show me my plan" }).click();
+
+  // Step 6: done, with the plan summary from the step above.
+  await expect(page.getByText("Your first plan", { exact: true })).toBeVisible({
+    timeout: 30_000,
+  });
   await page.getByRole("button", { name: "Go to my dashboard" }).click();
   await expect(page).toHaveURL(/\/dashboard/, { timeout: 15_000 });
 

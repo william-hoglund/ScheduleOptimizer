@@ -38,6 +38,10 @@ export async function registerAndCompleteOnboarding(
   // Preferences: defaults are fine.
   await page.getByRole("button", { name: "Continue" }).click();
 
+  // The first-plan step is optional — this helper is for flows that don't
+  // care about it, so skip straight past it.
+  await page.getByRole("button", { name: "Skip this" }).click();
+
   await page.getByRole("button", { name: "Go to my dashboard" }).click();
   await page.waitForURL(/\/dashboard/);
 

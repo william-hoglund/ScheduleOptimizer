@@ -769,6 +769,15 @@
       "title": "How do you like to study?",
       "subtitle": "Rough answers are fine. You can change any of this later, and the planner adapts as it learns."
     },
+    "plan": {
+      "title": "Let's see it in action",
+      "subtitle": "Add one thing that's coming up, and we'll build a real plan around it.",
+      "fieldLabel": "What's coming up?",
+      "fieldPlaceholder": "Lab report, exam, application deadline…",
+      "deadline": "Due by",
+      "submit": "Show me my plan",
+      "generating": "Building your plan…"
+    },
     "done": {
       "title": "That is everything",
       "subtitle": "Your setup is saved. Here is what we have so far.",
@@ -777,7 +786,10 @@
       "preferencesSummary": "Study preferences",
       "sessionSummary": "{preferred} min sessions, up to {daily} min a day",
       "daysSummary": "{days}",
-      "nextUp": "Next: add your deadlines and exams, then generate your first plan.",
+      "planLabel": "Your first plan",
+      "planSummary": "{hours}h {minutes}m across {days, plural, one {# day} other {# days}}",
+      "nextUp": "Next: add your deadlines and exams, and your plan will fill in around them.",
+      "nextUpWithPlan": "Your first plan is waiting on the Planner page — review it and approve whichever sessions work for you.",
       "finish": "Go to my dashboard"
     }
   },

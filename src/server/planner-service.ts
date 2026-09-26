@@ -1,5 +1,6 @@
 import "server-only";
 
+import { utcToLocalDate } from "@/lib/calendar/time";
 import { toEpochMinutes, fromEpochMinutes } from "@/lib/planner/time-grid";
 import type {
   ExistingSession,
@@ -333,6 +334,39 @@ export async function saveDraftPlan({
   }
 
   return { planId: plan.id };
+}
+
+/** The newest draft, which is what the student is currently reviewing. */
+export async function findLatestDraftPlan(
+  userId: string,
+  timeZone: string,
+): Promise<{ planId: string; totalMinutes: number; dayCount: number } | null> {
+  const supabase = await createServerSupabaseClient();
+
+  const { data: plan } = await supabase
+    .from("study_plans")
+    .select("id, total_planned_minutes")
+    .eq("user_id", userId)
+    .eq("status", "draft")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!plan) return null;
+
+  const { data: sessions } = await supabase
+    .from("study_sessions")
+    .select("start_at")
+    .eq("study_plan_id", plan.id)
+    .eq("user_id", userId);
+
+  // The student's own calendar date, not UTC's — the same session can fall on
+  // different dates depending on which one you ask.
+  const dayCount = new Set(
+    (sessions ?? []).map((session) => utcToLocalDate(session.start_at, timeZone)),
+  ).size;
+
+  return { planId: plan.id, totalMinutes: plan.total_planned_minutes, dayCount };
 }
 
 export async function getDraftPlan(
