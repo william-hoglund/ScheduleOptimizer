@@ -3,6 +3,7 @@ import "server-only";
 import OpenAI from "openai";
 import { z } from "zod";
 
+import { oneOfToAnyOf } from "../json-schema";
 import { AiResponseInvalidError, type AiProvider, type GenerateObjectRequest } from "../types";
 
 /**
@@ -25,9 +26,11 @@ export function createOpenAiProvider(apiKey: string, model: string): AiProvider 
       schema,
       maxOutputTokens,
     }: GenerateObjectRequest<S>): Promise<z.infer<S>> {
-      const jsonSchema = z.toJSONSchema(schema, { target: "draft-7" });
-      // OpenAI's strict mode rejects a top-level $schema key.
-      delete (jsonSchema as { $schema?: unknown }).$schema;
+      const rawSchema = z.toJSONSchema(schema, { target: "draft-07" });
+      // OpenAI's strict mode rejects a top-level $schema key, and rejects
+      // `oneOf` outright — see json-schema.ts for why rewriting it is safe.
+      delete (rawSchema as { $schema?: unknown }).$schema;
+      const jsonSchema = oneOfToAnyOf(rawSchema);
 
       const response = await client.chat.completions.create({
         model,

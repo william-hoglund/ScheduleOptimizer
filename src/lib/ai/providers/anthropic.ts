@@ -25,7 +25,7 @@ export function createAnthropicProvider(apiKey: string, model: string): AiProvid
       schema,
       maxOutputTokens,
     }: GenerateObjectRequest<S>): Promise<z.infer<S>> {
-      const jsonSchema = z.toJSONSchema(schema, { target: "draft-7" });
+      const jsonSchema = z.toJSONSchema(schema, { target: "draft-07" });
       delete (jsonSchema as { $schema?: unknown }).$schema;
 
       const response = await client.messages.create({

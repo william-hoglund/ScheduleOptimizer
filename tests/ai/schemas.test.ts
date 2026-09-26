@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { describe, expect, it } from "vitest";
 
+import { oneOfToAnyOf } from "@/lib/ai/json-schema";
 import { boundAdvisorContext } from "@/lib/ai/prompts/advisor";
 import { boundExplainPlanSessions, type ExplainPlanSession } from "@/lib/ai/prompts/explain-plan";
 import { advisorReplySchema } from "@/lib/ai/schemas/advisor";
@@ -54,6 +55,47 @@ describe("AI response schemas produce valid, strict-mode-safe JSON Schema", () =
   ])("%s", (_name, schema) => {
     const jsonSchema = z.toJSONSchema(schema) as JsonSchemaNode;
     assertFullyRequired(jsonSchema);
+  });
+});
+
+/**
+ * `z.discriminatedUnion` always compiles to `oneOf`, and OpenAI's strict mode
+ * rejects `oneOf` outright ("'oneOf' is not permitted") — a real 400 from a
+ * live call in Session 15, on `advisorReplySchema` specifically, since it's
+ * the only schema here with a union in it. Caught only by an actual request
+ * with real credits; `assertFullyRequired` above ran the same schema through
+ * `z.toJSONSchema` and saw nothing wrong, because "every property required"
+ * and "no oneOf" are independent constraints. `oneOfToAnyOf` is what
+ * `providers/openai.ts` applies before sending; this asserts it actually
+ * removes every occurrence, anywhere in the tree, not just at the top level.
+ */
+function containsOneOf(node: unknown): boolean {
+  if (Array.isArray(node)) return node.some(containsOneOf);
+  if (node && typeof node === "object") {
+    return Object.entries(node).some(([key, value]) => key === "oneOf" || containsOneOf(value));
+  }
+  return false;
+}
+
+describe("oneOfToAnyOf", () => {
+  it("confirms the bug exists: a raw discriminated-union schema contains oneOf", () => {
+    const raw = z.toJSONSchema(advisorReplySchema);
+    expect(containsOneOf(raw)).toBe(true);
+  });
+
+  it("removes every oneOf, at any depth, for every schema this app sends to OpenAI", () => {
+    for (const schema of [planExplanationSchema, taskBreakdownSchema, advisorReplySchema]) {
+      const openAiSchema = oneOfToAnyOf(z.toJSONSchema(schema));
+      expect(containsOneOf(openAiSchema)).toBe(false);
+    }
+  });
+
+  it("preserves the rest of the schema, including nested oneOf-turned-anyOf branches", () => {
+    const result = oneOfToAnyOf(z.toJSONSchema(advisorReplySchema)) as unknown as {
+      properties: { action: { anyOf: Array<{ properties: { kind: { const: string } } }> } };
+    };
+    const kinds = result.properties.action.anyOf.map((branch) => branch.properties.kind.const);
+    expect(kinds.sort()).toEqual(["none", "regenerate_plan", "set_course_priority"]);
   });
 });
 
