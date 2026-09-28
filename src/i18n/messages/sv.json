@@ -88,6 +88,7 @@
       "subtitle": "Studiepass placerade runt fasta åtaganden, med resonemanget synligt.",
       "explanationLabel": "Därför ser den ut så här",
       "explanation": "Statistik har tenta om nio dagar och får därför de två längsta förmiddagspassen när din energi är som högst. Databaser är utspritt på tre kortare block eftersom repetition med mellanrum fastnar bättre än ett långt pass. Torsdagen är lättare — du har markerat den som en dag med låg energi.",
+      "scrollLabel": "Exempelvecka. Skrolla horisontellt, eller använd piltangenterna, för att se hela veckan.",
       "courses": {
         "statistics": "Statistik",
         "databases": "Databaser"

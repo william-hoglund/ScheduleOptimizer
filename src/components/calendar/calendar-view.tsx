@@ -101,6 +101,11 @@ export function CalendarView({
     title: event.title,
     start: event.startIso,
     end: event.endIso,
+    // Without this, an imported all-day event (is_all_day) rendered as an
+    // ordinary midnight-to-midnight block in the timed grid instead of the
+    // dedicated all-day row below — allDaySlot has to be true too, see the
+    // FullCalendar config below.
+    allDay: event.isAllDay,
     // Styled by class rather than inline colour so the palette follows the
     // theme tokens and dark mode for free.
     classNames: [
@@ -208,7 +213,11 @@ export function CalendarView({
           headerToolbar={false}
           height="auto"
           nowIndicator
-          allDaySlot={false}
+          // An all-day imported event (is_all_day) needs this row to render
+          // as a banner — without it, FullCalendar draws even an
+          // allDay-flagged event as a midnight-to-midnight block in the
+          // timed grid. See event-dto.ts and PLAN.md's Session 9 note.
+          allDaySlot
           slotMinTime="06:00:00"
           slotMaxTime="23:00:00"
           expandRows

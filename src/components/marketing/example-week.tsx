@@ -74,7 +74,12 @@ export async function ExampleWeek() {
 
   return (
     <div className="bg-card animate-in fade-in slide-in-from-bottom-2 overflow-hidden rounded-xl border duration-700">
-      <div className="overflow-x-auto">
+      <div
+        className="overflow-x-auto focus-visible:outline-ring focus-visible:outline-2 focus-visible:-outline-offset-2"
+        tabIndex={0}
+        role="group"
+        aria-label={t("scrollLabel")}
+      >
         {/* One grid so the hour gutter and the day tracks share the same row and
             therefore the same vertical origin. Laying them out separately makes
             the labels drift out of alignment with the blocks. */}

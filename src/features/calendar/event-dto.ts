@@ -19,6 +19,7 @@ export type CalendarEventDto = {
   source: CalendarEventRow["source"];
   /** Which imported calendar it belongs to. Null for manual events. */
   sourceId: string | null;
+  isAllDay: boolean;
 };
 
 export function toCalendarEventDto(row: CalendarEventRow): CalendarEventDto {
@@ -34,5 +35,6 @@ export function toCalendarEventDto(row: CalendarEventRow): CalendarEventDto {
     isFixed: row.is_fixed,
     source: row.source,
     sourceId: row.source_id,
+    isAllDay: row.is_all_day,
   };
 }

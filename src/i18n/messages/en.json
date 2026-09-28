@@ -88,6 +88,7 @@
       "subtitle": "Study sessions placed around fixed commitments, with the reasoning shown.",
       "explanationLabel": "Why it looks like this",
       "explanation": "Statistics has an exam in nine days, so it gets the two longest morning sessions when your energy is highest. Databases is spread across three shorter blocks because spaced revision holds better than one long push. Thursday is left lighter — you marked it as a low-energy day.",
+      "scrollLabel": "Example week schedule. Scroll horizontally, or use the arrow keys, to see the full week.",
       "courses": {
         "statistics": "Statistics",
         "databases": "Databases"

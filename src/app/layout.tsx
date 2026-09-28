@@ -5,25 +5,42 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { clientEnv } from "@/lib/env";
 
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("app");
+  const title = { default: `${t("name")} — ${t("tagline")}`, template: `%s · ${t("name")}` };
 
   return {
-    title: {
-      default: `${t("name")} — ${t("tagline")}`,
-      template: `%s · ${t("name")}`,
-    },
+    metadataBase: new URL(clientEnv.NEXT_PUBLIC_APP_URL),
+    title,
     description: t("tagline"),
+    // opengraph-image.tsx / apple-icon.tsx / icon.tsx are picked up
+    // automatically by Next's file-based metadata convention — this just
+    // adds the fields those files don't cover themselves.
+    openGraph: {
+      title: title.default,
+      description: t("tagline"),
+      siteName: t("name"),
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: title.default,
+      description: t("tagline"),
+    },
   };
 }
 
 export const viewport: Viewport = {
+  // Matches --background in globals.css for each theme — the browser chrome
+  // (mobile address bar, PWA splash) should read as part of the page, not a
+  // mismatched sliver above it. Update alongside any change to those tokens.
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbfaf8" },
-    { media: "(prefers-color-scheme: dark)", color: "#101218" },
+    { media: "(prefers-color-scheme: light)", color: "#fbfaf9" },
+    { media: "(prefers-color-scheme: dark)", color: "#1e2129" },
   ],
 };
 
