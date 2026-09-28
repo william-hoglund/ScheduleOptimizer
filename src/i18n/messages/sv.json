@@ -226,7 +226,8 @@
       "signIn": "Logga in",
       "checkEmailTitle": "Bekräfta din e-post",
       "checkEmailBody": "Vi skickade en länk till {email}. Öppna den för att slutföra registreringen.",
-      "checkEmailHint": "Kom inget fram? Titta i skräpposten — det kan ta en minut."
+      "checkEmailHint": "Kom inget fram? Titta i skräpposten — det kan ta en minut.",
+      "agreement": "Genom att skapa ett konto godkänner du våra <terms>användarvillkor</terms> och vår <privacy>integritetspolicy</privacy>."
     },
     "forgot": {
       "title": "Återställ ditt lösenord",
@@ -891,6 +892,7 @@
     "saving": "Sparar",
     "saved": "Sparat",
     "privacy": {
+      "policyLink": "Läs vår fullständiga integritetspolicy",
       "exportTitle": "Dina uppgifter",
       "exportBody": "Ladda ned allt det här kontot innehåller, som en JSON-fil. Det är samma data som appen läser, direkt ur databasen — inget sammanfattat, inget utelämnat.",
       "includesSchedule": "Kurser, deadlines, kalenderhändelser och studiepass",

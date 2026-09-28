@@ -63,6 +63,22 @@ export default async function MarketingLayout({ children }: { children: React.Re
                   </li>
                 </ul>
               </div>
+
+              <div className="space-y-2.5">
+                <h2 className="label-caps">{t("landing.footer.legal")}</h2>
+                <ul className="text-muted-foreground space-y-2 text-sm">
+                  <li>
+                    <Link href="/privacy" className="hover:text-foreground transition-colors">
+                      {t("landing.footer.privacy")}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/terms" className="hover:text-foreground transition-colors">
+                      {t("landing.footer.terms")}
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
 

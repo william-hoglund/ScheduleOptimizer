@@ -1,4 +1,5 @@
 import { Download, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import { ButtonAnchor } from "@/components/common/button-link";
@@ -20,6 +21,10 @@ export async function PrivacyPanel() {
 
   return (
     <div className="space-y-8">
+      <Link href="/privacy" className="text-primary inline-block text-sm underline underline-offset-2">
+        {t("policyLink")}
+      </Link>
+
       <section className="space-y-3">
         <h2 className="flex items-center gap-2 text-base font-semibold">
           <ShieldCheck className="size-4" aria-hidden="true" />

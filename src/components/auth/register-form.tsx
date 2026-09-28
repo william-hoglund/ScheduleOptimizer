@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MailCheck } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
@@ -110,6 +111,21 @@ export function RegisterForm() {
       <Button type="submit" className="w-full" disabled={isPending}>
         {isPending ? t("register.pending") : t("register.submit")}
       </Button>
+
+      <p className="text-muted-foreground text-center text-xs leading-relaxed">
+        {t.rich("register.agreement", {
+          terms: (chunks) => (
+            <Link href="/terms" className="hover:text-foreground underline underline-offset-2">
+              {chunks}
+            </Link>
+          ),
+          privacy: (chunks) => (
+            <Link href="/privacy" className="hover:text-foreground underline underline-offset-2">
+              {chunks}
+            </Link>
+          ),
+        })}
+      </p>
     </form>
   );
 }

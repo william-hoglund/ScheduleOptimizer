@@ -226,7 +226,8 @@
       "signIn": "Sign in",
       "checkEmailTitle": "Confirm your email",
       "checkEmailBody": "We sent a link to {email}. Open it to finish setting up your account.",
-      "checkEmailHint": "Nothing arrived? Check your spam folder — it can take a minute."
+      "checkEmailHint": "Nothing arrived? Check your spam folder — it can take a minute.",
+      "agreement": "By creating an account, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>."
     },
     "forgot": {
       "title": "Reset your password",
@@ -891,6 +892,7 @@
     "saving": "Saving",
     "saved": "Saved",
     "privacy": {
+      "policyLink": "Read the full Privacy Policy",
       "exportTitle": "Your data",
       "exportBody": "Download everything this account holds, as one JSON file. It is the same data the app reads, straight from the database — nothing summarised, nothing left out.",
       "includesSchedule": "Courses, deadlines, calendar events and study sessions",
