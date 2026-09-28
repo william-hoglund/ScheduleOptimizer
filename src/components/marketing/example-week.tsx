@@ -73,7 +73,7 @@ export async function ExampleWeek() {
   const hourMarks = Array.from({ length: 6 }, (_, i) => 8 + i * 2);
 
   return (
-    <div className="bg-card overflow-hidden rounded-xl border">
+    <div className="bg-card animate-in fade-in slide-in-from-bottom-2 overflow-hidden rounded-xl border duration-700">
       <div className="overflow-x-auto">
         {/* One grid so the hour gutter and the day tracks share the same row and
             therefore the same vertical origin. Laying them out separately makes
@@ -107,10 +107,10 @@ export async function ExampleWeek() {
                 <div
                   key={`${block.day}-${block.start}`}
                   className={cn(
-                    "absolute inset-x-0 overflow-hidden rounded-[0.25rem] border-l-[3px] px-1.5 py-1",
+                    "animate-in fade-in zoom-in-95 absolute inset-x-0 overflow-hidden rounded-[0.25rem] border-l-[3px] px-1.5 py-1 duration-500 fill-mode-both",
                     BLOCK_STYLES[block.type],
                   )}
-                  style={position(block)}
+                  style={{ ...position(block), animationDelay: `${BLOCKS.indexOf(block) * 60}ms` }}
                 >
                   <span className="text-foreground block truncate text-[0.625rem] leading-tight font-medium">
                     {block.course ? t(`courses.${block.course}`) : t(`legend.${block.type}`)}

@@ -125,13 +125,18 @@ function AssessmentRow({
   item,
   checked,
   onToggle,
+  index,
 }: {
   item: ExtractedAssessment;
   checked: boolean;
   onToggle: () => void;
+  index: number;
 }) {
   return (
-    <li className="flex items-start gap-3 rounded-lg border p-3">
+    <li
+      className="animate-in fade-in slide-in-from-bottom-1 flex items-start gap-3 rounded-lg border p-3 duration-300 fill-mode-both"
+      style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
+    >
       <Checkbox checked={checked} onCheckedChange={onToggle} className="mt-0.5" />
       <div className="min-w-0 flex-1 space-y-1">
         <div className="flex flex-wrap items-center gap-2">
@@ -160,14 +165,19 @@ function MilestoneRow({
   item,
   checked,
   onToggle,
+  index,
 }: {
   item: ExtractedMilestone;
   checked: boolean;
   onToggle: () => void;
+  index: number;
 }) {
   const t = useTranslations("courseKnowledge.review");
   return (
-    <li className="flex items-start gap-3 rounded-lg border p-3">
+    <li
+      className="animate-in fade-in slide-in-from-bottom-1 flex items-start gap-3 rounded-lg border p-3 duration-300 fill-mode-both"
+      style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
+    >
       <Checkbox
         checked={checked}
         onCheckedChange={onToggle}
@@ -196,13 +206,18 @@ function RequirementRow({
   item,
   checked,
   onToggle,
+  index,
 }: {
   item: ExtractedRequirement;
   checked: boolean;
   onToggle: () => void;
+  index: number;
 }) {
   return (
-    <li className="flex items-start gap-3 rounded-lg border p-3">
+    <li
+      className="animate-in fade-in slide-in-from-bottom-1 flex items-start gap-3 rounded-lg border p-3 duration-300 fill-mode-both"
+      style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
+    >
       <Checkbox checked={checked} onCheckedChange={onToggle} className="mt-0.5" />
       <div className="min-w-0 flex-1 space-y-1">
         <div className="flex flex-wrap items-center gap-2">
@@ -348,7 +363,7 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
   if (stage.kind === "done") {
     return (
       <div className="space-y-4">
-        <div className="border-success/40 bg-success/5 flex items-start gap-3 rounded-lg border p-4">
+        <div className="border-success/40 bg-success/5 animate-in fade-in slide-in-from-bottom-2 flex items-start gap-3 rounded-lg border p-4 duration-300">
           <CheckCircle2 className="text-success mt-0.5 size-5 shrink-0" aria-hidden="true" />
           <p className="text-sm">
             {tReview("done", {
@@ -371,7 +386,7 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
       extraction.assessments.length + extraction.milestones.length + extraction.requirements.length;
 
     return (
-      <div className="space-y-5">
+      <div className="animate-in fade-in duration-300 space-y-5">
         <div>
           <h3 className="text-sm font-semibold">{tReview("title")}</h3>
           <p className="text-muted-foreground mt-1 text-sm">{tReview("description")}</p>
@@ -396,6 +411,7 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
                       item={item}
                       checked={stage.selection.assessments[i] ?? false}
                       onToggle={() => toggle("assessments", i)}
+                      index={i}
                     />
                   ))}
                 </ul>
@@ -412,6 +428,7 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
                       item={item}
                       checked={stage.selection.milestones[i] ?? false}
                       onToggle={() => toggle("milestones", i)}
+                      index={i}
                     />
                   ))}
                 </ul>
@@ -428,6 +445,7 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
                       item={item}
                       checked={stage.selection.requirements[i] ?? false}
                       onToggle={() => toggle("requirements", i)}
+                      index={i}
                     />
                   ))}
                 </ul>

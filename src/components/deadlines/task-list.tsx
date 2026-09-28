@@ -122,11 +122,13 @@ function TaskRowItem({
           >
             <span
               className={cn(
-                "flex size-4 items-center justify-center rounded-full border",
+                "flex size-4 items-center justify-center rounded-full border transition-colors duration-200",
                 isDone ? "bg-success border-success text-white" : "border-muted-foreground/40",
               )}
             >
-              {isDone ? <Check className="size-3" aria-hidden="true" /> : null}
+              {isDone ? (
+                <Check className="animate-in zoom-in duration-300 size-3" aria-hidden="true" />
+              ) : null}
             </span>
           </Button>
 

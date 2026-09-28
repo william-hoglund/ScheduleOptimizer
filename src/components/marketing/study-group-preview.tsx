@@ -38,7 +38,7 @@ export async function StudyGroupPreview() {
   const goalPercent = Math.round((GOAL_COMPLETED / GOAL_TOTAL) * 100);
 
   return (
-    <div className="bg-card overflow-hidden rounded-xl border">
+    <div className="bg-card animate-in fade-in slide-in-from-bottom-2 overflow-hidden rounded-xl border duration-700">
       <div className="flex items-center gap-3 border-b px-5 py-4">
         <span className="bg-muted text-muted-foreground rounded-md p-2">
           <Users className="size-4" aria-hidden="true" />
@@ -81,7 +81,11 @@ export async function StudyGroupPreview() {
           return (
             <li
               key={label}
-              className={cn("flex items-center gap-3 px-5 py-2", member.isYou && "bg-accent/60")}
+              className={cn(
+                "animate-in fade-in slide-in-from-bottom-1 flex items-center gap-3 px-5 py-2 duration-500 fill-mode-both",
+                member.isYou && "bg-accent/60",
+              )}
+              style={{ animationDelay: `${150 + index * 70}ms` }}
             >
               <span className="text-numeric text-muted-foreground w-3 text-xs">{index + 1}</span>
 

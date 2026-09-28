@@ -149,7 +149,7 @@ export function IcsImportPanel({
   if (stage.kind === "done") {
     return (
       <div className="space-y-4">
-        <div className="border-success/40 bg-success/5 flex items-start gap-3 rounded-lg border p-4">
+        <div className="border-success/40 bg-success/5 animate-in fade-in slide-in-from-bottom-2 flex items-start gap-3 rounded-lg border p-4 duration-300">
           <CalendarCheck className="text-success mt-0.5 size-5 shrink-0" aria-hidden="true" />
           <div>
             <p className="text-sm font-medium">{t("doneTitle")}</p>

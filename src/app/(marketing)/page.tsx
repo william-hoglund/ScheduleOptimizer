@@ -15,6 +15,7 @@ import { getTranslations } from "next-intl/server";
 import { ButtonAnchor, ButtonLink } from "@/components/common/button-link";
 import { AudienceSplit } from "@/components/marketing/audience-split";
 import { ExampleWeek } from "@/components/marketing/example-week";
+import { RevealOnScroll } from "@/components/marketing/reveal-on-scroll";
 import { StudyGroupPreview } from "@/components/marketing/study-group-preview";
 
 const PROBLEM_POINTS = [
@@ -49,17 +50,19 @@ export default async function LandingPage() {
       <section className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-24">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
           <div className="max-w-xl">
-            <p className="label-caps">{t("hero.eyebrow")}</p>
+            <p className="label-caps animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-both">
+              {t("hero.eyebrow")}
+            </p>
 
-            <h1 className="mt-4 text-3xl leading-[1.15] font-semibold tracking-tight text-balance sm:text-4xl lg:text-[2.75rem]">
+            <h1 className="animate-in fade-in slide-in-from-bottom-2 mt-4 text-3xl leading-[1.15] font-semibold tracking-tight text-balance duration-500 fill-mode-both sm:text-4xl lg:text-[2.75rem] [animation-delay:80ms]">
               {t("hero.title")}
             </h1>
 
-            <p className="text-muted-foreground mt-5 text-base leading-relaxed text-pretty">
+            <p className="text-muted-foreground animate-in fade-in slide-in-from-bottom-2 mt-5 text-base leading-relaxed text-pretty duration-500 fill-mode-both [animation-delay:160ms]">
               {t("hero.subtitle")}
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="animate-in fade-in slide-in-from-bottom-2 mt-8 flex flex-wrap items-center gap-3 duration-500 fill-mode-both [animation-delay:240ms]">
               <ButtonLink size="lg" href="/register">
                 {t("hero.primaryCta")}
               </ButtonLink>
@@ -79,7 +82,7 @@ export default async function LandingPage() {
 
       {/* The problem */}
       <section className="bg-card/40 border-y">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6">
+        <RevealOnScroll className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6">
           <div className="max-w-2xl">
             <h2 className="text-xl font-semibold tracking-tight text-balance sm:text-2xl">
               {t("problem.title")}
@@ -100,14 +103,16 @@ export default async function LandingPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </RevealOnScroll>
       </section>
 
-      <AudienceSplit />
+      <RevealOnScroll>
+        <AudienceSplit />
+      </RevealOnScroll>
 
       {/* How it works */}
       <section id="how-it-works" className="scroll-mt-20">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
+        <RevealOnScroll className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
           <div className="max-w-2xl">
             <h2 className="text-xl font-semibold tracking-tight text-balance sm:text-2xl">
               {t("how.title")}
@@ -128,12 +133,12 @@ export default async function LandingPage() {
               </li>
             ))}
           </ol>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* Example plan with its explanation */}
       <section className="bg-card/40 border-y">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
+        <RevealOnScroll className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
           <div className="max-w-2xl">
             <h2 className="text-xl font-semibold tracking-tight text-balance sm:text-2xl">
               {t("example.title")}
@@ -154,12 +159,12 @@ export default async function LandingPage() {
               </p>
             </div>
           </div>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* Study groups */}
       <section id="groups" className="scroll-mt-20">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
+        <RevealOnScroll className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center">
             <div className="max-w-xl">
               <h2 className="text-xl font-semibold tracking-tight text-balance sm:text-2xl">
@@ -186,12 +191,12 @@ export default async function LandingPage() {
 
             <StudyGroupPreview />
           </div>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* Features */}
       <section id="features" className="scroll-mt-20 border-t">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
+        <RevealOnScroll className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
           <h2 className="max-w-2xl text-xl font-semibold tracking-tight text-balance sm:text-2xl">
             {t("features.title")}
           </h2>
@@ -207,12 +212,12 @@ export default async function LandingPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </RevealOnScroll>
       </section>
 
       {/* Closing call to action */}
       <section className="bg-card/40 border-t">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
+        <RevealOnScroll className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
           <div className="max-w-xl">
             <h2 className="text-xl font-semibold tracking-tight text-balance sm:text-2xl">
               {t("cta.title")}
@@ -224,7 +229,7 @@ export default async function LandingPage() {
               {t("cta.button")}
             </ButtonLink>
           </div>
-        </div>
+        </RevealOnScroll>
       </section>
     </>
   );
