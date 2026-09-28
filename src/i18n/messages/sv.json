@@ -728,6 +728,86 @@
     "perWeek": "{hours} h per vecka",
     "countLabel": "{count, plural, one {# kurs} other {# kurser}}"
   },
+  "courseKnowledge": {
+    "backToCourses": "Alla kurser",
+    "upcoming": {
+      "title": "Kommande",
+      "nextClass": "Nästa lektion",
+      "nextDeadline": "Nästa deadline",
+      "nextExam": "Nästa tenta",
+      "none": "Inget inplanerat än"
+    },
+    "assessments": {
+      "title": "Examinationer",
+      "empty": "Inga examinationer än. Ladda upp ett kursdokument nedan, eller lägg till en under Deadlines.",
+      "weight": "{percent}% av betyget",
+      "due": "Deadline {date}",
+      "noDeadline": "Ingen deadline satt",
+      "viewAll": "Visa under Deadlines"
+    },
+    "knowledge": {
+      "title": "Det vi vet om kursen",
+      "description": "Hämtat från dokumenten du laddat upp. Fakta hålls separat från förslag — inget här är en rekommendation.",
+      "requirementsTitle": "Krav",
+      "milestonesTitle": "Viktiga datum",
+      "empty": "Ladda upp ett kursdokument för att bygga upp detta.",
+      "factLabel": "Kurskrav",
+      "sourcePage": "Sida {page}",
+      "confidenceHigh": "Anges i dokumentet",
+      "confidenceMedium": "Starkt antytt",
+      "confidenceLow": "Osäkert — värt att kontrollera mot originalet"
+    },
+    "documents": {
+      "title": "Kursdokument",
+      "description": "Ladda upp en kursplan, ett schema eller en examinationsguide. Den läses och görs om till examinationer, datum och krav som du granskar innan något sparas.",
+      "upload": "Ladda upp ett dokument",
+      "uploading": "Laddar upp…",
+      "extracting": "Läser dokumentet…",
+      "typeLabel": "Dokumenttyp",
+      "types": {
+        "syllabus": "Kursplan",
+        "schedule": "Schema",
+        "assessment_guide": "Examinationsguide",
+        "reading_list": "Litteraturlista",
+        "other": "Annat"
+      },
+      "status": {
+        "pending": "Inte läst än",
+        "processing": "Läser…",
+        "completed": "Granskat",
+        "failed": "Kunde inte läsa dokumentet"
+      },
+      "empty": "Inga dokument uppladdade än.",
+      "delete": "Ta bort",
+      "deleteConfirm": "Ta bort det här dokumentet? Sådant som redan sparats från det behålls.",
+      "review": "Granska tolkning",
+      "errors": {
+        "tooLarge": "Filen är större än 15 MB.",
+        "unsupportedType": "Ladda upp en PDF eller vanlig textfil.",
+        "uploadFailed": "Kunde inte ladda upp dokumentet.",
+        "aiUnavailable": "AI är inte tillgängligt just nu — försök igen senare.",
+        "noText": "Hittade ingen läsbar text i dokumentet.",
+        "extractionFailed": "Kunde inte läsa dokumentet. Du kan fortfarande lägga till uppgifterna för hand under Deadlines.",
+        "notFound": "Dokumentet kunde inte hittas.",
+        "invalidInput": "Något med uppladdningen var ogiltigt.",
+        "unexpected": "Något gick fel."
+      }
+    },
+    "review": {
+      "title": "Granska vad som hittades",
+      "description": "Allt nedan kommer från dokumentet du laddade upp. Kryssa i det du vill spara — du kan redigera det efteråt under Deadlines.",
+      "assessmentsHeading": "Examinationer",
+      "milestonesHeading": "Viktiga datum",
+      "requirementsHeading": "Övriga krav",
+      "noneFound": "Inget hittades i dokumentet.",
+      "missingDate": "Inget bekräftat datum — sparas inte",
+      "confirm": "Spara valda",
+      "cancel": "Avbryt",
+      "saving": "Sparar…",
+      "done": "Sparade {assessments} examination(er), {milestones} datum och {requirements} krav.",
+      "startOver": "Ladda upp ett till dokument"
+    }
+  },
   "onboarding": {
     "pageTitle": "Kom igång",
     "stepLabel": "Steg {current} av {total}",

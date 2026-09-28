@@ -1,6 +1,7 @@
 "use client";
 
 import { Archive, ArchiveRestore, GraduationCap, Pencil, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 
@@ -50,7 +51,11 @@ function CourseCard({
           <div className="flex flex-wrap items-baseline gap-x-2">
             {/* h2: the card sits directly under the page heading, with nothing
                 between. The size comes from the utility, not the level. */}
-            <h2 className="text-sm font-semibold">{course.name}</h2>
+            <h2 className="text-sm font-semibold">
+              <Link href={`/courses/${course.id}`} className="hover:underline">
+                {course.name}
+              </Link>
+            </h2>
             {course.code ? (
               <span className="text-numeric text-muted-foreground text-xs">{course.code}</span>
             ) : null}

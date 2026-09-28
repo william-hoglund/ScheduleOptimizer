@@ -7,16 +7,19 @@ import {
   boundExplainPlanSessions,
   breakdownTask as breakdownTaskAi,
   explainPlan as explainPlanAi,
+  extractCourseKnowledge as extractCourseKnowledgeAi,
   isAiEnabled,
   type AdvisorCourse,
   type AdvisorOutcome,
   type AdvisorTask,
+  type CourseExtraction,
   type PlanExplanation,
   type TaskBreakdown,
 } from "@/lib/ai";
 import { resolvePlannerCommand, type CommandContext, type ResolvedCommand } from "@/lib/ai/resolve-command";
 import type { PlannerCommand } from "@/lib/ai/schemas/advisor";
 import { utcToLocalDate, utcToWallClock } from "@/lib/calendar/time";
+import { DocumentTextExtractionError, extractDocumentText } from "@/lib/documents/extract-text";
 import { fromEpochMinutes } from "@/lib/planner/time-grid";
 import type { PlannerResult } from "@/lib/planner/types";
 import type { Segment } from "@/lib/segments";
@@ -26,7 +29,13 @@ import { generateDraftPlan } from "@/features/planner/actions";
 import { nowIso } from "./clock";
 import { createTask } from "./task-service";
 import { defaultTaskInput } from "@/lib/validation/task";
-import { listCourses, setCoursePriority } from "./course-service";
+import { getCourse, listCourses, setCoursePriority } from "./course-service";
+import {
+  downloadCourseDocumentBytes,
+  getCourseDocument,
+  markDocumentFailed,
+  markDocumentProcessing,
+} from "./course-knowledge-service";
 import { listTasks } from "./task-service";
 
 /**
@@ -203,6 +212,64 @@ export async function createSubtasksFromBreakdown({
   }
 
   return { created: subtasks.length };
+}
+
+// ------------------------------------------------------------ course knowledge ---
+
+/**
+ * Reads a course document and asks the AI to extract structured facts from it
+ * (docs/PLAN.md §40.2). Returns the proposed extraction for the student to
+ * review — nothing is written to `course_requirements` / `assessment_details`
+ * / `course_milestones` here. `saveExtractionSelections` in
+ * `course-knowledge-service.ts` is the only function that writes, and only
+ * after the student confirms.
+ */
+export async function generateCourseExtraction({
+  userId,
+  documentId,
+  locale,
+}: {
+  userId: string;
+  documentId: string;
+  locale: Locale;
+}): Promise<{ ok: true; extraction: CourseExtraction } | { ok: false; error: string }> {
+  if (!isAiEnabled()) return { ok: false, error: "aiUnavailable" };
+
+  const document = await getCourseDocument(userId, documentId);
+  if (!document) return { ok: false, error: "notFound" };
+
+  const course = await getCourse(userId, document.course_id);
+  if (!course) return { ok: false, error: "notFound" };
+
+  await markDocumentProcessing(userId, documentId);
+
+  try {
+    const bytes = await downloadCourseDocumentBytes(userId, document);
+    const { pages } = await extractDocumentText(bytes, document.mime_type);
+
+    if (pages.every((page) => page.text.trim().length === 0)) {
+      await markDocumentFailed(userId, documentId, "No extractable text found in the document");
+      return { ok: false, error: "noText" };
+    }
+
+    const extraction = await extractCourseKnowledgeAi({ locale, courseName: course.name, pages });
+    if (!extraction) {
+      await markDocumentFailed(userId, documentId, "The AI provider did not return a usable extraction");
+      return { ok: false, error: "extractionFailed" };
+    }
+
+    // Left as "processing" on purpose: `processing_status` only reaches
+    // "completed" once `saveExtractionSelections` actually writes rows, so a
+    // student who reviews but never confirms sees the document as still
+    // needing attention rather than silently "done".
+    return { ok: true, extraction };
+  } catch (cause) {
+    const message =
+      cause instanceof DocumentTextExtractionError ? cause.message : "Could not read the document";
+    await markDocumentFailed(userId, documentId, message);
+    console.error("[ai-service] course extraction failed:", cause);
+    return { ok: false, error: "extractionFailed" };
+  }
 }
 
 // ---------------------------------------------------------------- advisor ---

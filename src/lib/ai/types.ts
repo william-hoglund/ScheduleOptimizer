@@ -35,6 +35,8 @@ export const AI_LIMITS = {
   explainPlan: 700,
   taskBreakdown: 500,
   advisorReply: 500,
+  /** A syllabus can list many assessments/milestones/requirements — the widest budget here on purpose. */
+  courseExtraction: 3000,
   /** Characters. Past this, a message is rejected before it ever reaches a provider. */
   maxAdvisorMessageChars: 600,
 } as const;

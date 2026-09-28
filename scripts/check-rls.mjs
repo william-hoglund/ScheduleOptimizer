@@ -62,6 +62,11 @@ const TABLES = [
   "study_groups",
   "study_group_members",
   "study_group_scores",
+  "course_documents",
+  "course_requirements",
+  "assessment_details",
+  "course_milestones",
+  "course_knowledge_updates",
 ];
 
 let failures = 0;

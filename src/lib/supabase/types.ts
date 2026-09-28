@@ -65,6 +65,27 @@ export type NotificationType =
 export type NotificationStatus = "pending" | "sent" | "dismissed" | "failed";
 export type ConsentType = "analytics" | "product_improvement" | "ai_processing";
 
+/** See 0011_course_knowledge.sql, and docs/PLAN.md §40. */
+export type CourseDocumentType = "syllabus" | "schedule" | "assessment_guide" | "reading_list" | "other";
+export type DocumentProcessingStatus = "pending" | "processing" | "completed" | "failed";
+export type RequirementType = "reading" | "topic" | "exam_format" | "grading" | "policy" | "other";
+/** How sure the extraction is that a fact was actually stated, not inferred. Never a scheduling constraint on its own — see AGENTS.md's AI-layer notes. */
+export type ExtractionConfidence = "high" | "medium" | "low";
+export type AssessmentFormat = "individual" | "group" | "presentation" | "exam" | "other";
+export type CourseMilestoneType =
+  | "teaching_period"
+  | "reading_week"
+  | "assessment_period"
+  | "exam_period"
+  | "other";
+export type CourseKnowledgeChangeType =
+  | "deadline_changed"
+  | "weight_changed"
+  | "requirement_added"
+  | "requirement_removed"
+  | "milestone_changed"
+  | "other";
+
 // ------------------------------------------------------------------- rows ---
 
 export type ProfileRow = {
@@ -147,6 +168,85 @@ export type TaskDependencyRow = {
   task_id: string;
   depends_on_task_id: string;
   user_id: string;
+  created_at: string;
+};
+
+export type CourseDocumentRow = {
+  id: string;
+  user_id: string;
+  course_id: string;
+  file_name: string;
+  file_size: number;
+  mime_type: string;
+  /** Path inside the `course-documents` storage bucket. Always `${user_id}/...`. */
+  storage_path: string;
+  document_type: CourseDocumentType;
+  processing_status: DocumentProcessingStatus;
+  processing_error: string | null;
+  uploaded_at: string;
+  processed_at: string | null;
+};
+
+export type CourseRequirementRow = {
+  id: string;
+  user_id: string;
+  course_id: string;
+  document_id: string | null;
+  type: RequirementType;
+  title: string;
+  description: string | null;
+  source_page: number | null;
+  source_text: string | null;
+  confidence: ExtractionConfidence;
+  verified_by_user: boolean;
+  created_at: string;
+};
+
+/** 1:1 with a `tasks` row — the syllabus metadata `tasks` has no column for. */
+export type AssessmentDetailRow = {
+  id: string;
+  user_id: string;
+  task_id: string;
+  course_id: string;
+  document_id: string | null;
+  weight_percent: number | null;
+  word_count: number | null;
+  assessment_format: AssessmentFormat | null;
+  source_page: number | null;
+  source_text: string | null;
+  confidence: ExtractionConfidence;
+  verified_by_user: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CourseMilestoneRow = {
+  id: string;
+  user_id: string;
+  course_id: string;
+  document_id: string | null;
+  title: string;
+  milestone_date: string;
+  type: CourseMilestoneType;
+  description: string | null;
+  source_page: number | null;
+  source_text: string | null;
+  confidence: ExtractionConfidence;
+  verified_by_user: boolean;
+  created_at: string;
+};
+
+export type CourseKnowledgeUpdateRow = {
+  id: string;
+  user_id: string;
+  course_id: string;
+  document_id: string | null;
+  change_type: CourseKnowledgeChangeType;
+  field_label: string;
+  old_value: string | null;
+  new_value: string | null;
+  impact: string | null;
+  resolved: boolean;
   created_at: string;
 };
 
@@ -438,6 +538,50 @@ export type Database = {
         "remaining_minutes"
       >;
       task_dependencies: Table<TaskDependencyRow, "created_at">;
+      course_documents: Table<
+        CourseDocumentRow,
+        "id" | "document_type" | "processing_status" | "processing_error" | "uploaded_at" | "processed_at"
+      >;
+      course_requirements: Table<
+        CourseRequirementRow,
+        | "id"
+        | "created_at"
+        | "document_id"
+        | "description"
+        | "source_page"
+        | "source_text"
+        | "confidence"
+        | "verified_by_user"
+      >;
+      assessment_details: Table<
+        AssessmentDetailRow,
+        | "id"
+        | Timestamps
+        | "document_id"
+        | "weight_percent"
+        | "word_count"
+        | "assessment_format"
+        | "source_page"
+        | "source_text"
+        | "confidence"
+        | "verified_by_user"
+      >;
+      course_milestones: Table<
+        CourseMilestoneRow,
+        | "id"
+        | "created_at"
+        | "document_id"
+        | "type"
+        | "description"
+        | "source_page"
+        | "source_text"
+        | "confidence"
+        | "verified_by_user"
+      >;
+      course_knowledge_updates: Table<
+        CourseKnowledgeUpdateRow,
+        "id" | "created_at" | "document_id" | "old_value" | "new_value" | "impact" | "resolved"
+      >;
       calendar_connections: Table<
         CalendarConnectionRow,
         | "id"

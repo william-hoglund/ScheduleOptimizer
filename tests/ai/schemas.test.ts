@@ -5,6 +5,7 @@ import { oneOfToAnyOf } from "@/lib/ai/json-schema";
 import { boundAdvisorContext } from "@/lib/ai/prompts/advisor";
 import { boundExplainPlanSessions, type ExplainPlanSession } from "@/lib/ai/prompts/explain-plan";
 import { advisorReplySchema } from "@/lib/ai/schemas/advisor";
+import { courseExtractionSchema } from "@/lib/ai/schemas/course-extraction";
 import { planExplanationSchema } from "@/lib/ai/schemas/explain-plan";
 import { taskBreakdownSchema } from "@/lib/ai/schemas/task-breakdown";
 
@@ -52,6 +53,7 @@ describe("AI response schemas produce valid, strict-mode-safe JSON Schema", () =
     ["planExplanationSchema", planExplanationSchema],
     ["taskBreakdownSchema", taskBreakdownSchema],
     ["advisorReplySchema", advisorReplySchema],
+    ["courseExtractionSchema", courseExtractionSchema],
   ])("%s", (_name, schema) => {
     const jsonSchema = z.toJSONSchema(schema) as JsonSchemaNode;
     assertFullyRequired(jsonSchema);

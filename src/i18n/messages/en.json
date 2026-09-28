@@ -728,6 +728,86 @@
     "perWeek": "{hours}h per week",
     "countLabel": "{count, plural, one {# course} other {# courses}}"
   },
+  "courseKnowledge": {
+    "backToCourses": "All courses",
+    "upcoming": {
+      "title": "Upcoming",
+      "nextClass": "Next class",
+      "nextDeadline": "Next deadline",
+      "nextExam": "Next exam",
+      "none": "Nothing scheduled yet"
+    },
+    "assessments": {
+      "title": "Assessments",
+      "empty": "No assessments yet. Upload a course document below, or add one from Deadlines.",
+      "weight": "{percent}% of grade",
+      "due": "Due {date}",
+      "noDeadline": "No deadline set",
+      "viewAll": "View in Deadlines"
+    },
+    "knowledge": {
+      "title": "What we know about this course",
+      "description": "Extracted from the documents you've uploaded. Facts are kept separate from suggestions — nothing here is a recommendation.",
+      "requirementsTitle": "Requirements",
+      "milestonesTitle": "Key dates",
+      "empty": "Upload a course document to build this out.",
+      "factLabel": "Course requirement",
+      "sourcePage": "Page {page}",
+      "confidenceHigh": "Stated in the document",
+      "confidenceMedium": "Strongly implied",
+      "confidenceLow": "Uncertain — worth checking against the original"
+    },
+    "documents": {
+      "title": "Course documents",
+      "description": "Upload a syllabus, schedule or assessment guide. It's read and turned into assessments, dates and requirements for you to review before anything is saved.",
+      "upload": "Upload a document",
+      "uploading": "Uploading…",
+      "extracting": "Reading the document…",
+      "typeLabel": "Document type",
+      "types": {
+        "syllabus": "Syllabus",
+        "schedule": "Schedule",
+        "assessment_guide": "Assessment guide",
+        "reading_list": "Reading list",
+        "other": "Other"
+      },
+      "status": {
+        "pending": "Not read yet",
+        "processing": "Reading…",
+        "completed": "Reviewed",
+        "failed": "Could not read this document"
+      },
+      "empty": "No documents uploaded yet.",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this document? Anything already saved from it is kept.",
+      "review": "Review extraction",
+      "errors": {
+        "tooLarge": "That file is larger than 15 MB.",
+        "unsupportedType": "Upload a PDF or plain text file.",
+        "uploadFailed": "Could not upload the document.",
+        "aiUnavailable": "AI is not available right now — try again later.",
+        "noText": "Could not find any readable text in this document.",
+        "extractionFailed": "Could not read this document. You can still add the details by hand from Deadlines.",
+        "notFound": "That document could not be found.",
+        "invalidInput": "Something about that upload was invalid.",
+        "unexpected": "Something went wrong."
+      }
+    },
+    "review": {
+      "title": "Review what was found",
+      "description": "Everything below comes from the document you uploaded. Tick what to save — you can edit it afterwards from Deadlines.",
+      "assessmentsHeading": "Assessments",
+      "milestonesHeading": "Key dates",
+      "requirementsHeading": "Other requirements",
+      "noneFound": "Nothing was found in this document.",
+      "missingDate": "No confirmed date — won't be saved",
+      "confirm": "Save selected",
+      "cancel": "Discard",
+      "saving": "Saving…",
+      "done": "Saved {assessments} assessment(s), {milestones} date(s) and {requirements} requirement(s).",
+      "startOver": "Upload another document"
+    }
+  },
   "onboarding": {
     "pageTitle": "Set up your account",
     "stepLabel": "Step {current} of {total}",

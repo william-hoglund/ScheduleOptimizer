@@ -5,11 +5,13 @@ import { z } from "zod";
 import { getServerEnv } from "@/lib/env";
 import { finalizeAdvisorReply, precheckAdvisorMessage } from "./guardrails";
 import { buildAdvisorPrompt, type AdvisorInput } from "./prompts/advisor";
+import { buildCourseExtractionPrompt, type CourseExtractionInput } from "./prompts/course-extraction";
 import { buildExplainPlanPrompt, type ExplainPlanInput } from "./prompts/explain-plan";
 import { buildTaskBreakdownPrompt, type TaskBreakdownInput } from "./prompts/task-breakdown";
 import { createAnthropicProvider } from "./providers/anthropic";
 import { createOpenAiProvider } from "./providers/openai";
 import { advisorReplySchema, type AdvisorReply } from "./schemas/advisor";
+import { courseExtractionSchema, type CourseExtraction } from "./schemas/course-extraction";
 import { planExplanationSchema, type PlanExplanation } from "./schemas/explain-plan";
 import { taskBreakdownSchema, type TaskBreakdown } from "./schemas/task-breakdown";
 import { AI_LIMITS, type AiProvider } from "./types";
@@ -79,6 +81,18 @@ export async function breakdownTask(input: TaskBreakdownInput): Promise<TaskBrea
   });
 }
 
+export async function extractCourseKnowledge(
+  input: CourseExtractionInput,
+): Promise<CourseExtraction | null> {
+  const { system, prompt } = buildCourseExtractionPrompt(input);
+  return generateWithRetry({
+    system,
+    prompt,
+    schema: courseExtractionSchema,
+    maxOutputTokens: AI_LIMITS.courseExtraction,
+  });
+}
+
 export type AdvisorOutcome =
   | { ok: true; reply: AdvisorReply }
   | { ok: false; reason: "empty" | "tooLong" | "unavailable" };
@@ -107,6 +121,12 @@ export async function askAdvisor(input: AdvisorInput): Promise<AdvisorOutcome> {
 }
 
 export type { AdvisorReply, PlannerCommand } from "./schemas/advisor";
+export type {
+  CourseExtraction,
+  ExtractedAssessment,
+  ExtractedMilestone,
+  ExtractedRequirement,
+} from "./schemas/course-extraction";
 export type { PlanExplanation } from "./schemas/explain-plan";
 export type { TaskBreakdown } from "./schemas/task-breakdown";
 export type { AdvisorCourse, AdvisorTask } from "./prompts/advisor";
