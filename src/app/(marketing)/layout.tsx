@@ -5,12 +5,14 @@ import { ButtonLink } from "@/components/common/button-link";
 import { Logo } from "@/components/layout/logo";
 import { PreferencesMenu } from "@/components/layout/preferences-menu";
 import { SkipLink } from "@/components/layout/skip-link";
+import { ScrollProgressBar } from "@/components/marketing/scroll-progress-bar";
 
 export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
   const t = await getTranslations();
 
   return (
     <div className="flex min-h-dvh flex-col">
+      <ScrollProgressBar />
       <SkipLink />
 
       <header className="bg-background/95 supports-[backdrop-filter]:bg-background/75 sticky top-0 z-30 border-b backdrop-blur">

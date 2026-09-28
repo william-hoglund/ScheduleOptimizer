@@ -73,16 +73,18 @@ const light = {
 };
 
 const dark = {
-  background: [225, 15, 9],
-  card: [225, 14, 13],
+  // Lightened a step from the original 9/13/16.75 (Session 17 — "too dark"
+  // feedback), keeping the same hue/saturation family.
+  background: [225, 15, 14],
+  card: [225, 14, 16.5],
   foreground: [220, 15, 95],
-  "muted-foreground": [220, 10, 65],
-  muted: [225, 11.5, 16.75],
+  "muted-foreground": [220, 10, 68],
+  muted: [225, 11.5, 21.75],
   primary: [245, 70, 72],
   success: [150, 45, 62],
   warning: [38, 85, 62],
   destructive: [0, 70, 65],
-  border: [225, 12, 22],
+  border: [225, 12, 27],
   "event-lecture": [212, 65, 65],
   "event-study": [265, 60, 72],
   "event-deadline": [25, 82, 62],

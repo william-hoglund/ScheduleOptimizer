@@ -126,20 +126,27 @@
 }
 
 .dark {
-  --background: oklch(0.1972 0.0107 270.82);
+  /* Lightened a step from the original palette (Session 17 — "too dark"
+     feedback). Only surface/neutral tokens moved; the saturated accent
+     colours (primary, destructive, success, warning, event-*) and the
+     *-foreground values used as dark text on top of them are unchanged —
+     those are chosen for contrast against their own background, not the
+     page background, so lightening the page doesn't need to touch them.
+     Re-run `npm run check:contrast` after touching any value here. */
+  --background: oklch(0.2486 0.0158 270.71);
   --foreground: oklch(0.9597 0.0037 264.54);
-  --card: oklch(0.2392 0.0138 270.78);
+  --card: oklch(0.2741 0.0169 270.73);
   --card-foreground: oklch(0.9597 0.0037 264.54);
-  --popover: oklch(0.2392 0.0138 270.78);
+  --popover: oklch(0.2741 0.0169 270.73);
   --popover-foreground: oklch(0.9597 0.0037 264.54);
 
   --primary: oklch(0.6695 0.1452 285.57);
   --primary-foreground: oklch(0.1972 0.0107 270.82);
-  --secondary: oklch(0.279 0.014 270.8);
+  --secondary: oklch(0.3304 0.014 270.8);
   --secondary-foreground: oklch(0.9597 0.0037 264.54);
-  --muted: oklch(0.2785 0.0140 270.87);
-  --muted-foreground: oklch(0.7137 0.0186 264.45);
-  --accent: oklch(0.302 0.028 285.57);
+  --muted: oklch(0.3269 0.0175 270.83);
+  --muted-foreground: oklch(0.7392 0.0168 264.47);
+  --accent: oklch(0.3534 0.028 285.57);
   --accent-foreground: oklch(0.9597 0.0037 264.54);
 
   --destructive: oklch(0.6672 0.1562 22.23);
@@ -149,30 +156,30 @@
   --warning: oklch(0.8075 0.1377 78.05);
   --warning-foreground: oklch(0.1972 0.0107 270.82);
 
-  --border: oklch(0.3288 0.0185 270.8);
-  --input: oklch(0.3288 0.0185 270.8);
+  --border: oklch(0.3753 0.0219 270.77);
+  --input: oklch(0.3753 0.0219 270.77);
   --ring: oklch(0.6695 0.1452 285.57);
 
   --event-lecture: oklch(0.6994 0.1081 252.61);
-  --event-lecture-soft: oklch(0.302 0.042 252.61);
+  --event-lecture-soft: oklch(0.3534 0.042 252.61);
   --event-study: oklch(0.7086 0.127 302.46);
-  --event-study-soft: oklch(0.302 0.048 302.46);
+  --event-study-soft: oklch(0.3534 0.048 302.46);
   --event-deadline: oklch(0.7407 0.1386 54.2);
-  --event-deadline-soft: oklch(0.302 0.046 54.2);
+  --event-deadline-soft: oklch(0.3534 0.046 54.2);
   --event-exam: oklch(0.6672 0.1562 22.23);
-  --event-exam-soft: oklch(0.302 0.05 22.23);
+  --event-exam-soft: oklch(0.3534 0.05 22.23);
   --event-break: oklch(0.7574 0.1044 187.68);
-  --event-break-soft: oklch(0.302 0.038 187.68);
+  --event-break-soft: oklch(0.3534 0.038 187.68);
   --event-personal: oklch(0.688 0.0203 264.43);
-  --event-personal-soft: oklch(0.302 0.012 264.43);
+  --event-personal-soft: oklch(0.3534 0.012 264.43);
 
-  --sidebar: oklch(0.223 0.012 270.8);
+  --sidebar: oklch(0.2744 0.012 270.8);
   --sidebar-foreground: oklch(0.9597 0.0037 264.54);
   --sidebar-primary: oklch(0.6695 0.1452 285.57);
   --sidebar-primary-foreground: oklch(0.1972 0.0107 270.82);
-  --sidebar-accent: oklch(0.296 0.026 285.57);
+  --sidebar-accent: oklch(0.3474 0.026 285.57);
   --sidebar-accent-foreground: oklch(0.9597 0.0037 264.54);
-  --sidebar-border: oklch(0.3288 0.0185 270.8);
+  --sidebar-border: oklch(0.3753 0.0219 270.77);
   --sidebar-ring: oklch(0.6695 0.1452 285.57);
 }
 

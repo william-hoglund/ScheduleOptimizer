@@ -15,6 +15,7 @@ import { getTranslations } from "next-intl/server";
 import { ButtonAnchor, ButtonLink } from "@/components/common/button-link";
 import { AudienceSplit } from "@/components/marketing/audience-split";
 import { ExampleWeek } from "@/components/marketing/example-week";
+import { HeroParallax } from "@/components/marketing/hero-parallax";
 import { RevealOnScroll } from "@/components/marketing/reveal-on-scroll";
 import { StudyGroupPreview } from "@/components/marketing/study-group-preview";
 
@@ -75,7 +76,9 @@ export default async function LandingPage() {
           </div>
 
           <div className="lg:pl-4">
-            <ExampleWeek />
+            <HeroParallax>
+              <ExampleWeek />
+            </HeroParallax>
           </div>
         </div>
       </section>
@@ -112,28 +115,34 @@ export default async function LandingPage() {
 
       {/* How it works */}
       <section id="how-it-works" className="scroll-mt-20">
-        <RevealOnScroll className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
-          <div className="max-w-2xl">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
+          <RevealOnScroll className="max-w-2xl">
             <h2 className="text-xl font-semibold tracking-tight text-balance sm:text-2xl">
               {t("how.title")}
             </h2>
             <p className="text-muted-foreground mt-3">{t("how.subtitle")}</p>
-          </div>
+          </RevealOnScroll>
 
           <ol className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {STEPS.map((step) => (
-              <li key={step} className="border-t pt-5">
-                <span className="text-primary font-mono text-xs font-medium tabular-nums">
-                  {t(`how.steps.${step}.number`)}
-                </span>
-                <h3 className="mt-2 text-base font-semibold">{t(`how.steps.${step}.title`)}</h3>
-                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                  {t(`how.steps.${step}.body`)}
-                </p>
+            {STEPS.map((step, index) => (
+              <li key={step}>
+                <RevealOnScroll
+                  variant={index % 2 === 0 ? "left" : "right"}
+                  delayMs={index * 80}
+                  className="border-t pt-5"
+                >
+                  <span className="text-primary font-mono text-xs font-medium tabular-nums">
+                    {t(`how.steps.${step}.number`)}
+                  </span>
+                  <h3 className="mt-2 text-base font-semibold">{t(`how.steps.${step}.title`)}</h3>
+                  <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
+                    {t(`how.steps.${step}.body`)}
+                  </p>
+                </RevealOnScroll>
               </li>
             ))}
           </ol>
-        </RevealOnScroll>
+        </div>
       </section>
 
       {/* Example plan with its explanation */}
@@ -196,23 +205,27 @@ export default async function LandingPage() {
 
       {/* Features */}
       <section id="features" className="scroll-mt-20 border-t">
-        <RevealOnScroll className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
-          <h2 className="max-w-2xl text-xl font-semibold tracking-tight text-balance sm:text-2xl">
-            {t("features.title")}
-          </h2>
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 lg:px-6 lg:py-20">
+          <RevealOnScroll>
+            <h2 className="max-w-2xl text-xl font-semibold tracking-tight text-balance sm:text-2xl">
+              {t("features.title")}
+            </h2>
+          </RevealOnScroll>
 
           <ul className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map(({ key, icon: Icon }) => (
+            {FEATURES.map(({ key, icon: Icon }, index) => (
               <li key={key}>
-                <Icon className="text-primary size-5" aria-hidden="true" />
-                <h3 className="mt-3 text-sm font-semibold">{t(`features.items.${key}.title`)}</h3>
-                <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
-                  {t(`features.items.${key}.body`)}
-                </p>
+                <RevealOnScroll variant="scale" delayMs={(index % 3) * 90}>
+                  <Icon className="text-primary size-5" aria-hidden="true" />
+                  <h3 className="mt-3 text-sm font-semibold">{t(`features.items.${key}.title`)}</h3>
+                  <p className="text-muted-foreground mt-1.5 text-sm leading-relaxed">
+                    {t(`features.items.${key}.body`)}
+                  </p>
+                </RevealOnScroll>
               </li>
             ))}
           </ul>
-        </RevealOnScroll>
+        </div>
       </section>
 
       {/* Closing call to action */}
