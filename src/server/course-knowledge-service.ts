@@ -296,3 +296,21 @@ export async function listAssessmentDetails(
   if (error) throw new Error(`Could not load assessment details: ${error.message}`);
   return data ?? [];
 }
+
+/** `assessment_details.task_id` is unique — at most one row per task. */
+export async function getAssessmentDetailForTask(
+  userId: string,
+  taskId: string,
+): Promise<AssessmentDetailRow | null> {
+  const supabase = await createServerSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("assessment_details")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("task_id", taskId)
+    .maybeSingle();
+
+  if (error) throw new Error(`Could not load assessment detail: ${error.message}`);
+  return data;
+}

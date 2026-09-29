@@ -1204,5 +1204,44 @@
       "dismiss": "Dismiss",
       "applyFailed": "Couldn't apply that — your data may have changed. Try asking again."
     }
+  },
+  "intelligence": {
+    "forecast": {
+      "title": "Workload forecast",
+      "requiredLabel": "Needed",
+      "availableLabel": "Available",
+      "horizon": {
+        "7": "Next 7 days",
+        "14": "Next 14 days",
+        "30": "Next 30 days"
+      },
+      "pressure": {
+        "normal": "On track",
+        "elevated": "Slightly busy",
+        "high": "Busy",
+        "critical": "Very busy"
+      },
+      "reasons": {
+        "overlapping_deadlines": "{courseA} and {courseB} both have work due around the same time.",
+        "single_heavy_task": "{title} ({courseName}) needs more time than usually fits before its deadline.",
+        "insufficient_time": "There isn't quite enough open time in this period for everything due."
+      }
+    }
+  },
+  "learning": {
+    "title": "Learning profile",
+    "stillLearning": "Still learning — check back after a few more study sessions.",
+    "bestStudyBand": "You tend to complete more of your planned sessions in the {band}.",
+    "estimationBias": {
+      "underestimates": "You tend to need about {percent}% more time than you estimate.",
+      "overestimates": "You tend to finish about {percent}% faster than you estimate.",
+      "accurate": "Your time estimates tend to be accurate."
+    },
+    "coursePostponementRisk": "{courseName} sessions get rescheduled more often than your other courses.",
+    "basedOnSessions": "Based on {count} completed study sessions",
+    "basedOnTasks": "Based on {count} completed tasks",
+    "dismiss": "Not accurate for me",
+    "undo": "Undo",
+    "dismissedCount": "{count} dismissed"
   }
 }

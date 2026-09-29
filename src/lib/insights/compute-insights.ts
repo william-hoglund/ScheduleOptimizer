@@ -78,7 +78,8 @@ export type Insights = {
 /** Below this, per-band figures are noise rather than a pattern. */
 const MIN_SESSIONS_FOR_A_PATTERN = 6;
 
-function bandFor(minutesIntoDay: number): TimeOfDayBand {
+/** Shared with `lib/learning/compute-learning-profile.ts` — one banding rule, not two. */
+export function bandFor(minutesIntoDay: number): TimeOfDayBand {
   if (minutesIntoDay < 12 * 60) return "morning";
   if (minutesIntoDay < 17 * 60) return "afternoon";
   return "evening";

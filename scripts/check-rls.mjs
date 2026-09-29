@@ -67,6 +67,7 @@ const TABLES = [
   "assessment_details",
   "course_milestones",
   "course_knowledge_updates",
+  "learning_profile_insights",
 ];
 
 let failures = 0;

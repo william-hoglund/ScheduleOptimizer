@@ -1204,5 +1204,44 @@
       "dismiss": "Avfärda",
       "applyFailed": "Kunde inte verkställa det — din data kan ha ändrats. Försök fråga igen."
     }
+  },
+  "intelligence": {
+    "forecast": {
+      "title": "Arbetsbelastningsprognos",
+      "requiredLabel": "Behövs",
+      "availableLabel": "Tillgängligt",
+      "horizon": {
+        "7": "Nästa 7 dagarna",
+        "14": "Nästa 14 dagarna",
+        "30": "Nästa 30 dagarna"
+      },
+      "pressure": {
+        "normal": "Enligt plan",
+        "elevated": "Lite fullt",
+        "high": "Fullt",
+        "critical": "Mycket fullt"
+      },
+      "reasons": {
+        "overlapping_deadlines": "{courseA} och {courseB} har båda arbete som ska lämnas in ungefär samtidigt.",
+        "single_heavy_task": "{title} ({courseName}) kräver mer tid än vad som normalt får plats innan deadline.",
+        "insufficient_time": "Det finns inte riktigt tillräckligt med ledig tid under perioden för allt som ska göras."
+      }
+    }
+  },
+  "learning": {
+    "title": "Inlärningsprofil",
+    "stillLearning": "Fortfarande under inlärning — kom tillbaka efter några fler studiepass.",
+    "bestStudyBand": "Du slutför oftare dina planerade pass på {band}.",
+    "estimationBias": {
+      "underestimates": "Du brukar behöva ungefär {percent}% mer tid än du uppskattar.",
+      "overestimates": "Du brukar bli klar ungefär {percent}% snabbare än du uppskattar.",
+      "accurate": "Dina tidsuppskattningar brukar stämma bra."
+    },
+    "coursePostponementRisk": "Pass i {courseName} flyttas oftare än dina andra kurser.",
+    "basedOnSessions": "Baserat på {count} genomförda studiepass",
+    "basedOnTasks": "Baserat på {count} avklarade uppgifter",
+    "dismiss": "Inte korrekt för mig",
+    "undo": "Ångra",
+    "dismissedCount": "{count} avfärdade"
   }
 }

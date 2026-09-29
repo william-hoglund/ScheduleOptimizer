@@ -32,10 +32,12 @@ import { defaultTaskInput } from "@/lib/validation/task";
 import { getCourse, listCourses, setCoursePriority } from "./course-service";
 import {
   downloadCourseDocumentBytes,
+  getAssessmentDetailForTask,
   getCourseDocument,
   markDocumentFailed,
   markDocumentProcessing,
 } from "./course-knowledge-service";
+import { getWorkflowStages } from "@/lib/assessment/workflow-templates";
 import { listTasks } from "./task-service";
 
 /**
@@ -162,6 +164,16 @@ export async function generateTaskBreakdown({
 
   const remainingMinutes = Math.max(task.estimated_minutes - task.completed_minutes, 15);
 
+  // A task backed by a reviewed syllabus fact (docs/PLAN.md's Assessment
+  // Intelligence feature) gets a type-aware stage checklist instead of a
+  // generic minute split — see `lib/assessment/workflow-templates.ts`. An
+  // ordinary task has no `assessment_details` row, so `stageNames` stays
+  // undefined and behavior is unchanged.
+  const assessmentDetail = await getAssessmentDetailForTask(userId, taskId);
+  const stageNames = assessmentDetail
+    ? getWorkflowStages({ taskType: task.task_type, assessmentFormat: assessmentDetail.assessment_format })
+    : undefined;
+
   return breakdownTaskAi({
     locale,
     title: task.title,
@@ -169,6 +181,7 @@ export async function generateTaskBreakdown({
     remainingMinutes,
     deadlineLocal: task.deadline ? utcToWallClock(task.deadline, timeZone) : null,
     difficulty: task.difficulty,
+    stageNames,
   });
 }
 
