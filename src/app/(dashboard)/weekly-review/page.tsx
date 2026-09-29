@@ -5,7 +5,8 @@ import { EmptyState } from "@/components/common/empty-state";
 import { PageHeader } from "@/components/layout/page-header";
 import { createPageMetadata } from "@/components/layout/placeholder-page";
 import { pickRecommendation } from "@/lib/briefing/pick-recommendation";
-import type { CourseRow, LearningConfidence, LearningProfileInsightRow } from "@/lib/supabase/types";
+import { rankActiveInsights } from "@/lib/learning/rank-insights";
+import type { CourseRow, LearningProfileInsightRow } from "@/lib/supabase/types";
 import { requireUserContext } from "@/server/auth";
 import { nowIso } from "@/server/clock";
 import { loadInsights } from "@/server/insights-service";
@@ -13,21 +14,6 @@ import { listLearningProfileInsights } from "@/server/learning-profile-service";
 import { getWorkloadForecast } from "@/server/workload-forecast-service";
 
 export const generateMetadata = () => createPageMetadata("weeklyReview");
-
-/** Rank so the most-confident, best-evidenced insight leads. */
-const CONFIDENCE_RANK: Record<LearningConfidence, number> = { high: 3, medium: 2, low: 1 };
-
-function pickTopInsight(insights: readonly LearningProfileInsightRow[]): LearningProfileInsightRow | null {
-  const active = insights.filter((insight) => !insight.overridden_by_user);
-  if (active.length === 0) return null;
-
-  return (
-    [...active].sort((a, b) => {
-      const byConfidence = CONFIDENCE_RANK[b.confidence] - CONFIDENCE_RANK[a.confidence];
-      return byConfidence !== 0 ? byConfidence : b.observation_count - a.observation_count;
-    })[0] ?? null
-  );
-}
 
 function hours(minutes: number): number {
   return Math.round(minutes / 60);
@@ -88,7 +74,7 @@ export default async function WeeklyReviewPage() {
   let topInsight: LearningProfileInsightRow | null = null;
   let learningAvailable = true;
   try {
-    topInsight = pickTopInsight(await listLearningProfileInsights(user.id));
+    topInsight = rankActiveInsights(await listLearningProfileInsights(user.id))[0] ?? null;
   } catch (cause) {
     console.error("[weekly-review] learning profile unavailable:", cause);
     learningAvailable = false;

@@ -9,6 +9,7 @@ import {
   explainPlan as explainPlanAi,
   extractCourseKnowledge as extractCourseKnowledgeAi,
   isAiEnabled,
+  type AdvisorBehaviorHighlight,
   type AdvisorCourse,
   type AdvisorOutcome,
   type AdvisorTask,
@@ -20,6 +21,8 @@ import { resolvePlannerCommand, type CommandContext, type ResolvedCommand } from
 import type { PlannerCommand } from "@/lib/ai/schemas/advisor";
 import { utcToLocalDate, utcToWallClock } from "@/lib/calendar/time";
 import { DocumentTextExtractionError, extractDocumentText } from "@/lib/documents/extract-text";
+import type { HorizonForecast } from "@/lib/intelligence/workload-forecast";
+import { rankActiveInsights } from "@/lib/learning/rank-insights";
 import { fromEpochMinutes } from "@/lib/planner/time-grid";
 import type { PlannerResult } from "@/lib/planner/types";
 import type { Segment } from "@/lib/segments";
@@ -38,6 +41,9 @@ import {
   markDocumentProcessing,
 } from "./course-knowledge-service";
 import { getWorkflowStages } from "@/lib/assessment/workflow-templates";
+import { listLearningProfileInsights } from "./learning-profile-service";
+import { getStudyPreferences, saveStudyPreferences, toPreferencesInput } from "./preference-service";
+import { getWorkloadForecast } from "./workload-forecast-service";
 import { listTasks } from "./task-service";
 
 /**
@@ -287,6 +293,8 @@ export async function generateCourseExtraction({
 
 // ---------------------------------------------------------------- advisor ---
 
+const MAX_BEHAVIOR_HIGHLIGHTS_IN_PROMPT = 2;
+
 async function loadAdvisorContext(
   userId: string,
   timeZone: string,
@@ -294,6 +302,8 @@ async function loadAdvisorContext(
   courses: AdvisorCourse[];
   upcomingTasks: AdvisorTask[];
   hasCurrentPlan: boolean;
+  workload: HorizonForecast[];
+  behaviorHighlights: AdvisorBehaviorHighlight[];
   commandContext: Omit<CommandContext, "today">;
 }> {
   const supabase = await createServerSupabaseClient();
@@ -325,9 +335,40 @@ async function loadAdvisorContext(
     })),
   );
 
+  /**
+   * The forecast and the learning profile are supplementary context, not
+   * core to the advisor working at all — a failure in either (an unapplied
+   * migration, a genuinely empty account) must degrade to an advisor with
+   * slightly less to say, never a broken one.
+   */
+  const workload = await getWorkloadForecast({ userId, timeZone, nowIso: nowIso() }).catch((cause) => {
+    console.error("[ai-service] advisor workload context unavailable:", cause);
+    return [];
+  });
+
+  const behaviorHighlights = await listLearningProfileInsights(userId)
+    .then((insights) =>
+      rankActiveInsights(insights)
+        .slice(0, MAX_BEHAVIOR_HIGHLIGHTS_IN_PROMPT)
+        .map(
+          (insight): AdvisorBehaviorHighlight => ({
+            insightType: insight.insight_type,
+            computedValue: insight.computed_value,
+            courseName: insight.course_id ? (courseNameById.get(insight.course_id) ?? null) : null,
+            observationCount: insight.observation_count,
+          }),
+        ),
+    )
+    .catch((cause: unknown) => {
+      console.error("[ai-service] advisor behavior context unavailable:", cause);
+      return [];
+    });
+
   return {
     ...bounded,
     hasCurrentPlan: Boolean(activePlan),
+    workload,
+    behaviorHighlights,
     commandContext: {
       validCourseIds: new Set(courses.map((course) => course.id)),
       currentPlanHorizon: activePlan
@@ -381,6 +422,8 @@ export async function askAdvisor({
     courses: context.courses,
     upcomingTasks: context.upcomingTasks,
     hasCurrentPlan: context.hasCurrentPlan,
+    workload: context.workload,
+    behaviorHighlights: context.behaviorHighlights,
   });
 
   if (!outcome.ok) return outcome;
@@ -429,6 +472,26 @@ export async function applyResolvedCommand({
         return { ok: true };
       } catch (cause) {
         console.error("[ai-service] setCoursePriority failed:", cause);
+        return { ok: false, error: "unexpected" };
+      }
+    }
+
+    case "apply_forecast_remedy": {
+      // Same setter Settings uses — loads the current row, changes exactly
+      // one field, saves the whole thing back. Idempotent: applying either
+      // remedy when it's already in effect is a harmless no-op write, which
+      // is why the prompt doesn't need to know the current values to avoid
+      // proposing a redundant change.
+      try {
+        const current = toPreferencesInput(await getStudyPreferences(userId));
+        const next =
+          resolved.remedyCode === "allow_weekends"
+            ? { ...current, weekendAllowed: true }
+            : { ...current, maximumDailyMinutes: Math.min(480, current.maximumDailyMinutes + 60) };
+        await saveStudyPreferences(userId, next);
+        return { ok: true };
+      } catch (cause) {
+        console.error("[ai-service] applyForecastRemedy failed:", cause);
         return { ok: false, error: "unexpected" };
       }
     }

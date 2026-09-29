@@ -38,6 +38,19 @@ export const plannerCommandSchema = z.discriminatedUnion("kind", [
     label: z.string().min(1).max(100),
   }),
   z.object({
+    kind: z.literal("apply_forecast_remedy"),
+    /**
+     * Deliberately just these two: the only `PlannerRemedy` codes
+     * (`lib/planner/types.ts`) that map onto a single, unambiguous, always-
+     * safe-to-apply preference field. The others (`reduce_scope`,
+     * `prioritise_graded`, `relax_day_rule`, …) touch multiple courses or a
+     * specific calendar the model was never shown, so they stay out of the
+     * advisor's write vocabulary rather than guessing which one they mean.
+     */
+    remedyCode: z.enum(["allow_weekends", "extend_daily_limit"]),
+    label: z.string().min(1).max(100),
+  }),
+  z.object({
     kind: z.literal("none"),
   }),
 ]);

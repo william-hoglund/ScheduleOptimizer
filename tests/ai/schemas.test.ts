@@ -97,7 +97,12 @@ describe("oneOfToAnyOf", () => {
       properties: { action: { anyOf: Array<{ properties: { kind: { const: string } } }> } };
     };
     const kinds = result.properties.action.anyOf.map((branch) => branch.properties.kind.const);
-    expect(kinds.sort()).toEqual(["none", "regenerate_plan", "set_course_priority"]);
+    expect(kinds.sort()).toEqual([
+      "apply_forecast_remedy",
+      "none",
+      "regenerate_plan",
+      "set_course_priority",
+    ]);
   });
 });
 
@@ -112,6 +117,7 @@ describe("advisorReplySchema", () => {
         timeframe: "current_plan" as const,
         label: "x",
       },
+      { kind: "apply_forecast_remedy" as const, remedyCode: "allow_weekends" as const, label: "x" },
     ]) {
       const result = advisorReplySchema.safeParse({ inScope: true, message: "ok", action });
       expect(result.success).toBe(true);

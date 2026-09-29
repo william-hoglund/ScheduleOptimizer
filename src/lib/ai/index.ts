@@ -129,6 +129,6 @@ export type {
 } from "./schemas/course-extraction";
 export type { PlanExplanation } from "./schemas/explain-plan";
 export type { TaskBreakdown } from "./schemas/task-breakdown";
-export type { AdvisorCourse, AdvisorTask } from "./prompts/advisor";
+export type { AdvisorBehaviorHighlight, AdvisorCourse, AdvisorTask } from "./prompts/advisor";
 export { boundAdvisorContext } from "./prompts/advisor";
 export { boundExplainPlanSessions, type ExplainPlanSession } from "./prompts/explain-plan";

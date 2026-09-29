@@ -21,6 +21,7 @@ export type CommandContext = {
 export type ResolvedCommand =
   | { kind: "regenerate_plan"; courseIds: string[]; startDate: string; endDate: string; label: string }
   | { kind: "set_course_priority"; courseId: string; priority: 1 | 2 | 3 | 4 | 5; label: string }
+  | { kind: "apply_forecast_remedy"; remedyCode: "allow_weekends" | "extend_daily_limit"; label: string }
   | { kind: "none" };
 
 function nextSevenDays(today: string): { startDate: string; endDate: string } {
@@ -41,6 +42,13 @@ export function resolvePlannerCommand(
 ): ResolvedCommand | null {
   switch (command.kind) {
     case "none":
+      return command;
+
+    case "apply_forecast_remedy":
+      // Nothing to validate against the account: the remedy code is already a
+      // closed, schema-validated enum of two safe, idempotent, globally-
+      // applicable preference toggles — unlike a course id, there is no
+      // "hallucinated" value it could resolve to.
       return command;
 
     case "set_course_priority": {

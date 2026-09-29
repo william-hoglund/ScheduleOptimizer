@@ -101,6 +101,28 @@ describe("resolvePlannerCommand — set_course_priority", () => {
   });
 });
 
+describe("resolvePlannerCommand — apply_forecast_remedy", () => {
+  it("passes through unchanged — there is no account-specific id to validate", () => {
+    const resolved = resolvePlannerCommand(
+      { kind: "apply_forecast_remedy", remedyCode: "allow_weekends", label: "Allow weekend study" },
+      context(),
+    );
+    expect(resolved).toEqual({
+      kind: "apply_forecast_remedy",
+      remedyCode: "allow_weekends",
+      label: "Allow weekend study",
+    });
+  });
+
+  it("passes through the other remedy code the same way", () => {
+    const resolved = resolvePlannerCommand(
+      { kind: "apply_forecast_remedy", remedyCode: "extend_daily_limit", label: "Raise your daily cap" },
+      context(),
+    );
+    expect(resolved).toMatchObject({ remedyCode: "extend_daily_limit" });
+  });
+});
+
 describe("resolvePlannerCommand — none", () => {
   it("passes through unchanged", () => {
     expect(resolvePlannerCommand({ kind: "none" }, context())).toEqual({ kind: "none" });
