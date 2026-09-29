@@ -15,6 +15,12 @@ import { buildPlannerInput, type PlanHorizon } from "./planner-service";
  * `daily-briefing-service.ts` (one call for today) so this sequence exists in
  * exactly one place.
  */
+
+/** Local-date arithmetic only — no time-of-day, so no DST concern. */
+export function addLocalDays(date: string, days: number): string {
+  return new Date(Date.parse(`${date}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
+}
+
 export async function getAvailabilityForRange({
   userId,
   timeZone,

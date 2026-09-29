@@ -7,7 +7,7 @@ import {
 } from "@/lib/intelligence/workload-forecast";
 import { utcToLocalDate } from "@/lib/calendar/time";
 import { toEpochMinutes } from "@/lib/planner/time-grid";
-import { getAvailabilityForRange } from "./availability-lookup";
+import { addLocalDays, getAvailabilityForRange } from "./availability-lookup";
 
 /**
  * Turns the deterministic forecast math in `lib/intelligence/workload-forecast.ts`
@@ -19,11 +19,6 @@ import { getAvailabilityForRange } from "./availability-lookup";
  */
 
 const HORIZONS: readonly ForecastHorizonDays[] = [7, 14, 30];
-
-/** Local-date arithmetic only — no time-of-day, so no DST concern. */
-function addLocalDays(date: string, days: number): string {
-  return new Date(Date.parse(`${date}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
-}
 
 export async function getWorkloadForecast({
   userId,

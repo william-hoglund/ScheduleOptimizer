@@ -1280,5 +1280,21 @@
     "availableCapacity": "Tillgänglig kapacitet",
     "recommendationTitle": "Rekommendation",
     "recommendationNone": "Du ligger bra till — inget behöver ändras."
+  },
+  "whatIf": {
+    "title": "Tänk om...?",
+    "description": "Testa ett scenario mot din verkliga arbetsbelastning — inget här sparas eller verkställs.",
+    "horizonLabel": "Under de kommande",
+    "scenarioLabel": "Scenario",
+    "dayLabel": "Dag att hoppa över",
+    "hoursLabel": "Extra timmar",
+    "compare": "Jämför",
+    "failed": "Kunde inte köra den jämförelsen — försök igen strax.",
+    "current": "Nuläge",
+    "projected": "Om detta händer",
+    "scenario": {
+      "skip_day": "Hoppa över en studiedag",
+      "extra_commitment": "Extra åtagande (timmar)"
+    }
   }
 }

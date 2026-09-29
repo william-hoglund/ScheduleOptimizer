@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { EmptyState } from "@/components/common/empty-state";
 import { PageHeader } from "@/components/layout/page-header";
 import { createPageMetadata } from "@/components/layout/placeholder-page";
+import { WhatIfPanel } from "@/components/insights/what-if-panel";
 import { pickRecommendation } from "@/lib/briefing/pick-recommendation";
 import { rankActiveInsights } from "@/lib/learning/rank-insights";
 import type { CourseRow, LearningProfileInsightRow } from "@/lib/supabase/types";
@@ -169,6 +170,8 @@ export default async function WeeklyReviewPage() {
             : t("weeklyReview.recommendationNone")}
         </p>
       </section>
+
+      <WhatIfPanel />
     </div>
   );
 }

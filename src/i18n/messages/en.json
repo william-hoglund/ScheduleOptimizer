@@ -1280,5 +1280,21 @@
     "availableCapacity": "Available capacity",
     "recommendationTitle": "Recommendation",
     "recommendationNone": "You're on track — nothing needs to change."
+  },
+  "whatIf": {
+    "title": "What if...?",
+    "description": "Try a scenario against your real workload — nothing here is saved or applied.",
+    "horizonLabel": "Over the next",
+    "scenarioLabel": "Scenario",
+    "dayLabel": "Day to skip",
+    "hoursLabel": "Extra hours",
+    "compare": "Compare",
+    "failed": "Couldn't run that comparison — try again shortly.",
+    "current": "Current",
+    "projected": "If this happens",
+    "scenario": {
+      "skip_day": "Skip a day of studying",
+      "extra_commitment": "Extra commitment (hours)"
+    }
   }
 }
