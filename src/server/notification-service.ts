@@ -1,7 +1,9 @@
 import "server-only";
 
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import type { NotificationRow, NotificationSettingsRow } from "@/lib/supabase/types";
+import type { Database, NotificationRow, NotificationSettingsRow } from "@/lib/supabase/types";
 
 /**
  * In-app notifications.
@@ -68,10 +70,11 @@ export async function markRead(userId: string, notificationId: string): Promise<
 
 export async function getNotificationSettings(
   userId: string,
+  supabase?: SupabaseClient<Database>,
 ): Promise<NotificationSettingsRow | null> {
-  const supabase = await createServerSupabaseClient();
+  const client = supabase ?? (await createServerSupabaseClient());
 
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from("notification_settings")
     .select("*")
     .eq("user_id", userId)
@@ -96,16 +99,24 @@ export async function notify(
     relatedEntityType?: string;
     relatedEntityId?: string;
   },
+  /**
+   * Defaults to the per-request, RLS-scoped client — correct for the one
+   * call site that runs inside a signed-in user's own request. The
+   * notification dispatch job (Session 24) has no signed-in user at all, so
+   * it passes `createAdminSupabaseClient()` explicitly instead — see
+   * `lib/supabase/admin.ts` for why that's the sanctioned use case, not a
+   * shortcut.
+   */
+  supabase?: SupabaseClient<Database>,
 ): Promise<boolean> {
-  const settings = await getNotificationSettings(userId);
+  const client = supabase ?? (await createServerSupabaseClient());
+  const settings = await getNotificationSettings(userId, client);
 
   // No settings row yet means defaults, which are on for the types that matter.
   if (settings && !isEnabled(settings, notification.type)) return false;
   if (settings && !settings.channel_in_app) return false;
 
-  const supabase = await createServerSupabaseClient();
-
-  const { error } = await supabase.from("notifications").insert({
+  const { error } = await client.from("notifications").insert({
     user_id: userId,
     type: notification.type,
     title: notification.title,

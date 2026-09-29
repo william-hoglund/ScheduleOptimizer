@@ -51,6 +51,11 @@ const serverSchema = z.object({
   // model — nothing else in the code needs to change.
   OPENAI_MODEL: z.string().min(1).default("gpt-4o-2024-08-06"),
   ANTHROPIC_MODEL: z.string().min(1).default("claude-sonnet-5"),
+
+  // Notification dispatch (Session 24). Optional — the route refuses every
+  // request until this is set, which is the correct failure mode for a
+  // deployment that hasn't wired up the cron yet.
+  CRON_SECRET: z.string().min(16).optional(),
 });
 
 function parse<T extends z.ZodType>(schema: T, values: unknown, label: string): z.infer<T> {
@@ -95,6 +100,7 @@ export function getServerEnv() {
       ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY || undefined,
       OPENAI_MODEL: process.env.OPENAI_MODEL || undefined,
       ANTHROPIC_MODEL: process.env.ANTHROPIC_MODEL || undefined,
+      CRON_SECRET: process.env.CRON_SECRET || undefined,
     },
     "server",
   );
