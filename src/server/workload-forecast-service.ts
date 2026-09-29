@@ -6,18 +6,16 @@ import {
   type HorizonForecast,
 } from "@/lib/intelligence/workload-forecast";
 import { utcToLocalDate } from "@/lib/calendar/time";
-import { buildAvailability } from "@/lib/planner/availability/build-availability";
 import { toEpochMinutes } from "@/lib/planner/time-grid";
-import { buildPlannerInput } from "./planner-service";
+import { getAvailabilityForRange } from "./availability-lookup";
 
 /**
  * Turns the deterministic forecast math in `lib/intelligence/workload-forecast.ts`
  * into something the database can feed: one `HorizonForecast` per window,
- * built by reusing exactly what the real planner already uses to see a given
- * date range — `buildPlannerInput` (tasks/preferences/rules/fixed
- * events/calendar sources) and `buildAvailability` (the same day-effect-aware
- * free-time calculation the engine itself runs on). No caching, no new table:
- * recomputed on read, same discipline as `insights-service.ts`.
+ * built from `getAvailabilityForRange` (the same day-effect-aware free-time
+ * calculation the engine itself runs on, shared with
+ * `daily-briefing-service.ts`). No caching, no new table: recomputed on read,
+ * same discipline as `insights-service.ts`.
  */
 
 const HORIZONS: readonly ForecastHorizonDays[] = [7, 14, 30];
@@ -43,30 +41,15 @@ export async function getWorkloadForecast({
   for (const horizonDays of HORIZONS) {
     const horizonEndDate = addLocalDays(today, horizonDays);
 
-    const { input, courses } = await buildPlannerInput({
+    const { availableMinutes, input, courses } = await getAvailabilityForRange({
       userId,
       timeZone,
-      horizon: { startDate: today, endDate: horizonEndDate },
       nowIso,
+      range: { startDate: today, endDate: horizonEndDate },
       // A forecast never gets applied, only read — a fixed seed is enough to
       // make it reproducible for the length of one request.
       seed: `forecast-${horizonDays}`,
     });
-
-    const availability = buildAvailability({
-      horizonStartDate: today,
-      horizonEndDate,
-      timeZone,
-      preferences: input.preferences,
-      availabilityRules: input.availabilityRules,
-      fixedEvents: input.fixedEvents,
-      calendarSources: input.calendarSources,
-      now: input.now,
-    });
-    const availableMinutes = [...availability.minutesByDate.values()].reduce(
-      (sum, minutes) => sum + minutes,
-      0,
-    );
 
     const horizonEnd = toEpochMinutes(`${horizonEndDate}T23:59:59.999Z`);
 

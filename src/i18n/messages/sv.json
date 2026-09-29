@@ -10,6 +10,7 @@
     "deadlines": "Deadlines",
     "planner": "Planering",
     "insights": "Statistik",
+    "weeklyReview": "Veckans genomgång",
     "settings": "Inställningar",
     "openMenu": "Öppna meny",
     "closeMenu": "Stäng meny",
@@ -302,6 +303,12 @@
       "description": "Hur din planerade tid står sig mot tiden du faktiskt studerade.",
       "emptyTitle": "Inte tillräckligt med data än",
       "emptyBody": "Statistik visas när du har genomfört några studiepass."
+    },
+    "weeklyReview": {
+      "title": "Veckans genomgång",
+      "description": "Vad som faktiskt hände den här veckan, och vad som väntar härnäst.",
+      "emptyTitle": "Inget att gå igenom än",
+      "emptyBody": "En veckogenomgång visas när du har genomfört några studiepass."
     },
     "settings": {
       "title": "Inställningar",
@@ -1243,5 +1250,35 @@
     "dismiss": "Inte korrekt för mig",
     "undo": "Ångra",
     "dismissedCount": "{count} avfärdade"
+  },
+  "briefing": {
+    "greeting": {
+      "morning": "God morgon",
+      "afternoon": "God eftermiddag",
+      "evening": "God kväll"
+    },
+    "focusTitle": "Dagens fokus",
+    "noFocus": "Inget inplanerat idag än.",
+    "plannedLabel": "Planerad studietid",
+    "availableLabel": "Tillgängligt",
+    "commitmentsTitle": "Idag",
+    "watchOutTitle": "Tänk på",
+    "protectTitle": "En sak att värna om",
+    "protectBody": "Behåll {title} — din studietid får ändå plats runt den."
+  },
+  "weeklyReview": {
+    "yourWeek": "Din vecka",
+    "planned": "Planerat",
+    "completed": "Genomfört",
+    "adherence": "Följsamhet",
+    "rescheduled": "Omplanerade",
+    "sessionsCompleted": "Genomförda pass",
+    "notEnoughData": "Inte tillräckligt har hänt den här veckan för en genomgång än.",
+    "systemLearned": "Vad systemet har lärt sig",
+    "nextWeek": "Nästa vecka",
+    "expectedWorkload": "Förväntad arbetsbelastning",
+    "availableCapacity": "Tillgänglig kapacitet",
+    "recommendationTitle": "Rekommendation",
+    "recommendationNone": "Du ligger bra till — inget behöver ändras."
   }
 }

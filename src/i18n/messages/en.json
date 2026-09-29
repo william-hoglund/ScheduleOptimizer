@@ -10,6 +10,7 @@
     "deadlines": "Deadlines",
     "planner": "Planner",
     "insights": "Insights",
+    "weeklyReview": "Weekly Review",
     "settings": "Settings",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
@@ -302,6 +303,12 @@
       "description": "How your planned time compares with the time you actually studied.",
       "emptyTitle": "Not enough data yet",
       "emptyBody": "Statistics appear once you have completed a few study sessions."
+    },
+    "weeklyReview": {
+      "title": "Weekly Review",
+      "description": "What actually happened this week, and what to expect next.",
+      "emptyTitle": "Nothing to review yet",
+      "emptyBody": "A weekly review appears once you have completed a few study sessions."
     },
     "settings": {
       "title": "Settings",
@@ -1243,5 +1250,35 @@
     "dismiss": "Not accurate for me",
     "undo": "Undo",
     "dismissedCount": "{count} dismissed"
+  },
+  "briefing": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "focusTitle": "Today's focus",
+    "noFocus": "Nothing scheduled yet today.",
+    "plannedLabel": "Study planned",
+    "availableLabel": "Available",
+    "commitmentsTitle": "Today",
+    "watchOutTitle": "Watch out",
+    "protectTitle": "One thing to protect",
+    "protectBody": "Keep {title} — your study time can still fit around it."
+  },
+  "weeklyReview": {
+    "yourWeek": "Your week",
+    "planned": "Planned",
+    "completed": "Completed",
+    "adherence": "Adherence",
+    "rescheduled": "Rescheduled",
+    "sessionsCompleted": "Sessions completed",
+    "notEnoughData": "Not enough happened this week yet to review.",
+    "systemLearned": "What the system learned",
+    "nextWeek": "Next week",
+    "expectedWorkload": "Expected workload",
+    "availableCapacity": "Available capacity",
+    "recommendationTitle": "Recommendation",
+    "recommendationNone": "You're on track — nothing needs to change."
   }
 }

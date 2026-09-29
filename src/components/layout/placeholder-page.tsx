@@ -13,6 +13,7 @@ export type PageKey =
   | "deadlines"
   | "todos"
   | "insights"
+  | "weeklyReview"
   | "importExport"
   | "advisor"
   | "settings";

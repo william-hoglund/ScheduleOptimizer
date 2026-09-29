@@ -3,16 +3,19 @@ import { getFormatter, getTranslations } from "next-intl/server";
 
 import { ButtonLink } from "@/components/common/button-link";
 import { StatTile } from "@/components/common/stat-tile";
+import { DailyBriefingPanel } from "@/components/dashboard/daily-briefing";
 import { PageHeader } from "@/components/layout/page-header";
 import { createPageMetadata } from "@/components/layout/placeholder-page";
 import { TodaySessions } from "@/components/sessions/today-sessions";
 import { UnresolvedSessions } from "@/components/sessions/unresolved-sessions";
-import { utcToLocalDate, wallClockToUtc } from "@/lib/calendar/time";
+import { greetingBandFor, type DailyBriefing } from "@/lib/briefing/build-daily-briefing";
+import { utcToLocalDate, utcToWallClock, wallClockToUtc } from "@/lib/calendar/time";
 import { groupTodos, minutesThisWeek } from "@/lib/tasks/group-todos";
 import { daysUntil } from "@/lib/tasks/group-tasks";
 import { requireUserContext } from "@/server/auth";
 import { nowIso } from "@/server/clock";
 import { listCourses } from "@/server/course-service";
+import { getDailyBriefing } from "@/server/daily-briefing-service";
 import { findUnresolvedSessions, listSessionsBetween } from "@/server/session-service";
 import { listTasks } from "@/server/task-service";
 import { listTodos } from "@/server/todo-service";
@@ -67,6 +70,20 @@ export default async function DashboardPage() {
     .filter((task) => task.deadline !== null)
     .sort((a, b) => (a.deadline ?? "").localeCompare(b.deadline ?? ""))[0];
 
+  /**
+   * The briefing reads real planning data across several services (sessions,
+   * calendar events, the workload forecast) — a genuine failure there must
+   * hide only this panel, never the stat tiles and today's sessions below it.
+   */
+  let briefing: DailyBriefing | null = null;
+  try {
+    briefing = await getDailyBriefing({ userId: user.id, timeZone, nowIso: now });
+  } catch (cause) {
+    console.error("[dashboard] daily briefing unavailable:", cause);
+  }
+  const courseNameById = Object.fromEntries(courses.map((course) => [course.id, course.name]));
+  const localHour = Number(utcToWallClock(now, timeZone).slice(11, 13));
+
   const plannedToday = todaySessions.reduce((sum, session) => sum + session.planned_minutes, 0);
   const doneToday = todaySessions
     .filter((session) => session.status === "completed" || session.status === "partial")
@@ -90,6 +107,15 @@ export default async function DashboardPage() {
       />
 
       <UnresolvedSessions sessions={unresolvedBefore} timeZone={timeZone} />
+
+      {briefing ? (
+        <DailyBriefingPanel
+          briefing={briefing}
+          greeting={greetingBandFor(localHour)}
+          courseNameById={courseNameById}
+          timeZone={timeZone}
+        />
+      ) : null}
 
       {/*
         Always shown, with honest zeros. Tiles that appear only once there is

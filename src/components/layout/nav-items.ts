@@ -5,6 +5,7 @@ import {
   BarChart3,
   Bot,
   CalendarDays,
+  CalendarRange,
   GraduationCap,
   LayoutGrid,
   ListTodo,
@@ -22,6 +23,7 @@ export type NavLabelKey =
   | "deadlines"
   | "todos"
   | "insights"
+  | "weeklyReview"
   | "importExport"
   | "advisor"
   | "settings";
@@ -47,6 +49,7 @@ export const primaryNavItems: readonly NavItem[] = [
 
 export const secondaryNavItems: readonly NavItem[] = [
   { href: "/insights", labelKey: "insights", icon: BarChart3 },
+  { href: "/weekly-review", labelKey: "weeklyReview", icon: CalendarRange },
   { href: "/import-export", labelKey: "importExport", icon: ArrowDownUp },
   { href: "/advisor", labelKey: "advisor", icon: Bot },
   { href: "/settings", labelKey: "settings", icon: Settings },
