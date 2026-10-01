@@ -25,6 +25,7 @@ export function createOpenAiProvider(apiKey: string, model: string): AiProvider 
       prompt,
       schema,
       maxOutputTokens,
+      images,
     }: GenerateObjectRequest<S>): Promise<z.infer<S>> {
       const rawSchema = z.toJSONSchema(schema, { target: "draft-07" });
       // OpenAI's strict mode rejects a top-level $schema key, and rejects
@@ -32,12 +33,24 @@ export function createOpenAiProvider(apiKey: string, model: string): AiProvider 
       delete (rawSchema as { $schema?: unknown }).$schema;
       const jsonSchema = oneOfToAnyOf(rawSchema);
 
+      const userContent: OpenAI.Chat.ChatCompletionContentPart[] = images?.length
+        ? [
+            { type: "text", text: prompt },
+            ...images.map(
+              (image): OpenAI.Chat.ChatCompletionContentPart => ({
+                type: "image_url",
+                image_url: { url: `data:${image.mediaType};base64,${image.base64}` },
+              }),
+            ),
+          ]
+        : [{ type: "text", text: prompt }];
+
       const response = await client.chat.completions.create({
         model,
         max_completion_tokens: maxOutputTokens,
         messages: [
           { role: "system", content: system },
-          { role: "user", content: prompt },
+          { role: "user", content: userContent },
         ],
         response_format: {
           type: "json_schema",

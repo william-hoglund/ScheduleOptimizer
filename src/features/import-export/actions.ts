@@ -18,6 +18,7 @@ import {
   icsPreviewSchema,
   icsUrlPreviewSchema,
   importRequestSchema,
+  scheduleImagePreviewSchema,
 } from "@/lib/validation/import-export";
 import { calendarSourceSchema } from "@/lib/validation/calendar-source";
 import { requireUserContext } from "@/server/auth";
@@ -38,6 +39,7 @@ import {
   GOOGLE_CALENDAR_SOURCE_NAME,
   previewGoogleImport,
   previewIcsImport,
+  previewScheduleImage,
   saveImportedEvents,
   type ImportOutcome,
   type ImportPreview,
@@ -107,6 +109,50 @@ export async function confirmIcsImport(input: unknown): Promise<ActionResult<Imp
         : (await createCalendarSource(user.id, target.newSource, null)).id;
 
     const outcome = await saveImportedEvents(user.id, timeZone, events, sourceId);
+    await markImported(user.id, sourceId, nowIso());
+    return outcome;
+  });
+  if (!result.ok) return result;
+
+  revalidatePath("/calendar");
+  revalidatePath("/dashboard");
+  revalidatePath("/import-export");
+  return result;
+}
+
+/**
+ * A timetable photo: the AI extraction and the weekly-pattern expansion both
+ * already happened client-side (`schedule-image-panel.tsx`,
+ * `lib/calendar/schedule-image.ts`) — this only ever sees the resulting
+ * candidates, re-validated the same as everything else the browser sends
+ * back. Picks a calendar the same way `.ics` does (existing or new), unlike
+ * Google's one fixed destination, because there is no equivalent "the one
+ * account this came from" here.
+ */
+export async function previewScheduleImageAction(input: unknown): Promise<ActionResult<ImportPreview>> {
+  const { user } = await requireUserContext();
+
+  const parsed = scheduleImagePreviewSchema.safeParse(input);
+  if (!parsed.success) return fromZodError(parsed.error);
+
+  return guarded(() => previewScheduleImage(user.id, null, parsed.data.candidates, parsed.data.sourceId));
+}
+
+export async function confirmScheduleImageImport(input: unknown): Promise<ActionResult<ImportOutcome>> {
+  const { user, timeZone } = await requireUserContext();
+
+  const parsed = importRequestSchema.safeParse(input);
+  if (!parsed.success) return fromZodError(parsed.error);
+
+  const result = await guarded(async () => {
+    const { target, events } = parsed.data;
+
+    const sourceId =
+      "existingSourceId" in target
+        ? target.existingSourceId
+        : (await createCalendarSource(user.id, target.newSource, null)).id;
+
+    const outcome = await saveImportedEvents(user.id, timeZone, events, sourceId, "schedule_image");
     await markImported(user.id, sourceId, nowIso());
     return outcome;
   });

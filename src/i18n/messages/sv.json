@@ -430,6 +430,7 @@
     "previous": "Föregående",
     "next": "Nästa",
     "addEvent": "Lägg till händelse",
+    "importExport": "Import och export",
     "editEvent": "Ändra händelse",
     "empty": "Inget inplanerat",
     "emptyBody": "Lägg till en föreläsning eller ett privat åtagande så planeras studietiden runt det.",
@@ -892,7 +893,9 @@
       "title": "Din profil",
       "subtitle": "Namn, tidszon och språk.",
       "email": "E-post",
-      "emailHint": "Adressen du loggar in med. Att ändra den stöds inte än."
+      "emailHint": "Adressen du loggar in med. Att ändra den stöds inte än.",
+      "timezoneMismatch": "Din webbläsare säger att du är i {zone}.",
+      "timezoneMismatchUse": "Använd {zone}"
     },
     "preferencesIntro": "De här formar varje plan systemet skapar. Att ändra dem skriver inte om befintliga planer förrän du genererar på nytt.",
     "save": "Spara ändringar",
@@ -1068,6 +1071,13 @@
       "fixedHint": "På betyder att studietid aldrig planeras över dem. Stäng av för sådant du kan flytta.",
       "allDay": "Heldag",
       "courseUnmatched": "{code} — ingen kurs än",
+      "newCourses": {
+        "title": "Lägg till dessa som kurser?",
+        "body": "De här kurskoderna dök upp i importen men finns inte i din kurslista än. Lägg till de du faktiskt läser — du kan ladda upp kursplanen för var och en efteråt.",
+        "add": "Lägg till {count, plural, one {# kurs} other {# kurser}}",
+        "adding": "Lägger till…",
+        "failed": "Kunde inte lägga till de kurserna. Försök igen, eller lägg till dem från Kurser istället."
+      },
       "status": {
         "new": "Ny",
         "alreadyImported": "Redan importerad",
@@ -1103,6 +1113,33 @@
       "targetHint": "Att hålla varje schema i sin egen kalender gör att ett kan importeras om utan att röra det andra.",
       "clash": "Krockar med {title}",
       "clashSummary": "{count, plural, one {# händelse krockar} other {# händelser krockar}} med något du redan har. Inget löses åt dig — importera båda och välj, eller hoppa över en."
+    },
+    "scheduleImage": {
+      "title": "Importera från ett foto",
+      "description": "Ett foto eller en skärmdump av ett utskrivet eller digitalt schema. AI:n läser det till en granskningsvy — inget sparas förrän du bekräftar det, precis som varje annan import här.",
+      "upload": "Ladda upp ett foto",
+      "reading": "Läser bilden…",
+      "entriesFound": "{count, plural, one {# lektion hittad} other {# lektioner hittade}}.",
+      "startLabel": "Från",
+      "endLabel": "Till",
+      "endBeforeStart": "Slutet måste komma efter starten.",
+      "dateRangeHint": "Ett schemafoto visar ett veckomönster, inte ett år — detta är datumintervallet det upprepas över.",
+      "buildPreview": "Förhandsgranska dessa händelser",
+      "building": "Bygger förhandsgranskningen…",
+      "targetNewFallback": "Skannat schema",
+      "noEvents": "Inga lektioner kunde placeras i det datumintervallet.",
+      "doneTitle": "Importerat",
+      "doneBody": "{inserted, plural, one {# händelse tillagd} other {# händelser tillagda}}, {updated, plural, one {# uppdaterad} other {# uppdaterade}}.",
+      "importMore": "Importera ett till foto",
+      "errors": {
+        "tooLarge": "Den bilden är för stor.",
+        "unsupportedType": "Ladda upp en bildfil (JPEG, PNG, GIF eller WebP).",
+        "aiUnavailable": "AI är inte tillgängligt just nu — försök igen senare.",
+        "notASchedule": "Det där ser inte ut som ett schema, eller så gick inget att läsa från det.",
+        "extractionFailed": "Kunde inte läsa den bilden. Försök med ett tydligare foto, eller lägg till händelser för hand.",
+        "invalidInput": "Något i den begäran var inte giltigt.",
+        "unexpected": "Något gick fel. Inget importerades."
+      }
     },
     "export": {
       "title": "Exportera",

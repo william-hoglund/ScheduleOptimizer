@@ -7,14 +7,16 @@ import { finalizeAdvisorReply, precheckAdvisorMessage } from "./guardrails";
 import { buildAdvisorPrompt, type AdvisorInput } from "./prompts/advisor";
 import { buildCourseExtractionPrompt, type CourseExtractionInput } from "./prompts/course-extraction";
 import { buildExplainPlanPrompt, type ExplainPlanInput } from "./prompts/explain-plan";
+import { buildScheduleExtractionPrompt, type ScheduleExtractionInput } from "./prompts/schedule-extraction";
 import { buildTaskBreakdownPrompt, type TaskBreakdownInput } from "./prompts/task-breakdown";
 import { createAnthropicProvider } from "./providers/anthropic";
 import { createOpenAiProvider } from "./providers/openai";
 import { advisorReplySchema, type AdvisorReply } from "./schemas/advisor";
 import { courseExtractionSchema, type CourseExtraction } from "./schemas/course-extraction";
 import { planExplanationSchema, type PlanExplanation } from "./schemas/explain-plan";
+import { scheduleExtractionSchema, type ScheduleExtraction } from "./schemas/schedule-extraction";
 import { taskBreakdownSchema, type TaskBreakdown } from "./schemas/task-breakdown";
-import { AI_LIMITS, type AiProvider } from "./types";
+import { AI_LIMITS, type AiProvider, type ImageInput } from "./types";
 
 /**
  * The provider-agnostic client.
@@ -48,6 +50,7 @@ async function generateWithRetry<S extends z.ZodTypeAny>(request: {
   prompt: string;
   schema: S;
   maxOutputTokens: number;
+  images?: ImageInput[];
 }): Promise<z.infer<S> | null> {
   const provider = getProvider();
 
@@ -93,6 +96,19 @@ export async function extractCourseKnowledge(
   });
 }
 
+export async function extractSchedule(
+  input: ScheduleExtractionInput & { image: ImageInput },
+): Promise<ScheduleExtraction | null> {
+  const { system, prompt } = buildScheduleExtractionPrompt(input);
+  return generateWithRetry({
+    system,
+    prompt,
+    schema: scheduleExtractionSchema,
+    maxOutputTokens: AI_LIMITS.scheduleExtraction,
+    images: [input.image],
+  });
+}
+
 export type AdvisorOutcome =
   | { ok: true; reply: AdvisorReply }
   | { ok: false; reason: "empty" | "tooLong" | "unavailable" };
@@ -128,7 +144,9 @@ export type {
   ExtractedRequirement,
 } from "./schemas/course-extraction";
 export type { PlanExplanation } from "./schemas/explain-plan";
+export type { ExtractedScheduleEntry, ScheduleExtraction } from "./schemas/schedule-extraction";
 export type { TaskBreakdown } from "./schemas/task-breakdown";
+export type { ImageInput } from "./types";
 export type { AdvisorBehaviorHighlight, AdvisorCourse, AdvisorTask } from "./prompts/advisor";
 export { boundAdvisorContext } from "./prompts/advisor";
 export { boundExplainPlanSessions, type ExplainPlanSession } from "./prompts/explain-plan";

@@ -268,6 +268,21 @@ export async function previewGoogleImport(
   return buildPreview(userId, GOOGLE_CALENDAR_SOURCE_NAME, candidates, [], targetSourceId);
 }
 
+/**
+ * A preview built from candidates the caller already has, rather than from
+ * raw feed text — the schedule-image import's entry point. It still goes
+ * into a calendar the student chooses (a picker, like `.ics`, unlike
+ * Google's one fixed destination), so `targetSourceId` is theirs to pass in.
+ */
+export async function previewScheduleImage(
+  userId: string,
+  calendarName: string | null,
+  candidates: readonly ImportCandidate[],
+  targetSourceId: string | null,
+): Promise<ImportPreview> {
+  return buildPreview(userId, calendarName, candidates, [], targetSourceId);
+}
+
 export type ImportOutcome = { inserted: number; updated: number };
 
 /**
@@ -283,7 +298,7 @@ export async function saveImportedEvents(
   timeZone: string,
   selections: readonly ImportSelection[],
   sourceId: string | null,
-  source: "ics" | "google" = "ics",
+  source: "ics" | "google" | "schedule_image" = "ics",
 ): Promise<ImportOutcome> {
   const supabase = await createServerSupabaseClient();
 

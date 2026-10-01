@@ -4,8 +4,10 @@ import { CalendarSourceList, type CalendarSourceView } from "@/components/import
 import { ExportPanel } from "@/components/import-export/export-panel";
 import { GoogleCalendarPanel } from "@/components/import-export/google-calendar-panel";
 import { IcsImportPanel } from "@/components/import-export/ics-import-panel";
+import { ScheduleImagePanel } from "@/components/import-export/schedule-image-panel";
 import { PageHeader } from "@/components/layout/page-header";
 import { createPageMetadata } from "@/components/layout/placeholder-page";
+import { isAiEnabled } from "@/lib/ai";
 import { utcToLocalDate } from "@/lib/calendar/time";
 import { requireUserContext } from "@/server/auth";
 import { listCalendarSources } from "@/server/calendar-source-service";
@@ -113,6 +115,21 @@ export default async function ImportExportPage() {
           <IcsImportPanel timeZone={timeZone} sources={sources} />
         </div>
       </section>
+
+      {isAiEnabled() ? (
+        <section className="space-y-4">
+          <div>
+            <h2 className="text-base font-semibold">{t("importExport.scheduleImage.title")}</h2>
+            <p className="text-muted-foreground mt-1 max-w-prose text-sm">
+              {t("importExport.scheduleImage.description")}
+            </p>
+          </div>
+
+          <div className="bg-card rounded-xl border p-5">
+            <ScheduleImagePanel timeZone={timeZone} sources={sources} />
+          </div>
+        </section>
+      ) : null}
 
       <section className="space-y-4">
         <div>

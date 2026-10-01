@@ -12,12 +12,20 @@ import type { z } from "zod";
  * See guardrails.ts for the second line, which matters for the one feature
  * (the advisor) that does take free text from the student.
  */
+export type ImageInput = {
+  base64: string;
+  /** Matches Anthropic's image media-type union exactly, which is the tighter of the two providers'. */
+  mediaType: "image/jpeg" | "image/png" | "image/gif" | "image/webp";
+};
+
 export type GenerateObjectRequest<S extends z.ZodTypeAny> = {
   system: string;
   prompt: string;
   schema: S;
   /** A cost and latency cap, not a suggestion — see AI_LIMITS. */
   maxOutputTokens: number;
+  /** A photo or screenshot alongside the prompt — currently only the image schedule import uses this. */
+  images?: ImageInput[];
 };
 
 export interface AiProvider {
@@ -37,6 +45,10 @@ export const AI_LIMITS = {
   advisorReply: 500,
   /** A syllabus can list many assessments/milestones/requirements — the widest budget here on purpose. */
   courseExtraction: 3000,
+  /** A packed weekly timetable can list 20-30 distinct sessions. */
+  scheduleExtraction: 3000,
   /** Characters. Past this, a message is rejected before it ever reaches a provider. */
   maxAdvisorMessageChars: 600,
+  /** Bytes. A vision call's cost scales with image size, not just token count. */
+  maxScheduleImageBytes: 8 * 1024 * 1024,
 } as const;

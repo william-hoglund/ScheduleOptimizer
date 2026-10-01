@@ -14,7 +14,7 @@ import listPlugin from "@fullcalendar/list";
 import luxon3Plugin from "@fullcalendar/luxon3";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { ArrowLeftRight, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useRef, useState, useTransition } from "react";
 
@@ -24,6 +24,7 @@ import {
   type CalendarSourceOption,
 } from "./calendar-filters";
 import { EventFormDialog } from "./event-form-dialog";
+import { ButtonLink } from "@/components/common/button-link";
 import { Button } from "@/components/ui/button";
 import { fetchEventsInRange, moveEvent } from "@/features/calendar/actions";
 import type { CalendarEventDto } from "@/features/calendar/event-dto";
@@ -182,6 +183,11 @@ export function CalendarView({
             </button>
           ))}
         </div>
+
+        <ButtonLink href="/import-export" variant="outline" size="sm">
+          <ArrowLeftRight className="size-4" aria-hidden="true" />
+          {t("importExport")}
+        </ButtonLink>
 
         <Button
           size="sm"

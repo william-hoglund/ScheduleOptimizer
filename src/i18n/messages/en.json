@@ -430,6 +430,7 @@
     "previous": "Previous",
     "next": "Next",
     "addEvent": "Add event",
+    "importExport": "Import & export",
     "editEvent": "Edit event",
     "empty": "Nothing scheduled",
     "emptyBody": "Add a lecture or a personal commitment, and study time will be planned around it.",
@@ -892,7 +893,9 @@
       "title": "Your profile",
       "subtitle": "Name, time zone and language.",
       "email": "Email",
-      "emailHint": "Sign-in address. Changing this is not supported yet."
+      "emailHint": "Sign-in address. Changing this is not supported yet.",
+      "timezoneMismatch": "Your browser says you're in {zone}.",
+      "timezoneMismatchUse": "Use {zone}"
     },
     "preferencesIntro": "These shape every plan the system generates. Changing them does not rewrite existing plans until you regenerate.",
     "save": "Save changes",
@@ -1068,6 +1071,13 @@
       "fixedHint": "On means study time is never planned over them. Turn it off for events you could move.",
       "allDay": "All day",
       "courseUnmatched": "{code} — no course yet",
+      "newCourses": {
+        "title": "Add these as courses?",
+        "body": "These course codes turned up in the import but aren't in your course list yet. Add the ones you're actually taking — you can upload the syllabus for each afterward.",
+        "add": "Add {count, plural, one {# course} other {# courses}}",
+        "adding": "Adding…",
+        "failed": "Couldn't add those courses. Try again, or add them from Courses instead."
+      },
       "status": {
         "new": "New",
         "alreadyImported": "Already imported",
@@ -1103,6 +1113,33 @@
       "targetHint": "Keeping each timetable in its own calendar means one can be re-imported without touching the other.",
       "clash": "Clashes with {title}",
       "clashSummary": "{count, plural, one {# event clashes} other {# events clash}} with something already on your calendar. Nothing is resolved for you — import both and choose, or leave one out."
+    },
+    "scheduleImage": {
+      "title": "Import from a photo",
+      "description": "A photo or screenshot of a printed or on-screen timetable. The AI reads it into a review screen — nothing is saved until you confirm it, same as every other import here.",
+      "upload": "Upload a photo",
+      "reading": "Reading the image…",
+      "entriesFound": "{count, plural, one {# class found} other {# classes found}}.",
+      "startLabel": "From",
+      "endLabel": "To",
+      "endBeforeStart": "The end must come after the start.",
+      "dateRangeHint": "A timetable photo shows a weekly pattern, not a year — this is the date range it repeats across.",
+      "buildPreview": "Preview these events",
+      "building": "Building the preview…",
+      "targetNewFallback": "Scanned timetable",
+      "noEvents": "No classes could be placed in that date range.",
+      "doneTitle": "Imported",
+      "doneBody": "{inserted, plural, one {# event added} other {# events added}}, {updated, plural, one {# updated} other {# updated}}.",
+      "importMore": "Import another photo",
+      "errors": {
+        "tooLarge": "That image is too large.",
+        "unsupportedType": "Upload an image file (JPEG, PNG, GIF or WebP).",
+        "aiUnavailable": "AI is not available right now — try again later.",
+        "notASchedule": "That doesn't look like a timetable, or nothing could be read from it.",
+        "extractionFailed": "Could not read that image. Try a clearer photo, or add events by hand.",
+        "invalidInput": "Something about that request wasn't valid.",
+        "unexpected": "Something went wrong. Nothing was imported."
+      }
     },
     "export": {
       "title": "Export",

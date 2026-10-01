@@ -68,6 +68,32 @@ export const googleImportRequestSchema = z.object({
   events: z.array(importSelectionSchema).min(1).max(MAX_IMPORT_EVENTS),
 });
 
+/**
+ * A candidate built client-side — from a timetable photo's AI extraction
+ * expanded across a date range the student picked
+ * (`lib/calendar/schedule-image.ts`), never parsed from a feed the server
+ * fetched itself. Re-validated here for exactly the reason the comment at
+ * the top of this file gives: the server never trusts what the browser sends
+ * back, regardless of how it was produced.
+ */
+export const importCandidateSchema = z.object({
+  externalId: z.string().min(1).max(500),
+  title: z.string().trim().min(1, V.required).max(200, V.nameTooLong),
+  startIso: z.iso.datetime(),
+  endIso: z.iso.datetime(),
+  isAllDay: z.boolean(),
+  location: z.string().trim().max(200, V.tooLong).nullable(),
+  description: z.string().trim().max(2000, V.tooLong).nullable(),
+  eventType: z.enum(EVENT_TYPES),
+  courseCode: z.string().trim().max(20, V.tooLong).nullable(),
+});
+
+export const scheduleImagePreviewSchema = z.object({
+  candidates: z.array(importCandidateSchema).min(1).max(MAX_IMPORT_EVENTS),
+  /** Null when the import is going into a calendar that does not exist yet. */
+  sourceId: z.uuid().nullable(),
+});
+
 /** Pasting or uploading a file: the text arrives, not the file itself. */
 export const icsPreviewSchema = z.object({
   // 4 MB of text is a very large timetable; a browser upload larger than that

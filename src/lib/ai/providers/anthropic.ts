@@ -24,15 +24,31 @@ export function createAnthropicProvider(apiKey: string, model: string): AiProvid
       prompt,
       schema,
       maxOutputTokens,
+      images,
     }: GenerateObjectRequest<S>): Promise<z.infer<S>> {
       const jsonSchema = z.toJSONSchema(schema, { target: "draft-07" });
       delete (jsonSchema as { $schema?: unknown }).$schema;
+
+      // Images first, text last — Anthropic's own guidance for multi-image
+      // prompts, so the model reads the question after it has already seen
+      // what it is being asked about.
+      const content: Anthropic.MessageParam["content"] = images?.length
+        ? [
+            ...images.map(
+              (image): Anthropic.ImageBlockParam => ({
+                type: "image",
+                source: { type: "base64", media_type: image.mediaType, data: image.base64 },
+              }),
+            ),
+            { type: "text", text: prompt },
+          ]
+        : prompt;
 
       const response = await client.messages.create({
         model,
         max_tokens: maxOutputTokens,
         system,
-        messages: [{ role: "user", content: prompt }],
+        messages: [{ role: "user", content }],
         tools: [
           {
             name: "respond",

@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 
 import { FormField } from "@/components/common/form-field";
 import { NativeSelect } from "@/components/common/native-select";
+import { TimezoneMismatchHint } from "@/components/common/timezone-mismatch-hint";
 import { TimezoneSelect } from "@/components/common/timezone-select";
 import { Button } from "@/components/ui/button";
 import { useValidationText } from "@/features/shared/use-validation-text";
@@ -29,11 +30,15 @@ export function ProfileForm({ defaults, email }: { defaults: ProfileInput; email
     handleSubmit,
     reset,
     setError,
+    setValue,
+    watch,
     formState: { errors, isDirty },
   } = useForm<ProfileInput>({
     resolver: zodResolver(profileSchema),
     defaultValues: defaults,
   });
+
+  const currentTimezone = watch("timezone");
 
   const onSubmit = handleSubmit((values) => {
     setFormError(null);
@@ -82,12 +87,17 @@ export function ProfileForm({ defaults, email }: { defaults: ProfileInput; email
         disabled
       />
 
-      <TimezoneSelect
-        label={tOnboarding("basics.timezone")}
-        error={message(errors.timezone?.message)}
-        {...register("timezone")}
-      />
-
+      <div className="space-y-1.5">
+        <TimezoneSelect
+          label={tOnboarding("basics.timezone")}
+          error={message(errors.timezone?.message)}
+          {...register("timezone")}
+        />
+        <TimezoneMismatchHint
+          current={currentTimezone}
+          onUse={(zone) => setValue("timezone", zone, { shouldDirty: true })}
+        />
+      </div>
 
       {/*
         Who the week belongs to. It changes defaults and wording rather than the

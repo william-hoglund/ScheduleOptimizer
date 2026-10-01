@@ -11,8 +11,8 @@
 -- "already exists", which is intentional: it stops a second run from
 -- silently doing half a job.
 --
--- Files included: 12
--- Generated:      2026-09-29T12:33:32.563Z
+-- Files included: 13
+-- Generated:      2026-10-01T22:46:19.684Z
 -- =============================================================
 
 
@@ -1419,4 +1419,22 @@ alter table public.learning_profile_insights enable row level security;
 
 create policy "learning_profile_insights_own_rows" on public.learning_profile_insights
   for all to authenticated using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+
+-- <<<<<<<<<<<<<<<< 0013_schedule_image_source.sql >>>>>>>>>>>>>>>>
+
+-- 0013_schedule_image_source.sql
+-- Lets `calendar_events.source` record "read off a photo of a timetable",
+-- the one import path that isn't a file or an OAuth account.
+--
+-- A plain `alter table ... add constraint` with the same name would collide,
+-- so the existing check is dropped and recreated with the new value added —
+-- the standard way to widen a Postgres check constraint.
+
+alter table public.calendar_events
+  drop constraint calendar_events_source_valid;
+
+alter table public.calendar_events
+  add constraint calendar_events_source_valid
+    check (source in ('manual', 'ics', 'google', 'schedule_image'));
 

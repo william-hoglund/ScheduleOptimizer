@@ -44,7 +44,7 @@ export type StudyMethod =
   "pomodoro" | "active_recall" | "spaced_repetition" | "deep_work" | "interleaving" | "group_work";
 export type CalendarProvider = "google" | "ics_url";
 export type SyncStatus = "pending" | "active" | "error" | "revoked";
-export type EventSource = "manual" | "ics" | "google";
+export type EventSource = "manual" | "ics" | "google" | "schedule_image";
 export type CalendarSourceKind = "study" | "work" | "personal";
 /** What a day dominated by one calendar does to study time. See 0007. */
 export type DayEffect = "none" | "reduce" | "block";
