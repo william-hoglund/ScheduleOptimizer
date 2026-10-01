@@ -1022,6 +1022,33 @@
     "fairnessNote": "Ranked on the share of your own plan you kept. A deliberately light week costs you nothing."
   },
   "importExport": {
+    "google": {
+      "title": "Google Calendar",
+      "subtitle": "Connect once, then sync whenever you like. Read-only — nothing here is ever written back to Google.",
+      "description": "Sync pulls events from your primary Google Calendar into a review screen, exactly like an .ics import. Nothing is saved until you confirm it.",
+      "connect": "Connect Google Calendar",
+      "sync": "Sync now",
+      "syncing": "Syncing…",
+      "disconnect": "Disconnect",
+      "disconnecting": "Disconnecting…",
+      "cancel": "Cancel",
+      "neverSynced": "Not synced yet",
+      "lastSynced": "Last synced {date}",
+      "nothingNew": "Nothing new since the last sync.",
+      "close": "Close",
+      "doneTitle": "Synced",
+      "doneBody": "{inserted, plural, one {# event added} other {# events added}}, {updated, plural, one {# updated} other {# updated}}.",
+      "disconnectConfirmTitle": "Disconnect Google Calendar?",
+      "disconnectConfirmBody": "Stops syncing. Events already imported stay on your calendar until you remove that calendar yourself.",
+      "errors": {
+        "notConnected": "Connect Google Calendar first.",
+        "revoked": "Google Calendar access was revoked. Reconnect to keep syncing.",
+        "notConfigured": "Google Calendar isn't set up on this server yet.",
+        "denied": "Google sign-in was cancelled.",
+        "invalidState": "That didn't look like a request we started. Try connecting again.",
+        "unexpected": "Something went wrong. Nothing was changed."
+      }
+    },
     "import": {
       "title": "Import a timetable",
       "description": "Upload the .ics file your university gives you, or paste the link to it. Nothing is saved until you have looked through it.",

@@ -1022,6 +1022,33 @@
     "fairnessNote": "Rankas på hur stor andel av din egen plan du höll. En medvetet lugn vecka kostar dig ingenting."
   },
   "importExport": {
+    "google": {
+      "title": "Google Kalender",
+      "subtitle": "Anslut en gång, synka sedan när du vill. Endast läsning — inget skrivs någonsin tillbaka till Google.",
+      "description": "Synkning hämtar händelser från din primära Google-kalender till en granskningsvy, precis som en .ics-import. Inget sparas förrän du bekräftar det.",
+      "connect": "Anslut Google Kalender",
+      "sync": "Synka nu",
+      "syncing": "Synkar…",
+      "disconnect": "Koppla från",
+      "disconnecting": "Kopplar från…",
+      "cancel": "Avbryt",
+      "neverSynced": "Inte synkad än",
+      "lastSynced": "Senast synkad {date}",
+      "nothingNew": "Inget nytt sedan senaste synkningen.",
+      "close": "Stäng",
+      "doneTitle": "Synkad",
+      "doneBody": "{inserted, plural, one {# händelse tillagd} other {# händelser tillagda}}, {updated, plural, one {# uppdaterad} other {# uppdaterade}}.",
+      "disconnectConfirmTitle": "Koppla från Google Kalender?",
+      "disconnectConfirmBody": "Slutar synka. Händelser som redan importerats finns kvar i din kalender tills du själv tar bort den kalendern.",
+      "errors": {
+        "notConnected": "Anslut Google Kalender först.",
+        "revoked": "Åtkomsten till Google Kalender återkallades. Anslut igen för att fortsätta synka.",
+        "notConfigured": "Google Kalender är inte konfigurerat på den här servern än.",
+        "denied": "Google-inloggningen avbröts.",
+        "invalidState": "Det där såg inte ut som en begäran vi startade. Försök ansluta igen.",
+        "unexpected": "Något gick fel. Inget ändrades."
+      }
+    },
     "import": {
       "title": "Importera ett schema",
       "description": "Ladda upp .ics-filen från universitetet, eller klistra in länken till den. Inget sparas förrän du har gått igenom det.",

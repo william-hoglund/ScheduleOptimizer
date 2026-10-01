@@ -58,6 +58,16 @@ export const importRequestSchema = z.object({
   target: importTargetSchema,
 });
 
+/**
+ * A Google sync confirm, which never asks "which calendar": there is exactly
+ * one Google connection per student, so it always lands in the one calendar
+ * that connection owns (`GOOGLE_CALENDAR_SOURCE_NAME` in server/import-service.ts),
+ * created on first sync.
+ */
+export const googleImportRequestSchema = z.object({
+  events: z.array(importSelectionSchema).min(1).max(MAX_IMPORT_EVENTS),
+});
+
 /** Pasting or uploading a file: the text arrives, not the file itself. */
 export const icsPreviewSchema = z.object({
   // 4 MB of text is a very large timetable; a browser upload larger than that

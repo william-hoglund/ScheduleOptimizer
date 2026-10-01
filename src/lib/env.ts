@@ -56,6 +56,16 @@ const serverSchema = z.object({
   // request until this is set, which is the correct failure mode for a
   // deployment that hasn't wired up the cron yet.
   CRON_SECRET: z.string().min(16).optional(),
+
+  // Google Calendar sync (Session 27). All optional — the feature hides
+  // itself when any is missing, the same pattern as AI. See
+  // lib/google/calendar-client.ts#isGoogleCalendarEnabled.
+  GOOGLE_CLIENT_ID: z.string().min(10).optional(),
+  GOOGLE_CLIENT_SECRET: z.string().min(10).optional(),
+  GOOGLE_REDIRECT_URI: z.url().optional(),
+  // AES-256-GCM key for refresh/access tokens at rest, base64-encoded, exactly
+  // 32 bytes decoded. Generate with `openssl rand -base64 32`.
+  ENCRYPTION_KEY: z.string().min(40).optional(),
 });
 
 function parse<T extends z.ZodType>(schema: T, values: unknown, label: string): z.infer<T> {
@@ -101,6 +111,10 @@ export function getServerEnv() {
       OPENAI_MODEL: process.env.OPENAI_MODEL || undefined,
       ANTHROPIC_MODEL: process.env.ANTHROPIC_MODEL || undefined,
       CRON_SECRET: process.env.CRON_SECRET || undefined,
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || undefined,
+      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || undefined,
+      GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI || undefined,
+      ENCRYPTION_KEY: process.env.ENCRYPTION_KEY || undefined,
     },
     "server",
   );

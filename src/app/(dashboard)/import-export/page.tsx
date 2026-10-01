@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 
 import { CalendarSourceList, type CalendarSourceView } from "@/components/import-export/calendar-source-list";
 import { ExportPanel } from "@/components/import-export/export-panel";
+import { GoogleCalendarPanel } from "@/components/import-export/google-calendar-panel";
 import { IcsImportPanel } from "@/components/import-export/ics-import-panel";
 import { PageHeader } from "@/components/layout/page-header";
 import { createPageMetadata } from "@/components/layout/placeholder-page";
@@ -9,6 +10,11 @@ import { utcToLocalDate } from "@/lib/calendar/time";
 import { requireUserContext } from "@/server/auth";
 import { listCalendarSources } from "@/server/calendar-source-service";
 import { nowIso } from "@/server/clock";
+import { isGoogleCalendarEnabled } from "@/server/google-calendar-service";
+import {
+  getGoogleConnectionStatus,
+  type GoogleConnectionStatus,
+} from "@/server/google-connection-service";
 
 export const generateMetadata = () => createPageMetadata("importExport");
 
@@ -48,6 +54,18 @@ export default async function ImportExportPage() {
     calendarsAvailable = false;
   }
 
+  // Hidden entirely without credentials (GOOGLE_CLIENT_ID/SECRET/REDIRECT_URI,
+  // ENCRYPTION_KEY) — the same "degrade to hidden, never to a crash" rule as
+  // every other optional feature in this app (see AGENTS.md "The AI layer").
+  let googleStatus: GoogleConnectionStatus | null = null;
+  if (isGoogleCalendarEnabled()) {
+    try {
+      googleStatus = await getGoogleConnectionStatus(user.id);
+    } catch (cause) {
+      console.error("[import-export] Google connection status unavailable:", cause);
+    }
+  }
+
   return (
     <div className="space-y-10">
       <PageHeader
@@ -65,6 +83,21 @@ export default async function ImportExportPage() {
           </div>
 
           <CalendarSourceList sources={sources} />
+        </section>
+      ) : null}
+
+      {googleStatus ? (
+        <section className="space-y-4">
+          <div>
+            <h2 className="text-base font-semibold">{t("importExport.google.title")}</h2>
+            <p className="text-muted-foreground mt-1 max-w-prose text-sm">
+              {t("importExport.google.subtitle")}
+            </p>
+          </div>
+
+          <div className="bg-card rounded-xl border p-5">
+            <GoogleCalendarPanel status={googleStatus} timeZone={timeZone} />
+          </div>
         </section>
       ) : null}
 

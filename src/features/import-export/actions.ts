@@ -14,6 +14,7 @@ import {
 } from "@/lib/validation/action-result";
 import {
   exportRangeSchema,
+  googleImportRequestSchema,
   icsPreviewSchema,
   icsUrlPreviewSchema,
   importRequestSchema,
@@ -29,7 +30,13 @@ import {
 import { nowIso } from "@/server/clock";
 import { loadExportItems } from "@/server/export-service";
 import { fetchIcsFromUrl } from "@/server/ics-fetch";
+import { defaultCalendarSourceInput } from "@/lib/validation/calendar-source";
+import { ensureFreshAccessToken, fetchGoogleImportCandidates } from "@/server/google-calendar-service";
+import { disconnectGoogleCalendar } from "@/server/google-connection-service";
 import {
+  findGoogleCalendarSourceId,
+  GOOGLE_CALENDAR_SOURCE_NAME,
+  previewGoogleImport,
   previewIcsImport,
   saveImportedEvents,
   type ImportOutcome,
@@ -109,6 +116,64 @@ export async function confirmIcsImport(input: unknown): Promise<ActionResult<Imp
   revalidatePath("/dashboard");
   revalidatePath("/import-export");
   return result;
+}
+
+/**
+ * Google Calendar: the same preview-then-confirm shape as `.ics`, just with
+ * no file or URL to supply — the events come from the student's already
+ * -connected account instead.
+ */
+
+export async function previewGoogleSync(): Promise<ActionResult<ImportPreview>> {
+  const { user, timeZone } = await requireUserContext();
+
+  const access = await ensureFreshAccessToken(user.id);
+  if (!access.ok) return actionFailed(access.error);
+
+  return guarded(async () => {
+    const candidates = await fetchGoogleImportCandidates(access.accessToken, timeZone);
+    return previewGoogleImport(user.id, candidates);
+  });
+}
+
+export async function confirmGoogleImport(input: unknown): Promise<ActionResult<ImportOutcome>> {
+  const { user, timeZone } = await requireUserContext();
+
+  const parsed = googleImportRequestSchema.safeParse(input);
+  if (!parsed.success) return fromZodError(parsed.error);
+
+  const result = await guarded(async () => {
+    const existingSourceId = await findGoogleCalendarSourceId(user.id);
+    const sourceId =
+      existingSourceId ??
+      (
+        await createCalendarSource(
+          user.id,
+          { ...defaultCalendarSourceInput("personal"), name: GOOGLE_CALENDAR_SOURCE_NAME },
+          null,
+        )
+      ).id;
+
+    const outcome = await saveImportedEvents(user.id, timeZone, parsed.data.events, sourceId, "google");
+    await markImported(user.id, sourceId, nowIso());
+    return outcome;
+  });
+  if (!result.ok) return result;
+
+  revalidatePath("/calendar");
+  revalidatePath("/dashboard");
+  revalidatePath("/import-export");
+  return result;
+}
+
+export async function disconnectGoogleAction(): Promise<ActionResult<undefined>> {
+  const { user } = await requireUserContext();
+
+  const result = await guarded(() => disconnectGoogleCalendar(user.id));
+  if (!result.ok) return result;
+
+  revalidatePath("/import-export");
+  return actionOk();
 }
 
 /** Editing a calendar's day rule — what a day full of it does to studying. */

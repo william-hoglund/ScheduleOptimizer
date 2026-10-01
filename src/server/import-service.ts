@@ -142,22 +142,28 @@ function clashesForCandidates(
   return byCandidate;
 }
 
-export async function previewIcsImport(
+/**
+ * Turning a provider-agnostic candidate list into a reviewable preview.
+ *
+ * Shared by every import source — `.ics` text, an `.ics` URL, and Google
+ * Calendar sync all parse into the same `ImportCandidate[]` shape and land
+ * here. Duplicate detection, course matching and clash detection only need
+ * to exist once.
+ */
+async function buildPreview(
   userId: string,
-  timeZone: string,
-  icsText: string,
+  calendarName: string | null,
+  candidates: readonly ImportCandidate[],
+  warnings: readonly IcsWarning[],
   /** The calendar this import is going into, when it already exists. */
-  targetSourceId: string | null = null,
+  targetSourceId: string | null,
 ): Promise<ImportPreview> {
-  const parsed = parseIcs(icsText, { fallbackTimeZone: timeZone, maxEvents: MAX_IMPORT_EVENTS });
-  const candidates = toImportCandidates(parsed.events);
-
   const [first] = candidates;
   if (!first) {
     return {
-      calendarName: parsed.calendarName,
+      calendarName,
       rows: [],
-      warnings: parsed.warnings,
+      warnings: [...warnings],
       counts: { total: 0, new: 0, duplicate: 0, clashing: 0 },
     };
   }
@@ -200,9 +206,9 @@ export async function previewIcsImport(
   });
 
   return {
-    calendarName: parsed.calendarName,
+    calendarName,
     rows,
-    warnings: parsed.warnings,
+    warnings: [...warnings],
     counts: {
       total: rows.length,
       new: rows.filter((row) => row.status === "new").length,
@@ -210,6 +216,44 @@ export async function previewIcsImport(
       clashing: rows.filter((row) => row.clashesWith.length > 0).length,
     },
   };
+}
+
+export async function previewIcsImport(
+  userId: string,
+  timeZone: string,
+  icsText: string,
+  /** The calendar this import is going into, when it already exists. */
+  targetSourceId: string | null = null,
+): Promise<ImportPreview> {
+  const parsed = parseIcs(icsText, { fallbackTimeZone: timeZone, maxEvents: MAX_IMPORT_EVENTS });
+  const candidates = toImportCandidates(parsed.events);
+
+  return buildPreview(userId, parsed.calendarName, candidates, parsed.warnings, targetSourceId);
+}
+
+export const GOOGLE_CALENDAR_SOURCE_NAME = "Google Calendar";
+
+/** The one calendar a student's Google account syncs into, if it exists yet. */
+export async function findGoogleCalendarSourceId(userId: string): Promise<string | null> {
+  const supabase = await createServerSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("calendar_sources")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("name", GOOGLE_CALENDAR_SOURCE_NAME)
+    .maybeSingle();
+
+  if (error) throw new Error(`Could not look up the Google calendar: ${error.message}`);
+  return data?.id ?? null;
+}
+
+export async function previewGoogleImport(
+  userId: string,
+  candidates: readonly ImportCandidate[],
+): Promise<ImportPreview> {
+  const targetSourceId = await findGoogleCalendarSourceId(userId);
+  return buildPreview(userId, GOOGLE_CALENDAR_SOURCE_NAME, candidates, [], targetSourceId);
 }
 
 export type ImportOutcome = { inserted: number; updated: number };
@@ -227,6 +271,7 @@ export async function saveImportedEvents(
   timeZone: string,
   selections: readonly ImportSelection[],
   sourceId: string | null,
+  source: "ics" | "google" = "ics",
 ): Promise<ImportOutcome> {
   const supabase = await createServerSupabaseClient();
 
@@ -255,7 +300,7 @@ export async function saveImportedEvents(
       .insert(
         toInsert.map((selection) => ({
           user_id: userId,
-          source: "ics" as const,
+          source,
           source_id: sourceId,
           external_event_id: selection.externalId,
           ...asRow(selection),
