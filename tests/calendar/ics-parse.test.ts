@@ -166,7 +166,7 @@ describe("parseIcs — a single event", () => {
     expect(events[0]?.description).toBe("Bring the exercise sheet");
   });
 
-  it("skips cancelled and zero-length events", () => {
+  it("skips a cancelled event", () => {
     const { events, warnings } = parseIcs(
       ics(
         ...vevent(
@@ -176,8 +176,35 @@ describe("parseIcs — a single event", () => {
           "DTSTART:20260801T080000Z",
           "DTEND:20260801T090000Z",
         ),
-        ...vevent("UID:j", "SUMMARY:Zero", "DTSTART:20260801T080000Z", "DTEND:20260801T080000Z"),
       ),
+      { fallbackTimeZone: STOCKHOLM },
+    );
+
+    expect(events).toHaveLength(0);
+    // Cancelled events are dropped before the skip counter, deliberately: they
+    // are not a problem with the feed, so there is nothing to warn about.
+    expect(warnings).toHaveLength(0);
+  });
+
+  it("treats DTEND equal to DTSTART as a point-in-time deadline, not an invalid event", () => {
+    // A real UNSW Moodle export does exactly this for every "opens"/"closes"/
+    // "is due" entry — 20 of 21 VEVENTs in one real feed had DTEND == DTSTART,
+    // and every one was silently dropped before this was fixed.
+    const { events, warnings } = parseIcs(
+      ics(...vevent("UID:j", "SUMMARY:Assignment 3 is due", "DTSTART:20260801T080000Z", "DTEND:20260801T080000Z")),
+      { fallbackTimeZone: STOCKHOLM },
+    );
+
+    expect(events).toHaveLength(1);
+    expect(events[0]?.startIso).toBe("2026-08-01T08:00:00.000Z");
+    // Falls back to the same one-hour default a missing DTEND would get.
+    expect(events[0]?.endIso).toBe("2026-08-01T09:00:00.000Z");
+    expect(warnings).toHaveLength(0);
+  });
+
+  it("still skips an event whose end precedes its start", () => {
+    const { events, warnings } = parseIcs(
+      ics(...vevent("UID:k", "SUMMARY:Backwards", "DTSTART:20260801T090000Z", "DTEND:20260801T080000Z")),
       { fallbackTimeZone: STOCKHOLM },
     );
 

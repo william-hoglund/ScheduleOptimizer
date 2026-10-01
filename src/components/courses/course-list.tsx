@@ -169,6 +169,7 @@ export function CourseList({
         action={
           <CourseFormDialog
             programs={programs}
+            navigateToCourseOnCreate
             trigger={{
               label: t("addFirst"),
               icon: <Plus className="size-4" aria-hidden="true" />,

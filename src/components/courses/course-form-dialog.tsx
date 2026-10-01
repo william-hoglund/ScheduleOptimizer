@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 
@@ -47,15 +48,29 @@ export function CourseFormDialog({
   course = null,
   trigger,
   onSaved,
+  /**
+   * After creating a brand-new course (never on an edit), go straight to its
+   * Course Overview page — that is where uploading a course outline for the
+   * AI to read actually lives (Session 16's document → extraction → review
+   * pipeline), and a student who just typed in a course name is exactly the
+   * person who should see that next, not discover it later by accident.
+   *
+   * Explicit opt-in, not the default: onboarding's own course step uses this
+   * same dialog and must stay on its own flow rather than being yanked away
+   * mid-onboarding.
+   */
+  navigateToCourseOnCreate = false,
 }: {
   programs: ProgramRow[];
   course?: CourseRow | null;
   trigger: TriggerStyle;
   onSaved?: () => void;
+  navigateToCourseOnCreate?: boolean;
 }) {
   const t = useTranslations("courses");
   const tCommon = useTranslations("common");
   const message = useValidationText();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -90,6 +105,12 @@ export function CourseFormDialog({
       if (result.ok) {
         setOpen(false);
         onSaved?.();
+        // `course` being null is what makes this a create rather than an
+        // edit — an edit's whole point is changing an existing course's
+        // details, not being redirected away from the list mid-review.
+        if (navigateToCourseOnCreate && !course) {
+          router.push(`/courses/${result.data.id}`);
+        }
         return;
       }
 

@@ -196,12 +196,24 @@ async function buildPreview(
   const rows = reviewImport(candidates, existing, targetSourceId).map((candidate) => {
     const course = candidate.courseCode ? byCode.get(codeKey(candidate.courseCode)) : undefined;
 
+    // `clashesForCandidates` only excludes an existing row from clash
+    // detection when it shares this import's own `targetSourceId` — which
+    // misses the common case of a `matchesExisting` duplicate (same title and
+    // time, found by a *different* source, e.g. the same real class already
+    // synced from Google). Without this, a candidate the review screen
+    // already labels "Already on your calendar" also shows up "clashing"
+    // with that exact same event. The row this candidate would update is
+    // never a real clash with itself, regardless of why it matched.
+    const clashesWith = (clashesByCandidate.get(candidate.externalId) ?? []).filter(
+      (clash) => clash.id !== candidate.existingEventId,
+    );
+
     return {
       ...candidate,
       courseId: course?.id ?? null,
       courseName: course?.name ?? null,
       selectedByDefault: isSelectedByDefault(candidate.status),
-      clashesWith: clashesByCandidate.get(candidate.externalId) ?? [],
+      clashesWith,
     };
   });
 

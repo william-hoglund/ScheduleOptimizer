@@ -33,6 +33,13 @@ describe("subject heuristics", () => {
     expect(classifyEventType("Laborationstentamen")).toBe("exam");
   });
 
+  it("classifies real Moodle due-date phrasing as a deadline", () => {
+    // Confirmed against a real UNSW Moodle export — "due" is the only word
+    // common to every due-date entry in it.
+    expect(classifyEventType("Assignment 3 – Disruption is due")).toBe("deadline");
+    expect(classifyEventType("Group registration (Due date)")).toBe("deadline");
+  });
+
   it("strips TimeEdit's field labels but keeps the values", () => {
     expect(cleanImportedTitle("Kurs: TDDD86, Aktivitet: Föreläsning, Lokal: SU00")).toBe(
       "TDDD86 – Föreläsning – SU00",

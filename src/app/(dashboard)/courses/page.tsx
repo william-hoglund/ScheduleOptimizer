@@ -29,6 +29,7 @@ export default async function CoursesPage() {
           courses.length > 0 ? (
             <CourseFormDialog
               programs={programs}
+              navigateToCourseOnCreate
               trigger={{
                 label: t("courses.add"),
                 icon: <Plus className="size-4" aria-hidden="true" />,

@@ -63,7 +63,14 @@ const TYPE_PATTERNS: ReadonlyArray<{ type: EventType; pattern: RegExp }> = [
   { type: "lab", pattern: /\b(lab|labb|laboration\w*|lektion)\b/ },
   { type: "seminar", pattern: /\b(seminar\w*|seminarium|workshop|övning\w*|ovning\w*|räknestuga)\b/ },
   { type: "lecture", pattern: /\b(föreläsning\w*|forelasning\w*|lecture|fö|lec)\b/ },
-  { type: "deadline", pattern: /\b(deadline|inlämning\w*|inlamning\w*|redovisning\w*|submission)\b/ },
+  // "due" catches the common LMS phrasing directly ("Assignment 3 is due",
+  // "Group registration (Due date)") — confirmed against a real Moodle feed
+  // where every due-date VEVENT used exactly this word and nothing else in
+  // the pattern above.
+  {
+    type: "deadline",
+    pattern: /\b(deadline|inlämning\w*|inlamning\w*|redovisning\w*|submission|due)\b/,
+  },
 ];
 
 /** Best guess at an event type. Falls back to `other` rather than inventing one. */

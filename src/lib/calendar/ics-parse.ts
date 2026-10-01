@@ -595,12 +595,29 @@ export function parseIcs(text: string, options: ParseIcsOptions): ParsedIcs {
 
     // Duration, an explicit end, or the RFC default: a whole day for a DATE, an
     // hour for anything else so the event is at least visible and editable.
+    //
+    // DTEND equal to DTSTART is not malformed — it is how Moodle (and other
+    // LMS feeds) publish a point-in-time deadline: a quiz opening, a due date.
+    // Confirmed against a real UNSW Moodle export where 20 of 21 VEVENTs were
+    // exactly this shape ("Assignment 3 is due", "quiz - opens ... closes"),
+    // every one of them silently dropped before this fix. Treated the same as
+    // "no end given at all" rather than as zero duration, so it gets the same
+    // default instead of vanishing. A genuinely malformed end (unparseable, or
+    // before the start) is still rejected below.
     let durationMinutes: number;
     if (event.end) {
       const endIso = toInstant(event.end);
-      durationMinutes = endIso
+      const explicit = endIso
         ? Math.round((Date.parse(endIso) - Date.parse(startIso)) / 60_000)
-        : 0;
+        : null;
+
+      if (explicit === null || explicit < 0) {
+        durationMinutes = 0; // unparseable, or ends before it starts: genuinely invalid
+      } else if (explicit === 0) {
+        durationMinutes = startDate.dateOnly ? 24 * 60 : 60; // point-in-time deadline
+      } else {
+        durationMinutes = explicit;
+      }
     } else if (event.durationMinutes !== null) {
       durationMinutes = event.durationMinutes;
     } else {
