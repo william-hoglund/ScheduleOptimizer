@@ -148,6 +148,20 @@ export async function recordSessionOutcome(
   return { session, task: updatedTask };
 }
 
+/** Marks a session as begun now; finishing it later records the real minutes. */
+export async function startStudySession(userId: string, sessionId: string, nowIso: string): Promise<void> {
+  const supabase = await createServerSupabaseClient();
+
+  const { error } = await supabase
+    .from("study_sessions")
+    .update({ started_at: nowIso })
+    .eq("id", sessionId)
+    .eq("user_id", userId)
+    .eq("status", "planned");
+
+  if (error) throw new Error(`Could not start the session: ${error.message}`);
+}
+
 /** Drops a session the student decided is no longer relevant. */
 export async function cancelSession(userId: string, sessionId: string): Promise<void> {
   const supabase = await createServerSupabaseClient();

@@ -614,6 +614,20 @@
       "missed": "Missat",
       "partial": "Delvis gjort",
       "cancelled": "Inställt"
+    },
+    "live": {
+      "start": "Starta",
+      "finish": "Avsluta",
+      "running": "Pågår · {minutes} av {planned} min"
+    },
+    "attendance": {
+      "title": "Senaste lektionerna",
+      "description": "Var du med på dessa? Missade ligger kvar här tills du har kommit ikapp.",
+      "attended": "Var med",
+      "missed": "Missade",
+      "missedLabel": "missad",
+      "catchUp": "Kom ikapp",
+      "caughtUp": "Ikapp"
     }
   },
   "notifications": {
@@ -1460,6 +1474,12 @@
       "required": "Skriv först vad du vill ha hjälp med.",
       "tooLong": "Det är för långt — håll det under 600 tecken.",
       "unexpected": "Något gick fel."
+    },
+    "catchUp": {
+      "request": "Hjälp mig komma ikapp med föreläsningen \"{title}\" ({when}): vad som togs upp och vad jag behöver förstå.",
+      "banner": "Kommer ikapp med \"{title}\" ({when}). Bocka i bilderna för den föreläsningen och sammanfatta — eller fråga om det som är oklart.",
+      "markDone": "Markera som ikapp",
+      "done": "Markerad som ikapp. Snyggt jobbat."
     }
   },
   "howItWorks": {
@@ -1471,6 +1491,7 @@
       "classes": "Föreläsningar, seminarier, övningar, labbar och tentor i din kalender blockerar alltid studietid — ett studiepass hamnar aldrig samtidigt som en lektion.",
       "deadlines": "Arbetet sprids ut före varje deadline, med mer tid för större, svårare och viktigare uppgifter.",
       "startDate": "Ge en uppgift ett \"Börja plugga från\"-datum (t.ex. tentaplugg sent i perioden) så schemaläggs inget för den innan dess.",
+      "logging": "Tryck Starta på ett pass för att ta tid och Avsluta för att logga de faktiska minuterna. Lektioner från senaste veckan frågar om du var med; en missad får en Kom ikapp-knapp som sammanfattar föreläsningen utifrån bilderna.",
       "replan": "Planer är förslag: du granskar en plan innan den tillämpas och kan generera om den när något ändras."
     },
     "learn": {

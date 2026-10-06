@@ -1,12 +1,14 @@
 "use client";
 
-import { CalendarCheck, Check, Circle, Clock } from "lucide-react";
+import { CalendarCheck, Check, Circle, Clock, Play, Square } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 import { RescheduleDialog } from "./reschedule-dialog";
 import { SessionOutcome } from "./session-outcome";
 import { EmptyState } from "@/components/common/empty-state";
+import { Button } from "@/components/ui/button";
+import { finishSession, startSession } from "@/features/sessions/actions";
 import type { CourseRow, StudySessionRow } from "@/lib/supabase/types";
 import { cn } from "@/lib/utils";
 
@@ -108,6 +110,19 @@ export function TodaySessions({
                     ) : null}
                   </div>
 
+                  {!isDone && session.started_at ? (
+                    <RunningSession
+                      session={session}
+                      nowIso={nowIso}
+                      onFinished={(status) => {
+                        setResolved((current) => new Set(current).add(session.id));
+                        if (status === "partial") setReschedulingId(session.id);
+                      }}
+                    />
+                  ) : null}
+
+                  {!isDone && !session.started_at ? <StartButton sessionId={session.id} /> : null}
+
                   {isDone ? (
                     <p className="text-muted-foreground mt-1 flex items-center gap-1.5 text-xs">
                       {session.status === "completed" || resolved.has(session.id) ? (
@@ -117,7 +132,7 @@ export function TodaySessions({
                       )}
                       {t(`status.${session.status}`)}
                     </p>
-                  ) : hasStarted ? (
+                  ) : hasStarted && !session.started_at ? (
                     <div className="mt-2">
                       <p className="text-muted-foreground mb-1.5 text-xs">{t("outcome.prompt")}</p>
                       <SessionOutcome
@@ -149,6 +164,70 @@ export function TodaySessions({
         sessionIds={reschedulingId ? [reschedulingId] : []}
         timeZone={timeZone}
       />
+    </div>
+  );
+}
+
+function StartButton({ sessionId }: { sessionId: string }) {
+  const t = useTranslations("sessions.live");
+  const [isPending, startTransition] = useTransition();
+
+  return (
+    <Button
+      size="sm"
+      variant="secondary"
+      className="mt-2"
+      disabled={isPending}
+      onClick={() => startTransition(async () => void (await startSession(sessionId)))}
+    >
+      <Play className="size-3.5" aria-hidden="true" />
+      {t("start")}
+    </Button>
+  );
+}
+
+/** A started session: live elapsed time and a Finish button that logs it. */
+function RunningSession({
+  session,
+  nowIso,
+  onFinished,
+}: {
+  session: StudySessionRow;
+  nowIso: string;
+  onFinished: (status: "completed" | "partial") => void;
+}) {
+  const t = useTranslations("sessions.live");
+  const [now, setNow] = useState(() => Date.parse(nowIso));
+  const [isPending, startTransition] = useTransition();
+
+  // Ticks only on the client, after mount — the server's clock is the initial
+  // value, so the first render matches and there is no hydration mismatch.
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 15_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const elapsed = Math.max(0, Math.floor((now - Date.parse(session.started_at ?? nowIso)) / 60_000));
+
+  return (
+    <div className="mt-2 flex flex-wrap items-center gap-2">
+      <span className="text-primary flex items-center gap-1.5 text-xs font-medium" aria-live="polite">
+        <span className="bg-primary size-2 animate-pulse rounded-full" aria-hidden="true" />
+        {t("running", { minutes: elapsed, planned: session.planned_minutes })}
+      </span>
+      <Button
+        size="sm"
+        disabled={isPending}
+        onClick={() =>
+          startTransition(async () => {
+            const result = await finishSession(session.id);
+            if (result.ok) onFinished(result.data.status);
+          })
+        }
+      >
+        <Square className="size-3.5" aria-hidden="true" />
+        {t("finish")}
+      </Button>
     </div>
   );
 }

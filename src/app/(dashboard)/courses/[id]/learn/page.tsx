@@ -1,7 +1,7 @@
 import { GraduationCap } from "lucide-react";
 import type { Metadata, Route } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 
 import { ButtonLink } from "@/components/common/button-link";
 import { EmptyState } from "@/components/common/empty-state";
@@ -11,6 +11,7 @@ import { isAiEnabled } from "@/lib/ai";
 import { isLearningMaterial } from "@/lib/validation/course-knowledge";
 import { requireUserContext } from "@/server/auth";
 import { listCourseDocuments } from "@/server/course-knowledge-service";
+import { getCalendarEvent } from "@/server/calendar-service";
 import { getCourse } from "@/server/course-service";
 
 /**
@@ -26,10 +27,18 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return { title: course ? t("pageTitle", { course: course.name }) : "Learn" };
 }
 
-export default async function LearnPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function LearnPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ catchUp?: string }>;
+}) {
   const { id } = await params;
-  const { user } = await requireUserContext();
+  const { catchUp } = await searchParams;
+  const { user, timeZone } = await requireUserContext();
   const t = await getTranslations("learn");
+  const format = await getFormatter();
 
   const course = await getCourse(user.id, id);
   if (!course) notFound();
@@ -41,6 +50,26 @@ export default async function LearnPage({ params }: { params: Promise<{ id: stri
     // Same degrade-gracefully rule as the course page: 0011 may not be applied.
     console.error("[learn] course documents unavailable:", cause);
   }
+
+  // Arriving from "Catch up" on a missed class: start in summary mode, already
+  // asking about that lecture. Only honoured for this student's own event in
+  // this course.
+  const missedEvent = catchUp
+    ? await getCalendarEvent(user.id, catchUp).catch(() => null)
+    : null;
+  const catchUpEvent =
+    missedEvent && missedEvent.course_id === id
+      ? {
+          id: missedEvent.id,
+          title: missedEvent.title,
+          when: format.dateTime(new Date(missedEvent.start_at), {
+            weekday: "short",
+            day: "numeric",
+            month: "short",
+            timeZone,
+          }),
+        }
+      : null;
 
   const materials: StudyMaterialOption[] = documents
     .filter((doc) => doc.processing_status !== "failed")
@@ -77,7 +106,15 @@ export default async function LearnPage({ params }: { params: Promise<{ id: stri
           action={<ButtonLink href={`/courses/${id}` as Route}>{t("empty.action")}</ButtonLink>}
         />
       ) : (
-        <StudyHelper courseId={id} materials={materials} />
+        <StudyHelper
+          courseId={id}
+          materials={materials}
+          catchUp={
+            catchUpEvent
+              ? { ...catchUpEvent, request: t("catchUp.request", { title: catchUpEvent.title, when: catchUpEvent.when }) }
+              : null
+          }
+        />
       )}
     </div>
   );

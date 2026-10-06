@@ -330,9 +330,13 @@ export type CalendarEventRow = {
   is_fixed: boolean;
   is_all_day: boolean;
   metadata: Json;
+  /** Whether a class was attended. Null means the student hasn't said. */
+  attendance: EventAttendance | null;
   created_at: string;
   updated_at: string;
 };
+
+export type EventAttendance = "attended" | "missed" | "caught_up";
 
 export type StudyPreferencesRow = {
   id: string;
@@ -398,6 +402,8 @@ export type StudySessionRow = {
   is_locked: boolean;
   generation_reason: string | null;
   manually_modified: boolean;
+  /** When the student pressed "Start". Null until then. */
+  started_at: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -654,6 +660,7 @@ export type Database = {
         | "is_fixed"
         | "is_all_day"
         | "metadata"
+        | "attendance"
       >;
       study_preferences: Table<
         StudyPreferencesRow,
@@ -701,6 +708,7 @@ export type Database = {
         | "is_locked"
         | "generation_reason"
         | "manually_modified"
+        | "started_at"
       >;
       planner_runs: Table<
         PlannerRunRow,

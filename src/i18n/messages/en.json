@@ -614,6 +614,20 @@
       "missed": "Missed",
       "partial": "Partly done",
       "cancelled": "Cancelled"
+    },
+    "live": {
+      "start": "Start",
+      "finish": "Finish",
+      "running": "In progress · {minutes} of {planned} min"
+    },
+    "attendance": {
+      "title": "Recent classes",
+      "description": "Did you make it to these? Missed ones stay here until you have caught up.",
+      "attended": "Attended",
+      "missed": "Missed",
+      "missedLabel": "missed",
+      "catchUp": "Catch up",
+      "caughtUp": "Caught up"
     }
   },
   "notifications": {
@@ -1460,6 +1474,12 @@
       "required": "Write what you want help with first.",
       "tooLong": "That is too long — keep it under 600 characters.",
       "unexpected": "Something went wrong."
+    },
+    "catchUp": {
+      "request": "Catch me up on the lecture \"{title}\" ({when}): what was covered, and what I need to understand from it.",
+      "banner": "Catching up on \"{title}\" ({when}). Tick the slides for that lecture, then summarise — or ask about anything unclear.",
+      "markDone": "Mark caught up",
+      "done": "Marked as caught up. Nice work."
     }
   },
   "howItWorks": {
@@ -1471,6 +1491,7 @@
       "classes": "Lectures, seminars, tutorials, labs and exams on your calendar always block study time — a study session never lands on top of a class.",
       "deadlines": "Work is spread out before each deadline, with more time for bigger, harder and higher-priority tasks.",
       "startDate": "Give a task a \"Start studying from\" date (e.g. exam revision late in the term) and nothing is scheduled for it before then.",
+      "logging": "Press Start on a session to time it, and Finish to log the real minutes. Classes from the past week ask whether you attended; a missed one gets a Catch up button that summarises that lecture from its slides.",
       "replan": "Plans are proposals: you review a plan before it is applied, and can regenerate it whenever things change."
     },
     "learn": {

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { askStudyHelper } from "@/features/learning/actions";
+import { setClassAttendance } from "@/features/sessions/actions";
 import type { StudyHelp, StudyHelpMode } from "@/lib/ai";
 import { STUDY_HELP_MODES } from "@/lib/ai/schemas/study-help";
 import { AI_LIMITS } from "@/lib/ai/types";
@@ -32,10 +33,22 @@ const MODE_ICON = {
   quiz: ListChecks,
 } as const;
 
-export function StudyHelper({ courseId, materials }: { courseId: string; materials: StudyMaterialOption[] }) {
+export type CatchUpTarget = { id: string; title: string; when: string; request: string };
+
+export function StudyHelper({
+  courseId,
+  materials,
+  catchUp = null,
+}: {
+  courseId: string;
+  materials: StudyMaterialOption[];
+  /** A missed class to catch up on: preset to a summary focused on it. */
+  catchUp?: CatchUpTarget | null;
+}) {
   const t = useTranslations("learn");
   const [mode, setMode] = useState<StudyHelpMode>("summary");
-  const [request, setRequest] = useState("");
+  const [request, setRequest] = useState(catchUp?.request ?? "");
+  const [caughtUp, setCaughtUp] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(() => {
     const lecture = materials.filter((m) => m.isLectureMaterial);
     return new Set((lecture.length > 0 ? lecture : materials).map((m) => m.id));
@@ -72,6 +85,29 @@ export function StudyHelper({ courseId, materials }: { courseId: string; materia
 
   return (
     <div className="space-y-8">
+      {catchUp ? (
+        <div className="border-primary/40 bg-primary/5 flex flex-wrap items-center gap-3 rounded-lg border p-3">
+          <p className="min-w-0 flex-1 text-sm">
+            {caughtUp ? t("catchUp.done") : t("catchUp.banner", { title: catchUp.title, when: catchUp.when })}
+          </p>
+          {!caughtUp ? (
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={isPending}
+              onClick={() =>
+                startTransition(async () => {
+                  const result = await setClassAttendance(catchUp.id, "caught_up");
+                  if (result.ok) setCaughtUp(true);
+                })
+              }
+            >
+              {t("catchUp.markDone")}
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
+
       <section className="space-y-5 rounded-xl border p-4 sm:p-5">
         <div className="space-y-2">
           <h2 className="label-caps">{t("modeLabel")}</h2>

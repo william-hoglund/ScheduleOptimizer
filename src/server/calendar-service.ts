@@ -2,7 +2,7 @@ import "server-only";
 
 import { wallClockToUtc } from "@/lib/calendar/time";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import type { CalendarEventRow } from "@/lib/supabase/types";
+import type { CalendarEventRow, EventAttendance } from "@/lib/supabase/types";
 import type { CalendarEventInput } from "@/lib/validation/calendar-event";
 
 /** Calendar events. The only place the `calendar_events` table is touched. */
@@ -128,4 +128,61 @@ export async function deleteCalendarEvent(userId: string, eventId: string): Prom
     .eq("user_id", userId);
 
   if (error) throw new Error(`Could not delete event: ${error.message}`);
+}
+
+/** Records whether the student attended a class. */
+export async function setEventAttendance(
+  userId: string,
+  eventId: string,
+  attendance: EventAttendance | null,
+): Promise<void> {
+  const supabase = await createServerSupabaseClient();
+
+  const { error } = await supabase
+    .from("calendar_events")
+    .update({ attendance })
+    .eq("id", eventId)
+    .eq("user_id", userId);
+
+  if (error) throw new Error(`Could not record attendance: ${error.message}`);
+}
+
+/**
+ * Classes that have ended in the last `days` and still need attention: not
+ * yet marked, or marked missed and not caught up on.
+ */
+export async function listClassesNeedingAttention(
+  userId: string,
+  nowIso: string,
+  days = 7,
+): Promise<CalendarEventRow[]> {
+  const supabase = await createServerSupabaseClient();
+  const since = new Date(Date.parse(nowIso) - days * 86_400_000).toISOString();
+
+  const { data, error } = await supabase
+    .from("calendar_events")
+    .select("*")
+    .eq("user_id", userId)
+    .in("event_type", ["lecture", "seminar", "lab"])
+    .eq("is_all_day", false)
+    .gte("start_at", since)
+    .lt("end_at", nowIso)
+    .or("attendance.is.null,attendance.eq.missed")
+    .order("start_at", { ascending: false })
+    .limit(20);
+
+  if (error) throw new Error(`Could not load past classes: ${error.message}`);
+  return data ?? [];
+}
+
+export async function getCalendarEvent(userId: string, eventId: string): Promise<CalendarEventRow | null> {
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("calendar_events")
+    .select("*")
+    .eq("id", eventId)
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error) throw new Error(`Could not load event: ${error.message}`);
+  return data;
 }

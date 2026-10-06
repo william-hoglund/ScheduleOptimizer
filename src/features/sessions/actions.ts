@@ -3,10 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { fromEpochMinutes } from "@/lib/planner/time-grid";
+import { finishOutcome } from "@/lib/sessions/finish-outcome";
 import { rescheduleMissedSessions } from "@/lib/planner/rescheduling/reschedule-missed-session";
 import type { PlannedSession } from "@/lib/planner/types";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { actionOk, fromZodError, guarded, type ActionResult } from "@/lib/validation/action-result";
+import { actionFailed, actionOk, fromZodError, guarded, type ActionResult } from "@/lib/validation/action-result";
 import { sessionOutcomeSchema } from "@/lib/validation/session";
 import { requireUserContext } from "@/server/auth";
 import { nowIso } from "@/server/clock";
@@ -17,7 +18,9 @@ import {
   cancelSession,
   getSession,
   recordSessionOutcome,
+  startStudySession,
 } from "@/server/session-service";
+import { setEventAttendance } from "@/server/calendar-service";
 
 function revalidateSessionViews() {
   revalidatePath("/dashboard");
@@ -261,5 +264,57 @@ export async function applyReschedule(previewId: string): Promise<ActionResult<u
   });
 
   revalidateSessionViews();
+  return actionOk();
+}
+
+/** "Start" on a session: the clock starts now. */
+export async function startSession(sessionId: string): Promise<ActionResult<undefined>> {
+  const { user } = await requireUserContext();
+
+  const result = await guarded(() => startStudySession(user.id, sessionId, nowIso()));
+  if (!result.ok) return result;
+
+  revalidateSessionViews();
+  return actionOk();
+}
+
+/**
+ * "Finish" on a started session: records the minutes actually spent. Short of
+ * the plan counts as partly done, so the rest can be offered a new time.
+ */
+export async function finishSession(
+  sessionId: string,
+): Promise<ActionResult<{ status: "completed" | "partial"; minutes: number }>> {
+  const { user } = await requireUserContext();
+
+  const session = await getSession(user.id, sessionId);
+  if (!session || !session.started_at) return actionFailed("notFound");
+
+  const { status, minutes } = finishOutcome(session.started_at, nowIso(), session.planned_minutes);
+
+  const result = await guarded(() =>
+    recordSessionOutcome(user.id, sessionId, { status, completedMinutes: minutes }),
+  );
+  if (!result.ok) return result;
+
+  revalidateSessionViews();
+  return actionOk({ status, minutes });
+}
+
+const ATTENDANCE_VALUES = ["attended", "missed", "caught_up"] as const;
+
+/** Attended / missed a class, or caught up on one that was missed. */
+export async function setClassAttendance(
+  eventId: string,
+  attendance: (typeof ATTENDANCE_VALUES)[number],
+): Promise<ActionResult<undefined>> {
+  const { user } = await requireUserContext();
+  if (!ATTENDANCE_VALUES.includes(attendance)) return actionFailed("invalidInput");
+
+  const result = await guarded(() => setEventAttendance(user.id, eventId, attendance));
+  if (!result.ok) return result;
+
+  revalidateSessionViews();
+  revalidatePath("/courses", "layout");
   return actionOk();
 }

@@ -7,6 +7,7 @@ import { DailyBriefingPanel } from "@/components/dashboard/daily-briefing";
 import { PageHeader } from "@/components/layout/page-header";
 import { createPageMetadata } from "@/components/layout/placeholder-page";
 import { TodaySessions } from "@/components/sessions/today-sessions";
+import { ClassAttendance } from "@/components/sessions/class-attendance";
 import { UnresolvedSessions } from "@/components/sessions/unresolved-sessions";
 import { greetingBandFor, type DailyBriefing } from "@/lib/briefing/build-daily-briefing";
 import { utcToLocalDate, utcToWallClock, wallClockToUtc } from "@/lib/calendar/time";
@@ -19,6 +20,7 @@ import { getDailyBriefing } from "@/server/daily-briefing-service";
 import { findUnresolvedSessions, listSessionsBetween } from "@/server/session-service";
 import { listTasks } from "@/server/task-service";
 import { listTodos } from "@/server/todo-service";
+import { listClassesNeedingAttention } from "@/server/calendar-service";
 
 export const generateMetadata = () => createPageMetadata("dashboard");
 
@@ -60,6 +62,12 @@ export default async function DashboardPage() {
       console.error("[dashboard] to-dos unavailable:", cause);
       return null;
     });
+
+  // Needs migration 0017; until it's applied this section simply doesn't show.
+  const pastClasses = await listClassesNeedingAttention(user.id, now).catch((cause: unknown) => {
+    console.error("[dashboard] class attendance unavailable:", cause);
+    return [];
+  });
 
   // Anything still open today is not "unresolved" yet — it has not finished.
   const unresolvedBefore = unresolved.filter(
@@ -107,6 +115,8 @@ export default async function DashboardPage() {
       />
 
       <UnresolvedSessions sessions={unresolvedBefore} timeZone={timeZone} />
+
+      <ClassAttendance events={pastClasses} timeZone={timeZone} />
 
       {briefing ? (
         <DailyBriefingPanel
