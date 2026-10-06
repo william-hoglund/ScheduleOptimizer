@@ -93,6 +93,31 @@ function urgencyFromDays(days: number): number {
 }
 
 /**
+ * How much reason there is to have started this task yet.
+ *
+ * `importance` and `coursePriority` are properties of the task itself, not
+ * of the clock — an exam is worth the same 1.0 importance whether it is
+ * tomorrow or ten weeks away. Left unscaled, that let "this is graded and
+ * important" alone outrank — and get placed ahead of — work that is
+ * genuinely due soon, just because a slot happened to be free: nobody
+ * preps for an exam seven weeks out before anything nearer-term is touched.
+ *
+ * Within two weeks of the target deadline, or whenever the remaining work
+ * no longer comfortably fits the days left (`fallingBehind` already past
+ * halfway), there is real reason to be working on it — full weight applies.
+ * Further out than that with slack to spare, weight tapers toward a floor
+ * rather than vanishing: a student with nothing else due should still be
+ * able to get ahead on it, just without it crowding out nearer work first.
+ */
+function readiness(daysUntilTarget: number | null, fallingBehind: number): number {
+  if (daysUntilTarget === null || daysUntilTarget <= 14 || fallingBehind >= 0.5) return 1;
+
+  const excessDays = daysUntilTarget - 14;
+  const floor = 0.25;
+  return Math.max(floor, 1 - excessDays / 56);
+}
+
+/**
  * Whether the work still fits comfortably in the time left.
  *
  * Compares what remains against a rough sense of how much study time the days
@@ -134,8 +159,6 @@ export function calculateTaskUrgency(
   const daysUntilTarget = targetDeadline === null ? null : (targetDeadline - now) / MINUTES_PER_DAY;
 
   const urgency = daysUntilTarget === null ? 0.1 : urgencyFromDays(daysUntilTarget);
-  const importance = TYPE_IMPORTANCE[task.taskType] * (task.priority / 5);
-  const coursePriority = task.coursePriority / 5;
   const difficulty = task.difficulty / 5;
 
   // Normalised against a full day's study, capped so one enormous task cannot
@@ -147,6 +170,12 @@ export function calculateTaskUrgency(
     daysUntilTarget,
     maximumDailyMinutes,
   );
+
+  // How much of the task's static "this matters" weight actually applies yet
+  // — see `readiness`'s own comment for why this exists.
+  const ready = readiness(daysUntilTarget, fallingBehind);
+  const importance = TYPE_IMPORTANCE[task.taskType] * (task.priority / 5) * ready;
+  const coursePriority = (task.coursePriority / 5) * ready;
 
   // Work that unblocks other work earns a nudge, so chains start early enough.
   const dependency = Math.min(1, blockedByCount / 3);

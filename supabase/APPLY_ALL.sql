@@ -11,8 +11,8 @@
 -- "already exists", which is intentional: it stops a second run from
 -- silently doing half a job.
 --
--- Files included: 13
--- Generated:      2026-10-01T22:46:19.684Z
+-- Files included: 14
+-- Generated:      2026-10-02T07:30:59.119Z
 -- =============================================================
 
 
@@ -1438,3 +1438,57 @@ alter table public.calendar_events
   add constraint calendar_events_source_valid
     check (source in ('manual', 'ics', 'google', 'schedule_image'));
 
+
+-- <<<<<<<<<<<<<<<< 0014_task_preferred_session_minutes.sql >>>>>>>>>>>>>>>>
+
+-- 0014_task_preferred_session_minutes.sql
+-- Lets a single task ask for a different session length than the student's
+-- usual preference — "give me long sessions for the final project" — without
+-- changing `study_preferences.preferred_session_minutes`, which is global.
+--
+-- Null (the default) means "use the usual preference", not zero minutes —
+-- same convention `estimated_minutes` already follows elsewhere for "not
+-- stated" (see AGENTS.md's to-dos note). The planner engine falls back to
+-- `preferences.preferredSessionMinutes` whenever this is null.
+
+alter table public.tasks
+  add column preferred_session_minutes integer;
+
+alter table public.tasks
+  add constraint tasks_preferred_session_minutes_range
+    check (preferred_session_minutes is null or preferred_session_minutes between 15 and 480);
+
+
+-- <<<<<<<<<<<<<<<< 0015_task_start_date.sql >>>>>>>>>>>>>>>>
+
+-- 0015_task_start_date.sql
+-- "Don't start studying for this before…" — an exam at the end of the study
+-- period should not pull revision into week one just because there is free
+-- time now. A local calendar date (not an instant): the planner reads it as
+-- the start of that day in the student's own timezone.
+--
+-- Null (the default) means "no earliest start" — today's behaviour.
+
+alter table public.tasks
+  add column start_date date;
+
+-- <<<<<<<<<<<<<<<< 0016_lecture_material.sql >>>>>>>>>>>>>>>>
+
+-- 0016_lecture_material.sql
+-- Course documents were only ever things to *extract facts from* (syllabus,
+-- schedule, assessment guide). Lecture slides and notes are different: they
+-- are the material the student studies, read by the Learn page on demand
+-- rather than mined once for dates and weights. Two new document types; the
+-- check constraint is dropped and recreated with them, the standard way to
+-- widen a Postgres check (same as 0013).
+
+alter table public.course_documents
+  drop constraint course_documents_type_valid;
+
+alter table public.course_documents
+  add constraint course_documents_type_valid check (
+    document_type in (
+      'syllabus', 'schedule', 'assessment_guide', 'reading_list', 'other',
+      'lecture_slides', 'lecture_notes'
+    )
+  );

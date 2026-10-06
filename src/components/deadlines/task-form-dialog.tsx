@@ -58,6 +58,8 @@ function toFormValues(
     estimatedMinutes: task.estimated_minutes,
     completedMinutes: task.completed_minutes,
     preferredStudyMethod: task.preferred_study_method,
+    preferredSessionMinutes: task.preferred_session_minutes,
+    startDate: task.start_date,
   };
 }
 
@@ -233,14 +235,40 @@ export function TaskFormDialog({
             </NativeSelect>
           </div>
 
-          <NativeSelect label={t("fields.method")} {...register("preferredStudyMethod")}>
-            <option value="">{t("fields.noMethod")}</option>
-            {STUDY_METHODS.map((method) => (
-              <option key={method} value={method}>
-                {t(`methods.${method}`)}
-              </option>
-            ))}
-          </NativeSelect>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <NativeSelect label={t("fields.method")} {...register("preferredStudyMethod")}>
+              <option value="">{t("fields.noMethod")}</option>
+              {STUDY_METHODS.map((method) => (
+                <option key={method} value={method}>
+                  {t(`methods.${method}`)}
+                </option>
+              ))}
+            </NativeSelect>
+            <FormField
+              label={t("fields.preferredSessionMinutes")}
+              type="number"
+              inputMode="numeric"
+              min={15}
+              max={480}
+              step={15}
+              placeholder={t("fields.preferredSessionMinutesPlaceholder")}
+              hint={t("fields.preferredSessionMinutesHint")}
+              error={message(errors.preferredSessionMinutes?.message)}
+              {...register("preferredSessionMinutes", {
+                setValueAs: (v) => (v === "" || v === null ? null : Number(v)),
+              })}
+            />
+          </div>
+
+          <FormField
+            label={t("fields.startDate")}
+            type="date"
+            hint={t("fields.startDateHint")}
+            error={message(errors.startDate?.message)}
+            {...register("startDate", {
+              setValueAs: (v) => (v === "" || v === null ? null : v),
+            })}
+          />
 
           <div className="space-y-1.5">
             <label className="text-sm font-medium" htmlFor="task-description">

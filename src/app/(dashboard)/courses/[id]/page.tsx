@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 
@@ -121,7 +121,11 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
         <ButtonLink href="/courses" variant="ghost" size="sm" className="-ml-2">
           {t("backToCourses")}
         </ButtonLink>
-        <PageHeader title={course.name} description={course.description ?? undefined} />
+        <PageHeader
+          title={course.name}
+          description={course.description ?? undefined}
+          actions={<ButtonLink href={`/courses/${id}/learn` as Route}>{t("studyThisCourse")}</ButtonLink>}
+        />
       </div>
 
       <section className="space-y-3">
@@ -153,7 +157,7 @@ export default async function CourseOverviewPage({ params }: { params: Promise<{
 
       <section className="space-y-3">
         <h2 className="label-caps">{t("assessments.title")}</h2>
-        <CourseAssessmentsList assessments={assessments} timeZone={timeZone} />
+        <CourseAssessmentsList assessments={assessments} course={course} timeZone={timeZone} />
       </section>
 
       {knowledgeAvailable ? (

@@ -102,6 +102,7 @@ describe("oneOfToAnyOf", () => {
       "none",
       "regenerate_plan",
       "set_course_priority",
+      "set_task_session_minutes",
     ]);
   });
 });

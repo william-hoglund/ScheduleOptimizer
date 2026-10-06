@@ -360,6 +360,7 @@ function placeChunk({
   for (const window of freeWindows) {
     if (examined >= MAX_CANDIDATES_PER_CHUNK) break;
     if (deadline !== null && window.start >= deadline) continue;
+    if (task.notBefore != null && window.end <= task.notBefore) continue;
 
     for (const start of candidateStarts(window, chunk.minutes, SLOT_GRANULARITY_MINUTES)) {
       if (examined >= MAX_CANDIDATES_PER_CHUNK) break;
@@ -378,6 +379,7 @@ function placeChunk({
           dailyCapByDate,
         },
         deadline,
+        notBefore: task.notBefore ?? null,
       });
       if (violation !== null) continue;
 

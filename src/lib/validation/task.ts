@@ -49,6 +49,12 @@ export const taskSchema = z.object({
   estimatedMinutes: z.number().int().min(0, V.outOfRange).max(100_000, V.outOfRange),
   completedMinutes: z.number().int().min(0, V.outOfRange).max(100_000, V.outOfRange),
   preferredStudyMethod: z.enum(STUDY_METHODS).or(z.literal("")).nullable(),
+  // Null means "use the account's usual session length" — see migration
+  // 0014's own comment for why this follows the same convention as a null
+  // estimate rather than treating null as zero.
+  preferredSessionMinutes: z.number().int().min(15, V.outOfRange).max(480, V.outOfRange).nullable(),
+  // "Don't plan this before…" — a local date, e.g. revision for a December exam.
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, V.outOfRange).or(z.literal("")).nullable(),
 });
 
 export type TaskInput = z.infer<typeof taskSchema>;
@@ -66,6 +72,8 @@ export const defaultTaskInput: TaskInput = {
   estimatedMinutes: 120,
   completedMinutes: 0,
   preferredStudyMethod: null,
+  preferredSessionMinutes: null,
+  startDate: null,
 };
 
 /** Marking progress from a list row, without opening the whole form. */

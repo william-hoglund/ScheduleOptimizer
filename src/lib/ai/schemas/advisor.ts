@@ -51,6 +51,13 @@ export const plannerCommandSchema = z.discriminatedUnion("kind", [
     label: z.string().min(1).max(100),
   }),
   z.object({
+    kind: z.literal("set_task_session_minutes"),
+    /** A task id from the list given in the prompt. */
+    taskId: z.string().min(1).max(64),
+    minutes: z.number().int().min(15).max(480),
+    label: z.string().min(1).max(100),
+  }),
+  z.object({
     kind: z.literal("none"),
   }),
 ]);

@@ -7,6 +7,7 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { removeCourseDocument } from "@/features/course-knowledge/actions";
 import type { CourseDocumentRow, DocumentProcessingStatus } from "@/lib/supabase/types";
+import { isLearningMaterial } from "@/lib/validation/course-knowledge";
 
 const STATUS_ICON: Record<DocumentProcessingStatus, typeof Clock> = {
   pending: Clock,
@@ -36,7 +37,10 @@ function DocumentRow({ document }: { document: CourseDocumentRow }) {
         <p className="truncate text-sm font-medium">{document.file_name}</p>
         <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
           <StatusIcon className={`size-3 shrink-0 ${STATUS_TONE[document.processing_status]}`} aria-hidden="true" />
-          {t(`status.${document.processing_status}`)}
+          {t(`types.${document.document_type}`)} ·{" "}
+          {isLearningMaterial(document.document_type) && document.processing_status === "completed"
+            ? t("materialReady")
+            : t(`status.${document.processing_status}`)}
         </p>
       </div>
 

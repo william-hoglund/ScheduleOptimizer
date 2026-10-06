@@ -1,10 +1,11 @@
 "use client";
 
-import { Check, Lock, LockOpen, Sparkles, Trash2, X } from "lucide-react";
+import { Calendar, Check, List, Lock, LockOpen, Sparkles, Trash2, X } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { PlanPreviewCalendar } from "./plan-preview-calendar";
 import { EmptyState } from "@/components/common/empty-state";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,8 +16,9 @@ import {
   toggleSessionLock,
 } from "@/features/planner/actions";
 import type { SessionReason } from "@/lib/planner/types";
-import type { CourseRow, StudySessionRow } from "@/lib/supabase/types";
+import type { CalendarEventRow, CourseRow, StudySessionRow } from "@/lib/supabase/types";
 import type { PlannerRunInput } from "@/lib/validation/planner";
+import { cn } from "@/lib/utils";
 
 /**
  * The proposed plan, grouped by day.
@@ -80,6 +82,9 @@ function SessionRow({
             })}
           </time>
           <span className="text-sm">{session.title}</span>
+          {course?.code ? (
+            <span className="text-numeric text-muted-foreground text-xs">{course.code}</span>
+          ) : null}
           <span className="text-numeric text-muted-foreground text-xs">
             {t("preview.minutes", { minutes: session.planned_minutes })}
           </span>
@@ -135,6 +140,7 @@ function SessionRow({
 export function PlanPreview({
   planId,
   sessions,
+  fixedEvents,
   courses,
   timeZone,
   runOptions,
@@ -142,6 +148,11 @@ export function PlanPreview({
 }: {
   planId: string;
   sessions: StudySessionRow[];
+  /** Lectures, tutorials, anything already on the calendar for this horizon —
+   *  shown alongside the proposed sessions in the calendar view, so the plan
+   *  reads as the combined schedule it actually is. List-view actions (lock,
+   *  reject) only ever touch `sessions`; these are never editable from here. */
+  fixedEvents: CalendarEventRow[];
   courses: CourseRow[];
   timeZone: string;
   runOptions: PlannerRunInput;
@@ -151,6 +162,7 @@ export function PlanPreview({
   const format = useFormatter();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [mode, setMode] = useState<"list" | "calendar">("list");
 
   const courseById = new Map(courses.map((course) => [course.id, course]));
 
@@ -203,45 +215,88 @@ export function PlanPreview({
             </span>
           </p>
         </div>
+
+        {/* Two readings of the same draft — locking, rejecting and approving
+            only ever act on the list, so switching views never changes what
+            the next click does. */}
+        <div className="bg-muted flex items-center gap-0.5 rounded-lg p-0.5" role="group" aria-label={t("preview.viewList")}>
+          <button
+            type="button"
+            aria-pressed={mode === "list"}
+            onClick={() => setMode("list")}
+            className={cn(
+              "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
+              mode === "list"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <List className="size-3.5" aria-hidden="true" />
+            {t("preview.viewList")}
+          </button>
+          <button
+            type="button"
+            aria-pressed={mode === "calendar"}
+            onClick={() => setMode("calendar")}
+            className={cn(
+              "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
+              mode === "calendar"
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <Calendar className="size-3.5" aria-hidden="true" />
+            {t("preview.viewCalendar")}
+          </button>
+        </div>
       </div>
 
-      <div className="space-y-5">
-        {[...byDate.entries()].map(([date, daySessions]) => {
-          const dayTotal = daySessions.reduce((sum, s) => sum + s.planned_minutes, 0);
-          const first = daySessions[0];
+      {mode === "calendar" ? (
+        <PlanPreviewCalendar
+          sessions={sessions}
+          fixedEvents={fixedEvents}
+          courses={courses}
+          timeZone={timeZone}
+        />
+      ) : (
+        <div className="space-y-5">
+          {[...byDate.entries()].map(([date, daySessions]) => {
+            const dayTotal = daySessions.reduce((sum, s) => sum + s.planned_minutes, 0);
+            const first = daySessions[0];
 
-          return (
-            <section key={date} className="space-y-2">
-              <div className="flex items-baseline justify-between gap-2">
-                <h3 className="label-caps">
-                  {first
-                    ? format.dateTime(new Date(first.start_at), {
-                        weekday: "long",
-                        day: "numeric",
-                        month: "short",
-                        timeZone,
-                      })
-                    : date}
-                </h3>
-                <span className="text-numeric text-muted-foreground text-xs">
-                  {t("preview.minutes", { minutes: dayTotal })}
-                </span>
-              </div>
+            return (
+              <section key={date} className="space-y-2">
+                <div className="flex items-baseline justify-between gap-2">
+                  <h3 className="label-caps">
+                    {first
+                      ? format.dateTime(new Date(first.start_at), {
+                          weekday: "long",
+                          day: "numeric",
+                          month: "short",
+                          timeZone,
+                        })
+                      : date}
+                  </h3>
+                  <span className="text-numeric text-muted-foreground text-xs">
+                    {t("preview.minutes", { minutes: dayTotal })}
+                  </span>
+                </div>
 
-              <ul className="space-y-2">
-                {daySessions.map((session) => (
-                  <SessionRow
-                    key={session.id}
-                    session={session}
-                    course={session.course_id ? courseById.get(session.course_id) : undefined}
-                    timeZone={timeZone}
-                  />
-                ))}
-              </ul>
-            </section>
-          );
-        })}
-      </div>
+                <ul className="space-y-2">
+                  {daySessions.map((session) => (
+                    <SessionRow
+                      key={session.id}
+                      session={session}
+                      course={session.course_id ? courseById.get(session.course_id) : undefined}
+                      timeZone={timeZone}
+                    />
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-2 border-t pt-5">
         <Button

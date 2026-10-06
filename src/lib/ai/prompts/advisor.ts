@@ -109,7 +109,7 @@ export function buildAdvisorPrompt(input: AdvisorInput): { system: string; promp
       ? input.upcomingTasks
           .map(
             (t) =>
-              `- "${t.title}"${t.courseName ? ` (${t.courseName})` : ""}, priority ${t.priority}/5` +
+              `- ${t.id}: "${t.title}"${t.courseName ? ` (${t.courseName})` : ""}, priority ${t.priority}/5` +
               (t.deadlineLocal ? `, due ${t.deadlineLocal}` : ", no deadline"),
           )
           .join("\n")
@@ -139,14 +139,14 @@ export function buildAdvisorPrompt(input: AdvisorInput): { system: string; promp
     "Courses (id: name):",
     courseLines,
     "",
-    "Upcoming tasks:",
+    "Upcoming tasks (id: title):",
     taskLines,
     workloadLines ? "\nUpcoming workload:\n" + workloadLines : "",
     behaviorLines ? "\nWhat we've noticed about how the student studies:\n" + behaviorLines : "",
     "",
     `The student wrote: "${input.message}"`,
     "",
-    "If this asks for a concrete, achievable change to their plan or a course's priority, propose one action using only the ids listed above. If it's about workload pressure and the upcoming workload above shows more than \"on track\", you may instead propose action.kind \"apply_forecast_remedy\" with remedyCode \"allow_weekends\" or \"extend_daily_limit\" when that would plausibly help. Otherwise set action.kind to \"none\".",
+    "If this asks for a concrete, achievable change to their plan or a course's priority, propose one action using only the ids listed above. If it asks for a specific task to get longer or shorter study sessions than usual (e.g. \"give me long sessions for Assignment 1\", \"shorter blocks for the reading\"), propose action.kind \"set_task_session_minutes\" with that task's id and a sensible minutes value between 15 and 480 (a plain student request for \"long\" without a number might mean roughly 90-120; \"short\" might mean 25-30 — use judgement, do not just guess an arbitrary large number). If it's about workload pressure and the upcoming workload above shows more than \"on track\", you may instead propose action.kind \"apply_forecast_remedy\" with remedyCode \"allow_weekends\" or \"extend_daily_limit\" when that would plausibly help. Otherwise set action.kind to \"none\".",
   ]
     .filter((line) => line !== "")
     .join("\n");

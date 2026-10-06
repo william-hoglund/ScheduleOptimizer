@@ -49,6 +49,10 @@ export const AI_LIMITS = {
   scheduleExtraction: 3000,
   /** Characters. Past this, a message is rejected before it ever reaches a provider. */
   maxAdvisorMessageChars: 600,
+  /** Summaries and quizzes over several lectures need room. */
+  studyHelp: 2500,
+  /** Characters, for the Learn page's topic/question box. */
+  maxStudyRequestChars: 600,
   /** Bytes. A vision call's cost scales with image size, not just token count. */
   maxScheduleImageBytes: 8 * 1024 * 1024,
 } as const;

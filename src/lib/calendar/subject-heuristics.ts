@@ -61,7 +61,7 @@ const TYPE_PATTERNS: ReadonlyArray<{ type: EventType; pattern: RegExp }> = [
     pattern: /tentamen|tentor|\btenta\b|\bomtenta\w*|\bexam\w*|\bdugga\w*|\bprov\b/,
   },
   { type: "lab", pattern: /\b(lab|labb|laboration\w*|lektion)\b/ },
-  { type: "seminar", pattern: /\b(seminar\w*|seminarium|workshop|övning\w*|ovning\w*|räknestuga)\b/ },
+  { type: "seminar", pattern: /\b(seminar\w*|seminarium|workshop|tutorial\w*|tute|tut|practical|övning\w*|ovning\w*|räknestuga)\b/ },
   { type: "lecture", pattern: /\b(föreläsning\w*|forelasning\w*|lecture|fö|lec)\b/ },
   // "due" catches the common LMS phrasing directly ("Assignment 3 is due",
   // "Group registration (Due date)") — confirmed against a real Moodle feed

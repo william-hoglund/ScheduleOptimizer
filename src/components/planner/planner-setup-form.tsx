@@ -49,7 +49,12 @@ export function PlannerSetupForm({
 
   const [startDate, setStartDate] = useState(defaultStart);
   const [endDate, setEndDate] = useState(defaultEnd);
-  const [courseIds, setCourseIds] = useState<string[]>([]);
+  // All courses start selected, not just "functionally everything" via an
+  // empty array — a course chip nobody can see is highlighted is a course
+  // whose exclusion nobody would notice (see the planner silently narrowed
+  // to a few courses with nothing due, and "nothing could be scheduled").
+  // Unticking one now reads as a deliberate choice instead of a default.
+  const [courseIds, setCourseIds] = useState<string[]>(() => courses.map((course) => course.id));
   const [showOverrides, setShowOverrides] = useState(false);
   const [overrides, setOverrides] = useState<PlannerRunInput["overrides"]>({});
   const [formError, setFormError] = useState<string | null>(null);

@@ -2,6 +2,8 @@ import "server-only";
 
 import { extractText as extractPdfText, getDocumentProxy } from "unpdf";
 
+import { extractPptxSlides } from "./pptx-text";
+
 /**
  * Turns an uploaded course document into plain text, one entry per page.
  *
@@ -23,6 +25,8 @@ export type ExtractedDocument = {
 
 export class DocumentTextExtractionError extends Error {}
 
+const PPTX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+
 const SUPPORTED_TEXT_MIME_TYPES = new Set(["text/plain", "text/markdown"]);
 
 export async function extractDocumentText(
@@ -40,6 +44,16 @@ export async function extractDocumentText(
     const { text } = await extractPdfText(pdf, { mergePages: false });
     const pages = text.map((pageText, index) => ({ pageNumber: index + 1, text: pageText }));
 
+    return { pages, fullText: pages.map((page) => page.text).join("\n\n") };
+  }
+
+  if (mimeType === PPTX_MIME_TYPE) {
+    let pages;
+    try {
+      pages = extractPptxSlides(bytes);
+    } catch (cause) {
+      throw new DocumentTextExtractionError(`Could not read PowerPoint: ${String(cause)}`);
+    }
     return { pages, fullText: pages.map((page) => page.text).join("\n\n") };
   }
 

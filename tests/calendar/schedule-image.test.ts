@@ -31,7 +31,7 @@ describe("toImportCandidates — a weekly dayOfWeek pattern", () => {
   it("produces one candidate per matching weekday in range", () => {
     // 2026-08-03 is a Monday.
     const candidates = toImportCandidates(
-      [entry({ dayOfWeek: 1 })],
+      [entry({ dayOfWeek: "monday" })],
       { startDate: "2026-08-03", endDate: "2026-08-24" },
       STOCKHOLM,
     );
@@ -47,9 +47,9 @@ describe("toImportCandidates — a weekly dayOfWeek pattern", () => {
   });
 
   it("starts from the first matching weekday, not the range start itself", () => {
-    // 2026-08-03 is a Monday; asking for Wednesday (3) should skip to Aug 5.
+    // 2026-08-03 is a Monday; asking for Wednesday should skip to Aug 5.
     const candidates = toImportCandidates(
-      [entry({ dayOfWeek: 3 })],
+      [entry({ dayOfWeek: "wednesday" })],
       { startDate: "2026-08-03", endDate: "2026-08-05" },
       STOCKHOLM,
     );
@@ -59,9 +59,9 @@ describe("toImportCandidates — a weekly dayOfWeek pattern", () => {
   });
 
   it("produces nothing when the weekday never falls inside a short range", () => {
-    // Aug 3-4 2026 is Mon-Tue only; no Friday (5) in it.
+    // Aug 3-4 2026 is Mon-Tue only; no Friday in it.
     const candidates = toImportCandidates(
-      [entry({ dayOfWeek: 5 })],
+      [entry({ dayOfWeek: "friday" })],
       { startDate: "2026-08-03", endDate: "2026-08-04" },
       STOCKHOLM,
     );
@@ -70,7 +70,7 @@ describe("toImportCandidates — a weekly dayOfWeek pattern", () => {
 
   it("produces nothing when the range is backwards", () => {
     const candidates = toImportCandidates(
-      [entry({ dayOfWeek: 1 })],
+      [entry({ dayOfWeek: "monday" })],
       { startDate: "2026-08-24", endDate: "2026-08-03" },
       STOCKHOLM,
     );
@@ -79,7 +79,7 @@ describe("toImportCandidates — a weekly dayOfWeek pattern", () => {
 
   it("converts the wall-clock time through the given zone", () => {
     const candidates = toImportCandidates(
-      [entry({ dayOfWeek: 1, startTime: "10:00", endTime: "12:00" })],
+      [entry({ dayOfWeek: "monday", startTime: "10:00", endTime: "12:00" })],
       { startDate: "2026-08-03", endDate: "2026-08-03" },
       STOCKHOLM,
     );
@@ -92,12 +92,43 @@ describe("toImportCandidates — a weekly dayOfWeek pattern", () => {
 
   it("gives each occurrence a distinct, stable external id", () => {
     const candidates = toImportCandidates(
-      [entry({ dayOfWeek: 1 })],
+      [entry({ dayOfWeek: "monday" })],
       { startDate: "2026-08-03", endDate: "2026-08-10" },
       STOCKHOLM,
     );
     const ids = candidates.map((c) => c.externalId);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("maps every weekday name to the correct JS weekday index", () => {
+    // 2026-08-02 is a Sunday; Aug 2-8 covers each name exactly once.
+    const names = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+    ] as const;
+    const expectedDates = [
+      "2026-08-02",
+      "2026-08-03",
+      "2026-08-04",
+      "2026-08-05",
+      "2026-08-06",
+      "2026-08-07",
+      "2026-08-08",
+    ];
+
+    names.forEach((dayOfWeek, index) => {
+      const candidates = toImportCandidates(
+        [entry({ dayOfWeek })],
+        { startDate: "2026-08-02", endDate: "2026-08-08" },
+        STOCKHOLM,
+      );
+      expect(candidates[0]?.startIso.slice(0, 10)).toBe(expectedDates[index]);
+    });
   });
 });
 
@@ -116,7 +147,7 @@ describe("toImportCandidates — a specific date entry", () => {
 describe("toImportCandidates — entries with no usable time", () => {
   it("falls back to all-day rather than dropping the entry", () => {
     const candidates = toImportCandidates(
-      [entry({ dayOfWeek: 1, startTime: null, endTime: null })],
+      [entry({ dayOfWeek: "monday", startTime: null, endTime: null })],
       { startDate: "2026-08-03", endDate: "2026-08-03" },
       STOCKHOLM,
     );
@@ -131,7 +162,7 @@ describe("toImportCandidates — entries with no usable time", () => {
 describe("toImportCandidates — malformed entries", () => {
   it("drops an occurrence whose end is not after its start", () => {
     const candidates = toImportCandidates(
-      [entry({ dayOfWeek: 1, startTime: "12:00", endTime: "10:00" })],
+      [entry({ dayOfWeek: "monday", startTime: "12:00", endTime: "10:00" })],
       { startDate: "2026-08-03", endDate: "2026-08-03" },
       STOCKHOLM,
     );
@@ -152,8 +183,8 @@ describe("toImportCandidates — several entries together", () => {
   it("expands each independently and keeps their own fields", () => {
     const candidates = toImportCandidates(
       [
-        entry({ title: "Databases", dayOfWeek: 1, courseCode: "TDDD37" }),
-        entry({ title: "Algorithms", dayOfWeek: 3, courseCode: "TDDD86", location: "B12" }),
+        entry({ title: "Databases", dayOfWeek: "monday", courseCode: "TDDD37" }),
+        entry({ title: "Algorithms", dayOfWeek: "wednesday", courseCode: "TDDD86", location: "B12" }),
       ],
       { startDate: "2026-08-03", endDate: "2026-08-10" },
       STOCKHOLM,

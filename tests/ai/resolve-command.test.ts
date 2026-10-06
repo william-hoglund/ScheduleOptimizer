@@ -4,6 +4,7 @@ import { resolvePlannerCommand, type CommandContext } from "@/lib/ai/resolve-com
 
 const context = (overrides: Partial<CommandContext> = {}): CommandContext => ({
   validCourseIds: new Set(["course-1", "course-2"]),
+  validTaskIds: new Set(["task-1", "task-2"]),
   currentPlanHorizon: { startDate: "2026-09-21", endDate: "2026-09-27" },
   today: "2026-09-23",
   ...overrides,
@@ -120,6 +121,29 @@ describe("resolvePlannerCommand — apply_forecast_remedy", () => {
       context(),
     );
     expect(resolved).toMatchObject({ remedyCode: "extend_daily_limit" });
+  });
+});
+
+describe("resolvePlannerCommand — set_task_session_minutes", () => {
+  it("accepts a real task id", () => {
+    const resolved = resolvePlannerCommand(
+      { kind: "set_task_session_minutes", taskId: "task-1", minutes: 120, label: "Longer sessions" },
+      context(),
+    );
+    expect(resolved).toEqual({
+      kind: "set_task_session_minutes",
+      taskId: "task-1",
+      minutes: 120,
+      label: "Longer sessions",
+    });
+  });
+
+  it("refuses a task id that does not belong to this account", () => {
+    const resolved = resolvePlannerCommand(
+      { kind: "set_task_session_minutes", taskId: "someone-elses-task", minutes: 120, label: "x" },
+      context(),
+    );
+    expect(resolved).toBeNull();
   });
 });
 

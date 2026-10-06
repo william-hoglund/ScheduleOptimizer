@@ -350,6 +350,13 @@
   --event-color: var(--event-personal);
   --event-soft: var(--event-personal-soft);
 }
+/* A proposed study session, shown on the planner's own calendar preview
+   before anything is approved — kept visually distinct from a real
+   `calendar_events` row, which never uses this class. */
+.fc .sp-event-study {
+  --event-color: var(--event-study);
+  --event-soft: var(--event-study-soft);
+}
 
 /* ---- Agenda (list) view -------------------------------------------------- */
 

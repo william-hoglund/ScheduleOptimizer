@@ -4,26 +4,23 @@ import { AlertTriangle, CheckCircle2, FileText, Loader2, Upload } from "lucide-r
 import { useTranslations } from "next-intl";
 import { useRef, useState, useTransition } from "react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   confirmExtraction,
   previewExtraction,
   recordCourseDocument,
   type ExtractionPreview,
 } from "@/features/course-knowledge/actions";
+import { ExtractionReview, type ExtractionConfirmInput } from "./extraction-review";
+import { finishLearningMaterialUpload } from "@/features/learning/actions";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import {
   COURSE_DOCUMENT_TYPES,
+  isLearningMaterial,
   MAX_DOCUMENT_BYTES,
   SUPPORTED_DOCUMENT_MIME_TYPES,
-  type AssessmentSelection,
-  type MilestoneSelection,
-  type RequirementSelection,
 } from "@/lib/validation/course-knowledge";
 import type { CourseDocumentType } from "@/lib/supabase/types";
-import type { ExtractedAssessment, ExtractedMilestone, ExtractedRequirement } from "@/lib/ai";
 import type { SaveExtractionOutcome } from "@/server/course-knowledge-service";
 
 /**
@@ -34,22 +31,20 @@ import type { SaveExtractionOutcome } from "@/server/course-knowledge-service";
  * server only ever handles the small JSON that follows (the storage path,
  * then the reviewed extraction). Same reasoning as the export routes in
  * `import-export`, just for the opposite direction.
+ *
+ * The review UI itself lives in `extraction-review.tsx`, shared with
+ * `CourseFormDialog`'s "paste outline text" path — two ways to get text to
+ * the AI, one review screen.
  */
-
-const MAX_ITEMS_PER_KIND = 30;
 
 type Stage =
   | { kind: "idle" }
   | { kind: "uploading" }
   | { kind: "extracting" }
-  | { kind: "review"; preview: ExtractionPreview; selection: ReviewSelection }
-  | { kind: "done"; outcome: SaveExtractionOutcome };
-
-type ReviewSelection = {
-  assessments: boolean[];
-  milestones: boolean[];
-  requirements: boolean[];
-};
+  | { kind: "review"; preview: ExtractionPreview }
+  | { kind: "done"; outcome: SaveExtractionOutcome }
+  /** Lecture material: stored for the Learn page, no extraction to review. */
+  | { kind: "materialSaved" };
 
 const KNOWN_ERRORS = [
   "tooLarge",
@@ -73,166 +68,6 @@ function sanitizeFileName(name: string): string {
   return name.replace(/[^a-zA-Z0-9.\-_]/g, "_").slice(-150);
 }
 
-/** Low-confidence items start unticked — §40.16: ambiguous extractions need a deliberate yes. */
-function defaultChecked(confidence: "high" | "medium" | "low"): boolean {
-  return confidence !== "low";
-}
-
-const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-
-/**
- * A confirmed single date, or null.
- *
- * The prompt asks the model for YYYY-MM-DD-or-null, but a live run
- * (Session 15) returned a date *range* as free text ("2026-10-12 to
- * 2026-10-16") for a reading week instead of null — the schema has no format
- * constraint on this field, only `confirmExtractionSchema` does, so an
- * unguarded value here would pass the checkbox as "has a date" and then fail
- * validation on confirm, silently blocking the whole save. Treated the same
- * as no date: nothing to attach to a single `milestone_date` column.
- */
-function confirmedDate(date: string | null): string | null {
-  return date !== null && ISO_DATE_RE.test(date) ? date : null;
-}
-
-function initialSelection(extraction: ExtractionPreview["extraction"]): ReviewSelection {
-  return {
-    assessments: extraction.assessments.map((a) => defaultChecked(a.confidence)),
-    // A milestone with no confirmed date has nothing to save — see the schema
-    // note in lib/validation/course-knowledge.ts.
-    milestones: extraction.milestones.map((m) => confirmedDate(m.date) !== null && defaultChecked(m.confidence)),
-    requirements: extraction.requirements.map((r) => defaultChecked(r.confidence)),
-  };
-}
-
-function ConfidenceBadge({ confidence }: { confidence: "high" | "medium" | "low" }) {
-  const t = useTranslations("courseKnowledge.knowledge");
-  const variant = confidence === "low" ? "outline" : confidence === "medium" ? "secondary" : "default";
-  return (
-    <Badge variant={variant} className="shrink-0">
-      {t(`confidence${confidence === "high" ? "High" : confidence === "medium" ? "Medium" : "Low"}`)}
-    </Badge>
-  );
-}
-
-function SourceNote({ page }: { page: number | null }) {
-  const t = useTranslations("courseKnowledge.knowledge");
-  if (page === null) return null;
-  return <span className="text-muted-foreground text-xs">{t("sourcePage", { page })}</span>;
-}
-
-function AssessmentRow({
-  item,
-  checked,
-  onToggle,
-  index,
-}: {
-  item: ExtractedAssessment;
-  checked: boolean;
-  onToggle: () => void;
-  index: number;
-}) {
-  return (
-    <li
-      className="animate-in fade-in slide-in-from-bottom-1 flex items-start gap-3 rounded-lg border p-3 duration-300 fill-mode-both"
-      style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
-    >
-      <Checkbox checked={checked} onCheckedChange={onToggle} className="mt-0.5" />
-      <div className="min-w-0 flex-1 space-y-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-medium">{item.title}</p>
-          <ConfidenceBadge confidence={item.confidence} />
-        </div>
-        <p className="text-muted-foreground flex flex-wrap gap-x-3 text-xs">
-          {item.deadlineLocal ? <span className="text-numeric">{item.deadlineLocal}</span> : null}
-          {item.weightPercent !== null ? (
-            <span className="text-numeric">{item.weightPercent}%</span>
-          ) : null}
-          {item.wordCount !== null ? (
-            <span className="text-numeric">{item.wordCount} words</span>
-          ) : null}
-          <SourceNote page={item.sourcePage} />
-        </p>
-        {item.description ? (
-          <p className="text-muted-foreground text-xs">{item.description}</p>
-        ) : null}
-      </div>
-    </li>
-  );
-}
-
-function MilestoneRow({
-  item,
-  checked,
-  onToggle,
-  index,
-}: {
-  item: ExtractedMilestone;
-  checked: boolean;
-  onToggle: () => void;
-  index: number;
-}) {
-  const t = useTranslations("courseKnowledge.review");
-  return (
-    <li
-      className="animate-in fade-in slide-in-from-bottom-1 flex items-start gap-3 rounded-lg border p-3 duration-300 fill-mode-both"
-      style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
-    >
-      <Checkbox
-        checked={checked}
-        onCheckedChange={onToggle}
-        disabled={confirmedDate(item.date) === null}
-        className="mt-0.5"
-      />
-      <div className="min-w-0 flex-1 space-y-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-medium">{item.title}</p>
-          <ConfidenceBadge confidence={item.confidence} />
-        </div>
-        <p className="text-muted-foreground flex flex-wrap gap-x-3 text-xs">
-          {confirmedDate(item.date) ? (
-            <span className="text-numeric">{confirmedDate(item.date)}</span>
-          ) : (
-            <span>{t("missingDate")}</span>
-          )}
-          <SourceNote page={item.sourcePage} />
-        </p>
-      </div>
-    </li>
-  );
-}
-
-function RequirementRow({
-  item,
-  checked,
-  onToggle,
-  index,
-}: {
-  item: ExtractedRequirement;
-  checked: boolean;
-  onToggle: () => void;
-  index: number;
-}) {
-  return (
-    <li
-      className="animate-in fade-in slide-in-from-bottom-1 flex items-start gap-3 rounded-lg border p-3 duration-300 fill-mode-both"
-      style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
-    >
-      <Checkbox checked={checked} onCheckedChange={onToggle} className="mt-0.5" />
-      <div className="min-w-0 flex-1 space-y-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-medium">{item.title}</p>
-          <ConfidenceBadge confidence={item.confidence} />
-        </div>
-        {item.description ? (
-          <p className="text-muted-foreground text-xs">{item.description}</p>
-        ) : null}
-        <SourceNote page={item.sourcePage} />
-      </div>
-    </li>
-  );
-}
-
 export function DocumentUploadPanel({ courseId }: { courseId: string }) {
   const t = useTranslations("courseKnowledge.documents");
   const tReview = useTranslations("courseKnowledge.review");
@@ -243,7 +78,76 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  async function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
+  /** Uploads to storage, records the document, and runs extraction — shared
+   *  by the file-input path below. Returns whether it reached the review stage. */
+  async function submitDocument(
+    file: Blob,
+    fileName: string,
+    mimeType: (typeof SUPPORTED_DOCUMENT_MIME_TYPES)[number],
+  ): Promise<boolean> {
+    setStage({ kind: "uploading" });
+
+    const supabase = createBrowserSupabaseClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      setError("unexpected");
+      setStage({ kind: "idle" });
+      return false;
+    }
+
+    const storagePath = `${user.id}/${courseId}/${crypto.randomUUID()}-${sanitizeFileName(fileName)}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("course-documents")
+      .upload(storagePath, file, { contentType: mimeType });
+    if (uploadError) {
+      console.error("[document-upload] storage upload failed:", uploadError);
+      setError("uploadFailed");
+      setStage({ kind: "idle" });
+      return false;
+    }
+
+    const recorded = await recordCourseDocument({
+      courseId,
+      fileName,
+      fileSize: file.size,
+      mimeType,
+      storagePath,
+      documentType,
+    });
+    if (!recorded.ok) {
+      setError(recorded.error);
+      setStage({ kind: "idle" });
+      return false;
+    }
+
+    if (isLearningMaterial(documentType)) {
+      setStage({ kind: "extracting" });
+      const checked = await finishLearningMaterialUpload(recorded.data.id);
+      if (!checked.ok) {
+        setError(checked.error);
+        setStage({ kind: "idle" });
+        return false;
+      }
+      setStage({ kind: "materialSaved" });
+      return true;
+    }
+
+    setStage({ kind: "extracting" });
+    const preview = await previewExtraction(recorded.data.id);
+    if (!preview.ok) {
+      setError(preview.error);
+      setStage({ kind: "idle" });
+      return false;
+    }
+
+    setStage({ kind: "review", preview: preview.data });
+    return true;
+  }
+
+  function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (fileInput.current) fileInput.current.value = "";
     if (!file) return;
@@ -258,92 +162,17 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
     }
 
     setError(null);
-    setStage({ kind: "uploading" });
-
-    startTransition(async () => {
-      const supabase = createBrowserSupabaseClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        setError("unexpected");
-        setStage({ kind: "idle" });
-        return;
-      }
-
-      const storagePath = `${user.id}/${courseId}/${crypto.randomUUID()}-${sanitizeFileName(file.name)}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("course-documents")
-        .upload(storagePath, file, { contentType: file.type });
-      if (uploadError) {
-        console.error("[document-upload] storage upload failed:", uploadError);
-        setError("uploadFailed");
-        setStage({ kind: "idle" });
-        return;
-      }
-
-      const recorded = await recordCourseDocument({
-        courseId,
-        fileName: file.name,
-        fileSize: file.size,
-        mimeType: file.type,
-        storagePath,
-        documentType,
-      });
-      if (!recorded.ok) {
-        setError(recorded.error);
-        setStage({ kind: "idle" });
-        return;
-      }
-
-      setStage({ kind: "extracting" });
-      const preview = await previewExtraction(recorded.data.id);
-      if (!preview.ok) {
-        setError(preview.error);
-        setStage({ kind: "idle" });
-        return;
-      }
-
-      setStage({ kind: "review", preview: preview.data, selection: initialSelection(preview.data.extraction) });
+    startTransition(() => {
+      void submitDocument(file, file.name, file.type as (typeof SUPPORTED_DOCUMENT_MIME_TYPES)[number]);
     });
   }
 
-  function toggle(kind: keyof ReviewSelection, index: number) {
-    setStage((current) => {
-      if (current.kind !== "review") return current;
-      const next = { ...current.selection, [kind]: [...current.selection[kind]] };
-      next[kind][index] = !next[kind][index];
-      return { ...current, selection: next };
-    });
-  }
-
-  function handleConfirm() {
+  function handleConfirm(input: ExtractionConfirmInput) {
     if (stage.kind !== "review") return;
-    const { preview, selection } = stage;
-
-    const assessments: AssessmentSelection[] = preview.extraction.assessments
-      .filter((_, i) => selection.assessments[i])
-      // Same malformed-date guard as milestones: a deadline that isn't clean
-      // ISO would otherwise fail server-side validation and block the whole
-      // save rather than just arriving as "no deadline set".
-      .map((a) => ({ ...a, deadlineLocal: confirmedDate(a.deadlineLocal) }))
-      .slice(0, MAX_ITEMS_PER_KIND);
-    const milestones: MilestoneSelection[] = preview.extraction.milestones
-      .filter((m, i) => selection.milestones[i] && confirmedDate(m.date) !== null)
-      .map((m) => ({ ...m, date: confirmedDate(m.date) as string }))
-      .slice(0, MAX_ITEMS_PER_KIND);
-    const requirements: RequirementSelection[] = preview.extraction.requirements
-      .filter((_, i) => selection.requirements[i])
-      .slice(0, MAX_ITEMS_PER_KIND);
+    const documentId = stage.preview.documentId;
 
     startTransition(async () => {
-      const result = await confirmExtraction({
-        documentId: preview.documentId,
-        assessments,
-        milestones,
-        requirements,
-      });
+      const result = await confirmExtraction({ documentId, ...input });
       if (!result.ok) {
         setError(result.error);
         return;
@@ -380,89 +209,29 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
     );
   }
 
-  if (stage.kind === "review") {
-    const { extraction } = stage.preview;
-    const totalFound =
-      extraction.assessments.length + extraction.milestones.length + extraction.requirements.length;
-
+  if (stage.kind === "materialSaved") {
     return (
-      <div className="animate-in fade-in duration-300 space-y-5">
-        <div>
-          <h3 className="text-sm font-semibold">{tReview("title")}</h3>
-          <p className="text-muted-foreground mt-1 text-sm">{tReview("description")}</p>
-          {extraction.documentSummary ? (
-            <p className="bg-muted/50 mt-2 rounded-lg p-3 text-sm">{extraction.documentSummary}</p>
-          ) : null}
+      <div className="space-y-4">
+        <div className="border-success/40 bg-success/5 animate-in fade-in slide-in-from-bottom-2 flex items-start gap-3 rounded-lg border p-4 duration-300">
+          <CheckCircle2 className="text-success mt-0.5 size-5 shrink-0" aria-hidden="true" />
+          <p className="text-sm">{t("materialSaved")}</p>
         </div>
-
-        {errorMessage}
-
-        {totalFound === 0 ? (
-          <p className="text-muted-foreground text-sm">{tReview("noneFound")}</p>
-        ) : (
-          <>
-            {extraction.assessments.length > 0 ? (
-              <div className="space-y-2">
-                <h4 className="label-caps">{tReview("assessmentsHeading")}</h4>
-                <ul className="space-y-2">
-                  {extraction.assessments.map((item, i) => (
-                    <AssessmentRow
-                      key={i}
-                      item={item}
-                      checked={stage.selection.assessments[i] ?? false}
-                      onToggle={() => toggle("assessments", i)}
-                      index={i}
-                    />
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-
-            {extraction.milestones.length > 0 ? (
-              <div className="space-y-2">
-                <h4 className="label-caps">{tReview("milestonesHeading")}</h4>
-                <ul className="space-y-2">
-                  {extraction.milestones.map((item, i) => (
-                    <MilestoneRow
-                      key={i}
-                      item={item}
-                      checked={stage.selection.milestones[i] ?? false}
-                      onToggle={() => toggle("milestones", i)}
-                      index={i}
-                    />
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-
-            {extraction.requirements.length > 0 ? (
-              <div className="space-y-2">
-                <h4 className="label-caps">{tReview("requirementsHeading")}</h4>
-                <ul className="space-y-2">
-                  {extraction.requirements.map((item, i) => (
-                    <RequirementRow
-                      key={i}
-                      item={item}
-                      checked={stage.selection.requirements[i] ?? false}
-                      onToggle={() => toggle("requirements", i)}
-                      index={i}
-                    />
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-          </>
-        )}
-
-        <div className="flex flex-wrap gap-2">
-          <Button onClick={handleConfirm} disabled={isPending}>
-            {isPending ? tReview("saving") : tReview("confirm")}
-          </Button>
-          <Button variant="ghost" disabled={isPending} onClick={() => setStage({ kind: "idle" })}>
-            {tReview("cancel")}
-          </Button>
-        </div>
+        <Button variant="outline" onClick={() => setStage({ kind: "idle" })}>
+          {tReview("startOver")}
+        </Button>
       </div>
+    );
+  }
+
+  if (stage.kind === "review") {
+    return (
+      <ExtractionReview
+        preview={stage.preview}
+        isPending={isPending}
+        error={errorMessage}
+        onConfirm={handleConfirm}
+        onCancel={() => setStage({ kind: "idle" })}
+      />
     );
   }
 
@@ -496,7 +265,7 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
           <input
             ref={fileInput}
             type="file"
-            accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown"
+            accept=".pdf,.pptx,.txt,.md,application/pdf,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,text/markdown"
             onChange={handleFile}
             disabled={busy}
             aria-label={t("upload")}

@@ -19,10 +19,28 @@ import { EVENT_TYPES } from "@/lib/validation/calendar-event";
 
 const confidenceSchema = z.enum(["high", "medium", "low"]);
 
+/**
+ * Named rather than numbered. An earlier numeric 0=Sunday..6=Saturday field
+ * was explained in the prompt text, but the model still twice encoded the
+ * leftmost visible column (normally Monday) as 0 — the common ISO-8601 "week
+ * starts at Monday=1" habit winning out over the stated convention. A name
+ * has no second convention to default to.
+ */
+const weekdayNameSchema = z.enum([
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+]);
+export type WeekdayName = z.infer<typeof weekdayNameSchema>;
+
 const scheduleEntrySchema = z.object({
   title: z.string().min(1).max(200),
-  /** 0 = Sunday .. 6 = Saturday, matching JS `Date#getDay()`. Null when `date` is set instead. */
-  dayOfWeek: z.number().int().min(0).max(6).nullable(),
+  /** The literal weekday this entry falls on. Null when `date` is set instead. */
+  dayOfWeek: weekdayNameSchema.nullable(),
   /** ISO date (YYYY-MM-DD) for a one-off entry. Null when `dayOfWeek` is set instead. */
   date: z.string().nullable(),
   /** "HH:MM", 24-hour. Null only if the image genuinely does not show a time. */

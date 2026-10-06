@@ -27,7 +27,8 @@
     "language": "Language",
     "importExport": "Import & export",
     "todos": "This week",
-    "advisor": "Advisor"
+    "advisor": "Advisor",
+    "howItWorks": "How it works"
   },
   "landing": {
     "signIn": "Sign in",
@@ -388,6 +389,11 @@
       "completedMinutes": "Time done",
       "method": "Study method",
       "noMethod": "Let the planner choose",
+      "preferredSessionMinutes": "Preferred session length",
+      "preferredSessionMinutesPlaceholder": "Usual length",
+      "startDate": "Start studying from",
+      "startDateHint": "The planner won't schedule this before that day — e.g. exam revision late in the term. Leave blank to start any time.",
+      "preferredSessionMinutesHint": "Minutes per session for this task specifically. Leave blank to use your usual session length.",
       "description": "Notes"
     },
     "types": {
@@ -546,7 +552,9 @@
       "unlock": "Unlock",
       "locked": "Locked",
       "reject": "Remove",
-      "minutes": "{minutes} min"
+      "minutes": "{minutes} min",
+      "viewList": "List",
+      "viewCalendar": "Calendar"
     },
     "actions": {
       "approve": "Approve this plan",
@@ -779,7 +787,9 @@
         "schedule": "Schedule",
         "assessment_guide": "Assessment guide",
         "reading_list": "Reading list",
-        "other": "Other"
+        "other": "Other",
+        "lecture_slides": "Lecture slides",
+        "lecture_notes": "Lecture notes"
       },
       "status": {
         "pending": "Not read yet",
@@ -791,9 +801,19 @@
       "delete": "Delete",
       "deleteConfirm": "Delete this document? Anything already saved from it is kept.",
       "review": "Review extraction",
+      "paste": {
+        "add": "Paste outline text instead",
+        "label": "Course outline text",
+        "placeholder": "Paste the course outline, schedule or assessment details here…",
+        "submit": "Read this text",
+        "reading": "Reading…",
+        "fileName": "Pasted outline",
+        "addAnother": "Paste another",
+        "backToForm": "Back to course details"
+      },
       "errors": {
         "tooLarge": "That file is larger than 15 MB.",
-        "unsupportedType": "Upload a PDF or plain text file.",
+        "unsupportedType": "Upload a PDF, PowerPoint (.pptx) or plain text file.",
         "uploadFailed": "Could not upload the document.",
         "aiUnavailable": "AI is not available right now — try again later.",
         "noText": "Could not find any readable text in this document.",
@@ -801,7 +821,9 @@
         "notFound": "That document could not be found.",
         "invalidInput": "Something about that upload was invalid.",
         "unexpected": "Something went wrong."
-      }
+      },
+      "materialSaved": "Saved to this course's study material. Open \"Study this course\" to get summaries, explanations and quizzes from it.",
+      "materialReady": "Ready to study"
     },
     "review": {
       "title": "Review what was found",
@@ -816,7 +838,8 @@
       "saving": "Saving…",
       "done": "Saved {assessments} assessment(s), {milestones} date(s) and {requirements} requirement(s).",
       "startOver": "Upload another document"
-    }
+    },
+    "studyThisCourse": "Study this course"
   },
   "onboarding": {
     "pageTitle": "Set up your account",
@@ -1112,7 +1135,28 @@
       "targetNew": "A new calendar",
       "targetHint": "Keeping each timetable in its own calendar means one can be re-imported without touching the other.",
       "clash": "Clashes with {title}",
-      "clashSummary": "{count, plural, one {# event clashes} other {# events clash}} with something already on your calendar. Nothing is resolved for you — import both and choose, or leave one out."
+      "clashSummary": "{count, plural, one {# event clashes} other {# events clash}} with something already on your calendar. Nothing is resolved for you — import both and choose, or leave one out.",
+      "editRow": {
+        "edit": "Edit time",
+        "dateLabel": "Date",
+        "startLabel": "Start time",
+        "endLabel": "End time",
+        "save": "Save",
+        "cancel": "Cancel",
+        "invalidRange": "The end must come after the start."
+      },
+      "propagate": {
+        "title": "Apply to the rest of this class too?",
+        "body": "{title} repeats on other days in this import. Should the new time apply to all {count, plural, one {# other occurrence} other {# other occurrences}}, or just this one?",
+        "justThis": "Just this one",
+        "applyToAll": "All {count, plural, one {# occurrence} other {# occurrences}}"
+      },
+      "clashPrompt": {
+        "title": "These clash — which will you attend?",
+        "body": "{titleA} and {titleB} overlap. Nothing is decided for you — pick which one you'll actually go to, or keep both and sort it out later.",
+        "keep": "Keep {title} ({time})",
+        "keepBoth": "Keep both, decide later"
+      }
     },
     "scheduleImage": {
       "title": "Import from a photo",
@@ -1359,6 +1403,96 @@
     "scenario": {
       "skip_day": "Skip a day of studying",
       "extra_commitment": "Extra commitment (hours)"
+    }
+  },
+  "learn": {
+    "pageTitle": "Study {course}",
+    "backToCourse": "Back to {course}",
+    "description": "Get help learning from your own lecture slides and notes. Answers only use the material you pick, so they match what was actually taught.",
+    "howItWorks": "How it works",
+    "modeLabel": "How do you want help?",
+    "modes": {
+      "summary": {
+        "name": "Summarise",
+        "hint": "The main ideas, ready to revise",
+        "placeholder": "Optional: focus on a topic, e.g. \"normalisation\"",
+        "submit": "Summarise"
+      },
+      "explain": {
+        "name": "Explain",
+        "hint": "A topic, step by step",
+        "placeholder": "What should be explained? e.g. \"how B-trees stay balanced\"",
+        "submit": "Explain"
+      },
+      "ask": {
+        "name": "Ask a question",
+        "hint": "A direct answer from the material",
+        "placeholder": "Your question, e.g. \"what is the difference between 2NF and 3NF?\"",
+        "submit": "Ask"
+      },
+      "quiz": {
+        "name": "Quiz me",
+        "hint": "Test yourself, answers hidden",
+        "placeholder": "Optional: quiz on a specific topic",
+        "submit": "Make a quiz"
+      }
+    },
+    "requestLabelRequired": "What about?",
+    "requestLabelOptional": "Focus (optional)",
+    "materialLabel": "Material to use",
+    "working": "Reading your material…",
+    "notCovered": "Your selected material doesn't cover this. Try picking other lectures, or rephrasing.",
+    "keyPoints": "Key points",
+    "showAnswer": "Show answer",
+    "sources": "From:",
+    "page": "p. {page}",
+    "truncated": "Only part of the selected material fit in one request. Select fewer documents for full coverage.",
+    "empty": {
+      "title": "No study material yet",
+      "description": "Upload lecture slides or notes on the course page (choose \"Lecture slides\" as the document type), then come back here.",
+      "action": "Go to course"
+    },
+    "errors": {
+      "aiUnavailable": "AI is not available right now — try again later.",
+      "notFound": "That material could not be found.",
+      "noText": "Could not find readable text in the selected material.",
+      "helpFailed": "Could not get an answer this time. Try again.",
+      "required": "Write what you want help with first.",
+      "tooLong": "That is too long — keep it under 600 characters.",
+      "unexpected": "Something went wrong."
+    }
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "description": "What the planner does for you, the ways it can help you study, and what each study method means.",
+    "planning": {
+      "title": "How your week gets planned",
+      "availability": "You set when you can study (Settings → Study preferences). The planner only places sessions inside those hours and respects your daily limit.",
+      "classes": "Lectures, seminars, tutorials, labs and exams on your calendar always block study time — a study session never lands on top of a class.",
+      "deadlines": "Work is spread out before each deadline, with more time for bigger, harder and higher-priority tasks.",
+      "startDate": "Give a task a \"Start studying from\" date (e.g. exam revision late in the term) and nothing is scheduled for it before then.",
+      "replan": "Plans are proposals: you review a plan before it is applied, and can regenerate it whenever things change."
+    },
+    "learn": {
+      "title": "Studying with your course material",
+      "intro": "Each course has a \"Study this course\" page. Pick which lectures to use and how you want help:",
+      "modes": {
+        "summary": "A structured summary of the lectures you pick — the main ideas in order plus the key points to remember. Good for revision and for catching up on a missed lecture.",
+        "explain": "Name a topic and get it explained from the ground up, using your lecturer's own definitions and examples.",
+        "ask": "Ask a specific question and get a direct answer, with the slide or page it came from.",
+        "quiz": "Questions that test understanding, with the answers hidden until you are ready. Uses active recall — one of the most effective ways to remember."
+      },
+      "material": "Answers only use the material you uploaded. If it doesn't cover something, you are told so rather than given a guess. Upload slides as PDF or PowerPoint (.pptx) on the course page."
+    },
+    "methods": {
+      "title": "Study methods",
+      "intro": "You can give a task a preferred study method. It shapes how long its sessions are and how they are spread out.",
+      "pomodoro": "Short focused blocks (around 25 minutes) with short breaks. Good for getting started and for tasks that are hard to face.",
+      "active_recall": "Testing yourself instead of re-reading — close the notes and try to explain or answer. The quiz mode does this for you.",
+      "spaced_repetition": "Revisiting material in shorter sessions spread over days, so it sticks long-term. Best for exams.",
+      "deep_work": "Long uninterrupted blocks for demanding work like writing or problem sets.",
+      "interleaving": "Mixing different topics or problem types in one session, which builds the ability to tell them apart.",
+      "group_work": "Sessions meant for working with others, e.g. group projects or study groups."
     }
   }
 }

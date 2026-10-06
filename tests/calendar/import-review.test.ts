@@ -21,6 +21,7 @@ describe("subject heuristics", () => {
 
   it("classifies in Swedish and English", () => {
     expect(classifyEventType("Föreläsning i databaser")).toBe("lecture");
+    expect(classifyEventType("COMP9414 Tutorial")).toBe("seminar");
     expect(classifyEventType("Laboration 2")).toBe("lab");
     expect(classifyEventType("Seminarium: uppsats")).toBe("seminar");
     expect(classifyEventType("Omtentamen TDDD86")).toBe("exam");

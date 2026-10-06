@@ -112,8 +112,9 @@ export function scoreSlot(
     : 0;
 
   // --- session length ------------------------------------------------------
-  // How close this block is to the length the student asked for.
-  const preferred = preferences.preferredSessionMinutes;
+  // How close this block is to the length the student asked for — this
+  // task's own override when it has one, the account-wide default otherwise.
+  const preferred = task.preferredSessionMinutes ?? preferences.preferredSessionMinutes;
   const sessionLengthFit = 1 - Math.min(1, Math.abs(length - preferred) / Math.max(1, preferred));
 
   // --- spacing -------------------------------------------------------------

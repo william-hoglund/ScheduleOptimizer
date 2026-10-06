@@ -6,16 +6,11 @@ import { useRef, useState, useTransition } from "react";
 
 import type { CalendarSourceView } from "./calendar-source-list";
 import { ImportReviewList } from "./import-review-list";
+import { ImportTargetPicker, NEW_CALENDAR, useImportTarget } from "./import-target-picker";
 import { ButtonLink } from "@/components/common/button-link";
 import { FormField } from "@/components/common/form-field";
-import { NativeSelect } from "@/components/common/native-select";
 import { Button } from "@/components/ui/button";
 import { confirmIcsImport, previewIcsText, previewIcsUrl } from "@/features/import-export/actions";
-import {
-  CALENDAR_SOURCE_KINDS,
-  defaultCalendarSourceInput,
-  type CalendarSourceInput,
-} from "@/lib/validation/calendar-source";
 import type { ImportSelection, ImportTarget } from "@/lib/validation/import-export";
 import type { ImportOutcome, ImportPreview } from "@/server/import-service";
 
@@ -55,9 +50,6 @@ type Stage =
   | { kind: "review"; preview: ImportPreview }
   | { kind: "done"; outcome: ImportOutcome };
 
-/** "new" means the import creates its own calendar as it goes. */
-const NEW_CALENDAR = "new";
-
 export function IcsImportPanel({
   timeZone,
   sources,
@@ -71,12 +63,11 @@ export function IcsImportPanel({
 
   const [stage, setStage] = useState<Stage>({ kind: "choose" });
   const [url, setUrl] = useState("");
-  const [targetId, setTargetId] = useState<string>(sources[0]?.id ?? NEW_CALENDAR);
-  const [newCalendar, setNewCalendar] = useState<CalendarSourceInput>(() =>
-    defaultCalendarSourceInput("study"),
-  );
+  const target = useImportTarget(sources);
+  const { targetId, newCalendar } = target;
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
 
   function show(result: Awaited<ReturnType<typeof previewIcsText>>) {
     if (!result.ok) {
@@ -212,57 +203,13 @@ export function IcsImportPanel({
         duplicate detection matches feed ids within one calendar, so it needs to
         know the answer while it is comparing.
       */}
-      <div className="space-y-2 sm:col-span-2">
-        <NativeSelect
-          label={t("targetLabel")}
-          hint={t("targetHint")}
-          value={targetId}
+      <div className="sm:col-span-2">
+        <ImportTargetPicker
+          sources={sources}
+          target={target}
           disabled={isPending}
-          onChange={(event) => setTargetId(event.target.value)}
-        >
-          {sources.map((source) => (
-            <option key={source.id} value={source.id}>
-              {source.name}
-            </option>
-          ))}
-          <option value={NEW_CALENDAR}>{t("targetNew")}</option>
-        </NativeSelect>
-
-        {targetId === NEW_CALENDAR ? (
-          <div className="grid gap-4 sm:grid-cols-2">
-            <FormField
-              label={tCalendars("fields.name")}
-              placeholder={tCalendars("fields.namePlaceholder")}
-              value={newCalendar.name}
-              disabled={isPending}
-              onChange={(event) =>
-                setNewCalendar((current) => ({ ...current, name: event.target.value }))
-              }
-            />
-            <NativeSelect
-              label={tCalendars("fields.kind")}
-              hint={tCalendars("fields.effectHint")}
-              value={newCalendar.kind}
-              disabled={isPending}
-              onChange={(event) =>
-                setNewCalendar((current) => ({
-                  // Kind decides the day rule, so it is re-derived rather than
-                  // left at whatever the previous kind implied.
-                  ...defaultCalendarSourceInput(
-                    event.target.value as CalendarSourceInput["kind"],
-                  ),
-                  name: current.name,
-                }))
-              }
-            >
-              {CALENDAR_SOURCE_KINDS.map((kind) => (
-                <option key={kind} value={kind}>
-                  {tCalendars(`kinds.${kind}`)}
-                </option>
-              ))}
-            </NativeSelect>
-          </div>
-        ) : null}
+          namePlaceholder={tCalendars("fields.namePlaceholder")}
+        />
       </div>
 
       <div className="space-y-2">

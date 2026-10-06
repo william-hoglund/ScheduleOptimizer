@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { CourseDocumentType } from "@/lib/supabase/types";
+
 import { V } from "./messages";
 
 /**
@@ -20,9 +22,26 @@ export const COURSE_DOCUMENT_TYPES = [
   "assessment_guide",
   "reading_list",
   "other",
+  "lecture_slides",
+  "lecture_notes",
 ] as const;
 
-export const SUPPORTED_DOCUMENT_MIME_TYPES = ["application/pdf", "text/plain", "text/markdown"] as const;
+/**
+ * Material the student studies from, rather than a document mined once for
+ * facts — read on demand by the Learn page, never sent through extraction.
+ */
+export const LEARNING_MATERIAL_TYPES: readonly CourseDocumentType[] = ["lecture_slides", "lecture_notes"];
+
+export function isLearningMaterial(type: string): boolean {
+  return (LEARNING_MATERIAL_TYPES as readonly string[]).includes(type);
+}
+
+export const SUPPORTED_DOCUMENT_MIME_TYPES = [
+  "application/pdf",
+  "text/plain",
+  "text/markdown",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+] as const;
 
 /** A syllabus is rarely more than a few MB; this stops an upload used to fill storage. */
 export const MAX_DOCUMENT_BYTES = 15 * 1024 * 1024;

@@ -48,7 +48,8 @@ export function assessFeasibility({
     if (remaining <= 0) continue;
 
     const deadline = task.deadline ?? horizonEnd;
-    const minutesUntilDeadline = Math.max(0, deadline - now);
+    // Time before the task's own start date can't be spent on it.
+    const minutesUntilDeadline = Math.max(0, deadline - Math.max(now, task.notBefore ?? now));
     const daysUntil = minutesUntilDeadline / 1440;
     const theoreticalCapacity = daysUntil * preferences.maximumDailyMinutes;
 

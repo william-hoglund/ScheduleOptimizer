@@ -27,7 +27,8 @@
     "language": "Språk",
     "importExport": "Import och export",
     "todos": "Den här veckan",
-    "advisor": "Rådgivare"
+    "advisor": "Rådgivare",
+    "howItWorks": "Så fungerar det"
   },
   "landing": {
     "signIn": "Logga in",
@@ -388,6 +389,11 @@
       "completedMinutes": "Tid gjord",
       "method": "Studieteknik",
       "noMethod": "Låt planeringen välja",
+      "preferredSessionMinutes": "Föredragen passlängd",
+      "preferredSessionMinutesPlaceholder": "Vanlig längd",
+      "startDate": "Börja plugga från",
+      "startDateHint": "Planeraren schemalägger inte detta före den dagen — t.ex. tentaplugg sent i perioden. Lämna tomt för att börja när som helst.",
+      "preferredSessionMinutesHint": "Minuter per pass för just den här uppgiften. Lämna tomt för att använda din vanliga passlängd.",
       "description": "Anteckningar"
     },
     "types": {
@@ -546,7 +552,9 @@
       "unlock": "Lås upp",
       "locked": "Låst",
       "reject": "Ta bort",
-      "minutes": "{minutes} min"
+      "minutes": "{minutes} min",
+      "viewList": "Lista",
+      "viewCalendar": "Kalender"
     },
     "actions": {
       "approve": "Godkänn planen",
@@ -779,7 +787,9 @@
         "schedule": "Schema",
         "assessment_guide": "Examinationsguide",
         "reading_list": "Litteraturlista",
-        "other": "Annat"
+        "other": "Annat",
+        "lecture_slides": "Föreläsningsbilder",
+        "lecture_notes": "Föreläsningsanteckningar"
       },
       "status": {
         "pending": "Inte läst än",
@@ -791,9 +801,19 @@
       "delete": "Ta bort",
       "deleteConfirm": "Ta bort det här dokumentet? Sådant som redan sparats från det behålls.",
       "review": "Granska tolkning",
+      "paste": {
+        "add": "Klistra in text istället",
+        "label": "Text för kursöversikt",
+        "placeholder": "Klistra in kursöversikten, schemat eller examinationsdetaljerna här…",
+        "submit": "Läs den här texten",
+        "reading": "Läser…",
+        "fileName": "Inklistrad översikt",
+        "addAnother": "Klistra in en till",
+        "backToForm": "Tillbaka till kursuppgifterna"
+      },
       "errors": {
         "tooLarge": "Filen är större än 15 MB.",
-        "unsupportedType": "Ladda upp en PDF eller vanlig textfil.",
+        "unsupportedType": "Ladda upp en PDF, PowerPoint (.pptx) eller textfil.",
         "uploadFailed": "Kunde inte ladda upp dokumentet.",
         "aiUnavailable": "AI är inte tillgängligt just nu — försök igen senare.",
         "noText": "Hittade ingen läsbar text i dokumentet.",
@@ -801,7 +821,9 @@
         "notFound": "Dokumentet kunde inte hittas.",
         "invalidInput": "Något med uppladdningen var ogiltigt.",
         "unexpected": "Något gick fel."
-      }
+      },
+      "materialSaved": "Sparat i kursens studiematerial. Öppna \"Plugga kursen\" för sammanfattningar, förklaringar och quiz.",
+      "materialReady": "Redo att plugga"
     },
     "review": {
       "title": "Granska vad som hittades",
@@ -816,7 +838,8 @@
       "saving": "Sparar…",
       "done": "Sparade {assessments} examination(er), {milestones} datum och {requirements} krav.",
       "startOver": "Ladda upp ett till dokument"
-    }
+    },
+    "studyThisCourse": "Plugga kursen"
   },
   "onboarding": {
     "pageTitle": "Kom igång",
@@ -1112,7 +1135,28 @@
       "targetNew": "En ny kalender",
       "targetHint": "Att hålla varje schema i sin egen kalender gör att ett kan importeras om utan att röra det andra.",
       "clash": "Krockar med {title}",
-      "clashSummary": "{count, plural, one {# händelse krockar} other {# händelser krockar}} med något du redan har. Inget löses åt dig — importera båda och välj, eller hoppa över en."
+      "clashSummary": "{count, plural, one {# händelse krockar} other {# händelser krockar}} med något du redan har. Inget löses åt dig — importera båda och välj, eller hoppa över en.",
+      "editRow": {
+        "edit": "Ändra tid",
+        "dateLabel": "Datum",
+        "startLabel": "Starttid",
+        "endLabel": "Sluttid",
+        "save": "Spara",
+        "cancel": "Avbryt",
+        "invalidRange": "Slutet måste komma efter starten."
+      },
+      "propagate": {
+        "title": "Gäller ändringen resten av lektionen också?",
+        "body": "{title} återkommer på andra dagar i den här importen. Ska den nya tiden gälla alla {count, plural, one {# annat tillfälle} other {# andra tillfällen}}, eller bara det här?",
+        "justThis": "Bara det här",
+        "applyToAll": "Alla {count, plural, one {# tillfälle} other {# tillfällen}}"
+      },
+      "clashPrompt": {
+        "title": "De här krockar — vilken går du på?",
+        "body": "{titleA} och {titleB} krockar i tid. Inget väljs åt dig — välj vilken du faktiskt går på, eller behåll båda och ta ställning senare.",
+        "keep": "Behåll {title} ({time})",
+        "keepBoth": "Behåll båda, bestäm senare"
+      }
     },
     "scheduleImage": {
       "title": "Importera från ett foto",
@@ -1359,6 +1403,96 @@
     "scenario": {
       "skip_day": "Hoppa över en studiedag",
       "extra_commitment": "Extra åtagande (timmar)"
+    }
+  },
+  "learn": {
+    "pageTitle": "Plugga {course}",
+    "backToCourse": "Tillbaka till {course}",
+    "description": "Få hjälp att lära dig från dina egna föreläsningsbilder och anteckningar. Svaren bygger bara på materialet du väljer, så de stämmer med det som faktiskt lärdes ut.",
+    "howItWorks": "Så fungerar det",
+    "modeLabel": "Hur vill du ha hjälp?",
+    "modes": {
+      "summary": {
+        "name": "Sammanfatta",
+        "hint": "Huvudidéerna, redo att repetera",
+        "placeholder": "Valfritt: fokusera på ett ämne, t.ex. \"normalisering\"",
+        "submit": "Sammanfatta"
+      },
+      "explain": {
+        "name": "Förklara",
+        "hint": "Ett ämne, steg för steg",
+        "placeholder": "Vad ska förklaras? t.ex. \"hur B-träd hålls balanserade\"",
+        "submit": "Förklara"
+      },
+      "ask": {
+        "name": "Ställ en fråga",
+        "hint": "Ett direkt svar ur materialet",
+        "placeholder": "Din fråga, t.ex. \"vad är skillnaden mellan 2NF och 3NF?\"",
+        "submit": "Fråga"
+      },
+      "quiz": {
+        "name": "Förhör mig",
+        "hint": "Testa dig själv, svaren dolda",
+        "placeholder": "Valfritt: quiz om ett visst ämne",
+        "submit": "Skapa quiz"
+      }
+    },
+    "requestLabelRequired": "Om vad?",
+    "requestLabelOptional": "Fokus (valfritt)",
+    "materialLabel": "Material att använda",
+    "working": "Läser ditt material…",
+    "notCovered": "Materialet du valt tar inte upp detta. Välj andra föreläsningar eller formulera om.",
+    "keyPoints": "Nyckelpunkter",
+    "showAnswer": "Visa svar",
+    "sources": "Från:",
+    "page": "s. {page}",
+    "truncated": "Bara en del av det valda materialet fick plats i en förfrågan. Välj färre dokument för full täckning.",
+    "empty": {
+      "title": "Inget studiematerial än",
+      "description": "Ladda upp föreläsningsbilder eller anteckningar på kurssidan (välj \"Föreläsningsbilder\" som dokumenttyp) och kom sedan tillbaka hit.",
+      "action": "Till kursen"
+    },
+    "errors": {
+      "aiUnavailable": "AI är inte tillgängligt just nu — försök igen senare.",
+      "notFound": "Materialet kunde inte hittas.",
+      "noText": "Hittade ingen läsbar text i det valda materialet.",
+      "helpFailed": "Kunde inte få fram ett svar den här gången. Försök igen.",
+      "required": "Skriv först vad du vill ha hjälp med.",
+      "tooLong": "Det är för långt — håll det under 600 tecken.",
+      "unexpected": "Något gick fel."
+    }
+  },
+  "howItWorks": {
+    "title": "Så fungerar det",
+    "description": "Vad planeraren gör åt dig, hur den kan hjälpa dig plugga och vad varje studiemetod innebär.",
+    "planning": {
+      "title": "Så planeras din vecka",
+      "availability": "Du anger när du kan plugga (Inställningar → Studiepreferenser). Planeraren lägger bara pass inom de tiderna och respekterar din dagsgräns.",
+      "classes": "Föreläsningar, seminarier, övningar, labbar och tentor i din kalender blockerar alltid studietid — ett studiepass hamnar aldrig samtidigt som en lektion.",
+      "deadlines": "Arbetet sprids ut före varje deadline, med mer tid för större, svårare och viktigare uppgifter.",
+      "startDate": "Ge en uppgift ett \"Börja plugga från\"-datum (t.ex. tentaplugg sent i perioden) så schemaläggs inget för den innan dess.",
+      "replan": "Planer är förslag: du granskar en plan innan den tillämpas och kan generera om den när något ändras."
+    },
+    "learn": {
+      "title": "Plugga med ditt kursmaterial",
+      "intro": "Varje kurs har en sida \"Plugga kursen\". Välj vilka föreläsningar som ska användas och hur du vill ha hjälp:",
+      "modes": {
+        "summary": "En strukturerad sammanfattning av föreläsningarna du väljer — huvudidéerna i ordning plus nyckelpunkterna att komma ihåg. Bra för repetition och för att komma ikapp efter en missad föreläsning.",
+        "explain": "Ange ett ämne och få det förklarat från grunden, med föreläsarens egna definitioner och exempel.",
+        "ask": "Ställ en specifik fråga och få ett direkt svar, med bilden eller sidan det kommer från.",
+        "quiz": "Frågor som testar förståelse, med svaren dolda tills du är redo. Bygger på aktiv återkallning — ett av de mest effektiva sätten att minnas."
+      },
+      "material": "Svaren använder bara materialet du laddat upp. Om det inte tar upp något får du veta det i stället för en gissning. Ladda upp bilder som PDF eller PowerPoint (.pptx) på kurssidan."
+    },
+    "methods": {
+      "title": "Studiemetoder",
+      "intro": "Du kan ge en uppgift en föredragen studiemetod. Den styr hur långa passen blir och hur de sprids ut.",
+      "pomodoro": "Korta fokuserade block (runt 25 minuter) med korta pauser. Bra för att komma igång och för uppgifter som känns tunga.",
+      "active_recall": "Att förhöra sig själv i stället för att läsa om — stäng anteckningarna och försök förklara eller svara. Quiz-läget gör detta åt dig.",
+      "spaced_repetition": "Att återkomma till materialet i kortare pass utspridda över flera dagar, så det fastnar långsiktigt. Bäst inför tentor.",
+      "deep_work": "Långa ostörda block för krävande arbete som skrivande eller problemlösning.",
+      "interleaving": "Att blanda olika ämnen eller uppgiftstyper i ett pass, vilket tränar förmågan att skilja dem åt.",
+      "group_work": "Pass avsedda för att arbeta med andra, t.ex. grupprojekt eller studiegrupper."
     }
   }
 }

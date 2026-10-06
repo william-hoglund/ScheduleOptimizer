@@ -123,6 +123,10 @@ export type PlannerTask = {
   priority: number;
   difficulty: number;
   preferredStudyMethod: StudyMethod | null;
+  /** Overrides `preferences.preferredSessionMinutes` for this task alone. Null means "use the usual preference". */
+  preferredSessionMinutes: number | null;
+  /** No session may start before this. Null/absent means "any time from now". */
+  notBefore?: EpochMinutes | null;
   /** Course-level weight, 1–5. */
   coursePriority: number;
   /** Task ids that must be finished first. */

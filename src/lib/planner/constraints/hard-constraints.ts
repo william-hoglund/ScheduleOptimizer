@@ -17,6 +17,7 @@ export type HardConstraintViolation =
   | "outside_availability"
   | "overlaps_session"
   | "after_deadline"
+  | "before_start_date"
   | "exceeds_daily_limit"
   | "non_positive_duration"
   | "in_the_past";
@@ -47,13 +48,17 @@ export function violatesHardConstraint(
   {
     context,
     deadline,
+    notBefore = null,
   }: {
     context: PlacementContext;
     deadline: EpochMinutes | null;
+    /** The task's own earliest start, e.g. "revise from 1 December". */
+    notBefore?: EpochMinutes | null;
   },
 ): HardConstraintViolation | null {
   if (candidate.end <= candidate.start) return "non_positive_duration";
   if (candidate.start < context.now) return "in_the_past";
+  if (notBefore !== null && candidate.start < notBefore) return "before_start_date";
 
   // Availability already has fixed events and unavailable rules removed, so
   // "inside a window" covers both at once.

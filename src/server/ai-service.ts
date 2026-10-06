@@ -44,7 +44,7 @@ import { getWorkflowStages } from "@/lib/assessment/workflow-templates";
 import { listLearningProfileInsights } from "./learning-profile-service";
 import { getStudyPreferences, saveStudyPreferences, toPreferencesInput } from "./preference-service";
 import { getWorkloadForecast } from "./workload-forecast-service";
-import { listTasks } from "./task-service";
+import { listTasks, setTaskPreferredSessionMinutes } from "./task-service";
 
 /**
  * Where the database meets the AI layer.
@@ -371,6 +371,7 @@ async function loadAdvisorContext(
     behaviorHighlights,
     commandContext: {
       validCourseIds: new Set(courses.map((course) => course.id)),
+      validTaskIds: new Set(tasks.map((task) => task.id)),
       currentPlanHorizon: activePlan
         ? { startDate: activePlan.start_date, endDate: activePlan.end_date }
         : null,
@@ -507,6 +508,16 @@ export async function applyResolvedCommand({
         overrides: {},
       });
       return result.ok ? { ok: true } : { ok: false, error: result.error };
+    }
+
+    case "set_task_session_minutes": {
+      try {
+        await setTaskPreferredSessionMinutes(userId, resolved.taskId, resolved.minutes);
+        return { ok: true };
+      } catch (cause) {
+        console.error("[ai-service] setTaskPreferredSessionMinutes failed:", cause);
+        return { ok: false, error: "unexpected" };
+      }
     }
   }
 }

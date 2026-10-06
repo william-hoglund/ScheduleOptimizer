@@ -8,6 +8,7 @@ import { buildAdvisorPrompt, type AdvisorInput } from "./prompts/advisor";
 import { buildCourseExtractionPrompt, type CourseExtractionInput } from "./prompts/course-extraction";
 import { buildExplainPlanPrompt, type ExplainPlanInput } from "./prompts/explain-plan";
 import { buildScheduleExtractionPrompt, type ScheduleExtractionInput } from "./prompts/schedule-extraction";
+import { buildStudyHelpPrompt, type StudyHelpInput } from "./prompts/study-help";
 import { buildTaskBreakdownPrompt, type TaskBreakdownInput } from "./prompts/task-breakdown";
 import { createAnthropicProvider } from "./providers/anthropic";
 import { createOpenAiProvider } from "./providers/openai";
@@ -15,6 +16,7 @@ import { advisorReplySchema, type AdvisorReply } from "./schemas/advisor";
 import { courseExtractionSchema, type CourseExtraction } from "./schemas/course-extraction";
 import { planExplanationSchema, type PlanExplanation } from "./schemas/explain-plan";
 import { scheduleExtractionSchema, type ScheduleExtraction } from "./schemas/schedule-extraction";
+import { studyHelpSchema, type StudyHelp } from "./schemas/study-help";
 import { taskBreakdownSchema, type TaskBreakdown } from "./schemas/task-breakdown";
 import { AI_LIMITS, type AiProvider, type ImageInput } from "./types";
 
@@ -96,6 +98,16 @@ export async function extractCourseKnowledge(
   });
 }
 
+export async function generateStudyHelp(input: StudyHelpInput): Promise<StudyHelp | null> {
+  const { system, prompt } = buildStudyHelpPrompt(input);
+  return generateWithRetry({
+    system,
+    prompt,
+    schema: studyHelpSchema,
+    maxOutputTokens: AI_LIMITS.studyHelp,
+  });
+}
+
 export async function extractSchedule(
   input: ScheduleExtractionInput & { image: ImageInput },
 ): Promise<ScheduleExtraction | null> {
@@ -144,9 +156,12 @@ export type {
   ExtractedRequirement,
 } from "./schemas/course-extraction";
 export type { PlanExplanation } from "./schemas/explain-plan";
-export type { ExtractedScheduleEntry, ScheduleExtraction } from "./schemas/schedule-extraction";
+export type { ExtractedScheduleEntry, ScheduleExtraction, WeekdayName } from "./schemas/schedule-extraction";
 export type { TaskBreakdown } from "./schemas/task-breakdown";
 export type { ImageInput } from "./types";
 export type { AdvisorBehaviorHighlight, AdvisorCourse, AdvisorTask } from "./prompts/advisor";
 export { boundAdvisorContext } from "./prompts/advisor";
 export { boundExplainPlanSessions, type ExplainPlanSession } from "./prompts/explain-plan";
+export type { StudyHelp, StudyHelpMode } from "./schemas/study-help";
+export { STUDY_HELP_MODES } from "./schemas/study-help";
+export { boundStudyMaterials, type StudyMaterial } from "./prompts/study-help";

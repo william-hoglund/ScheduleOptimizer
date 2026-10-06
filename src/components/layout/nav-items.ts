@@ -7,6 +7,7 @@ import {
   CalendarDays,
   CalendarRange,
   GraduationCap,
+  HelpCircle,
   LayoutGrid,
   ListTodo,
   Settings,
@@ -26,6 +27,7 @@ export type NavLabelKey =
   | "weeklyReview"
   | "importExport"
   | "advisor"
+  | "howItWorks"
   | "settings";
 
 export type NavItem = {
@@ -52,6 +54,7 @@ export const secondaryNavItems: readonly NavItem[] = [
   { href: "/weekly-review", labelKey: "weeklyReview", icon: CalendarRange },
   { href: "/import-export", labelKey: "importExport", icon: ArrowDownUp },
   { href: "/advisor", labelKey: "advisor", icon: Bot },
+  { href: "/how-it-works", labelKey: "howItWorks", icon: HelpCircle },
   { href: "/settings", labelKey: "settings", icon: Settings },
 ];
 

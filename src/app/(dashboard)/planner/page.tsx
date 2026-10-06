@@ -8,12 +8,14 @@ import { PlanExplanationCard } from "@/components/planner/plan-explanation";
 import { PlannerSetupForm } from "@/components/planner/planner-setup-form";
 import { PlanPreview } from "@/components/planner/plan-preview";
 import { PlanWarnings } from "@/components/planner/plan-warnings";
+import { AdvisorPanel } from "@/features/ai-advisor/advisor-panel";
 import { isAiEnabled } from "@/lib/ai";
 import { utcToLocalDate } from "@/lib/calendar/time";
 import type { FeasibilityReport, PlannerWarning } from "@/lib/planner/types";
 import type { PlanExplanation } from "@/lib/ai";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { requireUserContext } from "@/server/auth";
+import { listCalendarEvents } from "@/server/calendar-service";
 import { nowIso } from "@/server/clock";
 import { listCourses } from "@/server/course-service";
 import { getDraftPlan } from "@/server/planner-service";
@@ -105,6 +107,18 @@ export default async function PlannerPage() {
   const draft = draftId ? await getDraftPlan(user.id, draftId) : null;
   const run = draftId ? await loadRunDetails(user.id, draftId) : null;
 
+  // The whole point of the plan is a schedule that combines proposed study
+  // time with what is already fixed — lectures, tutorials, anything else on
+  // the calendar — so the preview's calendar view needs both, not just the
+  // sessions this run proposed.
+  const fixedEvents = draft
+    ? await listCalendarEvents(
+        user.id,
+        `${draft.plan.start_date}T00:00:00.000Z`,
+        `${draft.plan.end_date}T23:59:59.999Z`,
+      )
+    : [];
+
   const taskTitles = new Map(tasks.map((task) => [task.id, task.title]));
 
   const cachedExplanation: PlanExplanation | null = draft?.plan.explanation
@@ -120,6 +134,16 @@ export default async function PlannerPage() {
       <PageHeader title={t("pages.planner.title")} description={t("pages.planner.description")} />
 
       <PlannerSetupForm courses={courses} today={today} defaultStart={today} defaultEnd={weekEnd} />
+
+      {isAiEnabled() ? (
+        <section className="bg-card space-y-3 rounded-xl border p-5">
+          <div>
+            <h2 className="text-sm font-semibold">{t("pages.advisor.title")}</h2>
+            <p className="text-muted-foreground mt-1 text-sm">{t("pages.advisor.description")}</p>
+          </div>
+          <AdvisorPanel />
+        </section>
+      ) : null}
 
       {run && run.warnings.length > 0 && run.feasibility ? (
         <PlanWarnings
@@ -138,6 +162,7 @@ export default async function PlannerPage() {
           <PlanPreview
             planId={draft.plan.id}
             sessions={draft.sessions}
+            fixedEvents={fixedEvents}
             courses={courses}
             timeZone={timeZone}
             runOptions={{

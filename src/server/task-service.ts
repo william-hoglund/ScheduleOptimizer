@@ -30,6 +30,8 @@ function toRow(input: TaskInput, timeZone: string) {
     completed_minutes: input.completedMinutes,
     preferred_study_method: emptyToNull(input.preferredStudyMethod) as
       TaskRow["preferred_study_method"] | null,
+    preferred_session_minutes: input.preferredSessionMinutes,
+    start_date: emptyToNull(input.startDate),
   };
 }
 
@@ -100,6 +102,24 @@ export async function setTaskProgress(
   const { error } = await supabase
     .from("tasks")
     .update({ status: changes.status, completed_minutes: changes.completedMinutes })
+    .eq("id", taskId)
+    .eq("user_id", userId);
+
+  if (error) throw new Error(`Could not update task: ${error.message}`);
+}
+
+/** Quick, single-field update — what the AI advisor's `set_task_session_minutes`
+ *  command calls, the same way `setCoursePriority` backs its course-priority one. */
+export async function setTaskPreferredSessionMinutes(
+  userId: string,
+  taskId: string,
+  minutes: number,
+): Promise<void> {
+  const supabase = await createServerSupabaseClient();
+
+  const { error } = await supabase
+    .from("tasks")
+    .update({ preferred_session_minutes: minutes })
     .eq("id", taskId)
     .eq("user_id", userId);
 

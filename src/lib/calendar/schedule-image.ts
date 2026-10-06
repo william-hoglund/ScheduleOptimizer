@@ -1,6 +1,17 @@
 import { wallClockToUtc } from "./time";
 import type { ImportCandidate } from "./normalize-event";
-import type { ExtractedScheduleEntry } from "@/lib/ai";
+import type { ExtractedScheduleEntry, WeekdayName } from "@/lib/ai";
+
+/** `WeekdayName` -> JS `Date#getDay()` index (0=Sunday..6=Saturday). */
+const WEEKDAY_INDEX: Record<WeekdayName, number> = {
+  sunday: 0,
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6,
+};
 
 /**
  * Turning what the AI read off a timetable photo into the same
@@ -73,6 +84,13 @@ function toCandidate(
   // a fix for — drop it, same as a genuinely backwards `.ics` DTEND/DTSTART.
   if (Date.parse(endIso) <= Date.parse(startIso)) return null;
 
+  // The model occasionally emits the literal text "null" instead of an
+  // actual null for a field it couldn't read, rather than honouring the
+  // schema's nullability — seen in practice on `courseCode`. Treat it the
+  // same as a real null rather than importing "null" as someone's course code.
+  const courseCode =
+    entry.courseCode && entry.courseCode.trim().toLowerCase() !== "null" ? entry.courseCode : null;
+
   return {
     externalId,
     title: entry.title.trim() || "Untitled event",
@@ -82,7 +100,7 @@ function toCandidate(
     location: entry.location,
     description: null,
     eventType: entry.eventType,
-    courseCode: entry.courseCode,
+    courseCode,
   };
 }
 
@@ -100,7 +118,11 @@ export function toImportCandidates(
   const candidates: ImportCandidate[] = [];
 
   entries.forEach((entry, entryIndex) => {
-    const dates = entry.date ? [entry.date] : entry.dayOfWeek !== null ? datesForWeekday(range, entry.dayOfWeek) : [];
+    const dates = entry.date
+      ? [entry.date]
+      : entry.dayOfWeek !== null
+        ? datesForWeekday(range, WEEKDAY_INDEX[entry.dayOfWeek])
+        : [];
 
     for (const date of dates) {
       const candidate = toCandidate(entry, date, timeZone, `schedule-image:${entryIndex}:${date}`);

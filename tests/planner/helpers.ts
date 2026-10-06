@@ -63,6 +63,7 @@ export function task(overrides: Partial<PlannerTask> = {}): PlannerTask {
     priority: 3,
     difficulty: 3,
     preferredStudyMethod: null,
+    preferredSessionMinutes: null,
     coursePriority: 3,
     dependsOn: [],
     ...overrides,

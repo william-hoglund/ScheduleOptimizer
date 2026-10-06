@@ -67,10 +67,14 @@ function chunkLengthFor(
   urgent: boolean,
 ): number {
   const shape = METHOD_SHAPE[methodFor(task)];
+  const explicit = task.preferredSessionMinutes;
 
-  // Meet the method and the student halfway rather than letting either win
-  // outright — a Pomodoro person doing deep work still wants longer blocks.
-  let target = Math.round((shape.ideal + preferences.preferredSessionMinutes) / 2);
+  // An explicit per-task preference — "long sessions for the final project"
+  // — is a deliberate override and wins outright, rather than being blended
+  // down by the method's natural rhythm the way the account-wide default is
+  // below. Difficulty and urgency still nudge it like any other task.
+  let target =
+    explicit ?? Math.round((shape.ideal + preferences.preferredSessionMinutes) / 2);
 
   // Hard work benefits from longer runs; light work is fine in shorter ones.
   if (task.difficulty >= 4) target = Math.round(target * 1.2);
@@ -79,11 +83,17 @@ function chunkLengthFor(
   // Close to a deadline, fewer and longer blocks beat many fragments.
   if (urgent) target = Math.round(target * 1.25);
 
-  return clamp(
-    target,
-    Math.max(preferences.minimumSessionMinutes, shape.min),
-    Math.min(preferences.maximumSessionMinutes, shape.max),
-  );
+  // The account's and the method's own bounds still apply — except an
+  // explicit override widens the upper one just enough to actually be
+  // honoured; a 90-minute cap should not silently defeat "give this one
+  // task 3-hour sessions".
+  const minimum = Math.max(preferences.minimumSessionMinutes, shape.min);
+  const maximum =
+    explicit !== null
+      ? Math.max(preferences.maximumSessionMinutes, shape.max, explicit)
+      : Math.min(preferences.maximumSessionMinutes, shape.max);
+
+  return clamp(target, minimum, maximum);
 }
 
 /**

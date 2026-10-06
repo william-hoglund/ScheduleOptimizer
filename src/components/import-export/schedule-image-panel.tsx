@@ -6,8 +6,8 @@ import { useRef, useState, useTransition } from "react";
 
 import type { CalendarSourceView } from "./calendar-source-list";
 import { ImportReviewList } from "./import-review-list";
+import { ImportTargetPicker, NEW_CALENDAR, useImportTarget } from "./import-target-picker";
 import { FormField } from "@/components/common/form-field";
-import { NativeSelect } from "@/components/common/native-select";
 import { Button } from "@/components/ui/button";
 import {
   confirmScheduleImageImport,
@@ -15,11 +15,6 @@ import {
 } from "@/features/import-export/actions";
 import { toImportCandidates } from "@/lib/calendar/schedule-image";
 import { utcToLocalDate } from "@/lib/calendar/time";
-import {
-  CALENDAR_SOURCE_KINDS,
-  defaultCalendarSourceInput,
-  type CalendarSourceInput,
-} from "@/lib/validation/calendar-source";
 import type { ImportSelection, ImportTarget } from "@/lib/validation/import-export";
 import type { ImportOutcome, ImportPreview } from "@/server/import-service";
 import type { ScheduleExtraction } from "@/lib/ai";
@@ -40,8 +35,6 @@ const MAX_RAW_BYTES = 20 * 1024 * 1024;
 /** Long edge after downscaling. Large enough to stay legible, small enough to stay cheap and fast. */
 const MAX_DIMENSION = 1600;
 const JPEG_QUALITY = 0.85;
-
-const NEW_CALENDAR = "new";
 
 const KNOWN_ERRORS = [
   "tooLarge",
@@ -107,7 +100,6 @@ export function ScheduleImagePanel({
 }) {
   const t = useTranslations("importExport.scheduleImage");
   const tImport = useTranslations("importExport.import");
-  const tCalendars = useTranslations("importExport.calendars");
   const fileInput = useRef<HTMLInputElement>(null);
 
   const [stage, setStage] = useState<Stage>({ kind: "choose" });
@@ -122,10 +114,8 @@ export function ScheduleImagePanel({
     return date.toISOString().slice(0, 10);
   });
 
-  const [targetId, setTargetId] = useState<string>(sources[0]?.id ?? NEW_CALENDAR);
-  const [newCalendar, setNewCalendar] = useState<CalendarSourceInput>(() =>
-    defaultCalendarSourceInput("study"),
-  );
+  const target = useImportTarget(sources);
+  const { targetId, newCalendar } = target;
 
   function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -287,54 +277,12 @@ export function ScheduleImagePanel({
         </div>
         <p className="text-muted-foreground text-xs">{t("dateRangeHint")}</p>
 
-        <div className="space-y-2">
-          <NativeSelect
-            label={tImport("targetLabel")}
-            hint={tImport("targetHint")}
-            value={targetId}
-            disabled={isPending}
-            onChange={(event) => setTargetId(event.target.value)}
-          >
-            {sources.map((source) => (
-              <option key={source.id} value={source.id}>
-                {source.name}
-              </option>
-            ))}
-            <option value={NEW_CALENDAR}>{tImport("targetNew")}</option>
-          </NativeSelect>
-
-          {targetId === NEW_CALENDAR ? (
-            <div className="grid gap-4 sm:grid-cols-2">
-              <FormField
-                label={tCalendars("fields.name")}
-                placeholder={t("targetNewFallback")}
-                value={newCalendar.name}
-                disabled={isPending}
-                onChange={(event) =>
-                  setNewCalendar((current) => ({ ...current, name: event.target.value }))
-                }
-              />
-              <NativeSelect
-                label={tCalendars("fields.kind")}
-                hint={tCalendars("fields.effectHint")}
-                value={newCalendar.kind}
-                disabled={isPending}
-                onChange={(event) =>
-                  setNewCalendar((current) => ({
-                    ...defaultCalendarSourceInput(event.target.value as CalendarSourceInput["kind"]),
-                    name: current.name,
-                  }))
-                }
-              >
-                {CALENDAR_SOURCE_KINDS.map((kind) => (
-                  <option key={kind} value={kind}>
-                    {tCalendars(`kinds.${kind}`)}
-                  </option>
-                ))}
-              </NativeSelect>
-            </div>
-          ) : null}
-        </div>
+        <ImportTargetPicker
+          sources={sources}
+          target={target}
+          disabled={isPending}
+          namePlaceholder={t("targetNewFallback")}
+        />
 
         <div className="flex flex-wrap gap-2">
           <Button onClick={buildPreview} disabled={isPending || endDate < startDate}>

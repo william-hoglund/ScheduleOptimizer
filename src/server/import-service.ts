@@ -286,6 +286,64 @@ export async function previewScheduleImage(
 export type ImportOutcome = { inserted: number; updated: number };
 
 /**
+ * A ticked row the AI or feed classified as a deadline also becomes a task,
+ * not just a calendar marker — `calendar_events` and `tasks` are separate
+ * tables (see AGENTS.md "To-dos and segments"), and the planner only ever
+ * schedules study time against the latter. Without this, importing a
+ * Moodle-style "assignment due" feed fills the calendar with markers the
+ * planner correctly treats as fixed and otherwise has nothing to plan
+ * around.
+ *
+ * Matched against existing tasks by title + deadline instant rather than a
+ * stored link back to the event — `tasks` has no column for one, and a
+ * student rarely has two different deadlines sharing both a title and an
+ * exact due instant. This is what makes re-importing (ticking an
+ * "already imported" deadline row again) safe to repeat without duplicating
+ * the task every time.
+ */
+async function ensureTasksForDeadlines(
+  supabase: Awaited<ReturnType<typeof createServerSupabaseClient>>,
+  userId: string,
+  selections: readonly ImportSelection[],
+): Promise<void> {
+  const deadlines = selections.filter((selection) => selection.eventType === "deadline");
+  if (deadlines.length === 0) return;
+
+  const { data: existing, error: existingError } = await supabase
+    .from("tasks")
+    .select("title, deadline")
+    .eq("user_id", userId)
+    .not("deadline", "is", null);
+  if (existingError) throw new Error(`Could not check existing tasks: ${existingError.message}`);
+
+  const existingKeys = new Set(
+    (existing ?? [])
+      .filter((task): task is { title: string; deadline: string } => task.deadline !== null)
+      .map((task) => `${task.title}|${new Date(task.deadline).getTime()}`),
+  );
+
+  const toCreate = deadlines.filter(
+    (selection) => !existingKeys.has(`${selection.title}|${new Date(selection.startIso).getTime()}`),
+  );
+  if (toCreate.length === 0) return;
+
+  const { error } = await supabase.from("tasks").insert(
+    toCreate.map((selection) => ({
+      user_id: userId,
+      course_id: selection.courseId,
+      title: selection.title,
+      // The feed only ever says "this is a deadline", never what kind of
+      // work it is — 'assignment' is the closest generic default among the
+      // task_type values, and estimated_minutes stays 0 ("not stated"),
+      // which resolveMinutes falls back from rather than treating as instant.
+      task_type: "assignment",
+      deadline: selection.startIso,
+    })),
+  );
+  if (error) throw new Error(`Could not create tasks for imported deadlines: ${error.message}`);
+}
+
+/**
  * Write the reviewed selection.
  *
  * Rows the student ticked that already exist are **updated**, not inserted:
@@ -356,6 +414,8 @@ export async function saveImportedEvents(
     if (error) throw new Error(`Could not update an imported event: ${error.message}`);
     updated += 1;
   }
+
+  await ensureTasksForDeadlines(supabase, userId, selections);
 
   return { inserted, updated };
 }

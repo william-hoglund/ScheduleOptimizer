@@ -1,7 +1,7 @@
 import "server-only";
 
 import { utcToLocalDate } from "@/lib/calendar/time";
-import { toEpochMinutes, fromEpochMinutes } from "@/lib/planner/time-grid";
+import { toEpochMinutes, fromEpochMinutes, localToEpochMinutes } from "@/lib/planner/time-grid";
 import type {
   ExistingSession,
   PlannerAvailabilityRule,
@@ -26,6 +26,9 @@ import { getStudyPreferences, toPreferencesInput } from "./preference-service";
  * `PlannerResult` back. Keeping the mapping here is what lets the engine stay
  * testable without a database.
  */
+
+/** Event types that are attended in person and so always block study sessions. */
+const CLASS_EVENT_TYPES = new Set(["lecture", "seminar", "lab", "exam"]);
 
 export type PlanHorizon = {
   /** Local calendar dates, inclusive. */
@@ -134,6 +137,9 @@ export async function buildPlannerInput({
       priority: task.priority,
       difficulty: task.difficulty,
       preferredStudyMethod: task.preferred_study_method,
+      preferredSessionMinutes: task.preferred_session_minutes,
+      // Midnight of the chosen day, in the student's own timezone.
+      notBefore: task.start_date ? localToEpochMinutes(task.start_date, "00:00", timeZone) : null,
       // A task inherits its course's weight, so "prioritise databases this week"
       // lifts everything in that course at once.
       coursePriority: task.course_id ? (courseById.get(task.course_id)?.priority ?? 3) : 3,
@@ -171,7 +177,10 @@ export async function buildPlannerInput({
     id: event.id,
     start: toEpochMinutes(event.start_at),
     end: toEpochMinutes(event.end_at),
-    isFixed: event.is_fixed,
+    // A class is never "movable" as far as study time goes: you can't do an
+    // assignment while sitting in a lecture, so these block regardless of the
+    // flag (which an import switch or a manual edit can leave off).
+    isFixed: event.is_fixed || CLASS_EVENT_TYPES.has(event.event_type),
     courseId: event.course_id,
     sourceId: event.source_id,
   })).concat(fixedTodos);
