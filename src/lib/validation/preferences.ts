@@ -71,15 +71,17 @@ export type StudyPreferencesInput = z.infer<typeof studyPreferencesSchema>;
 
 export const defaultStudyPreferences: StudyPreferencesInput = {
   minimumSessionMinutes: 25,
-  preferredSessionMinutes: 50,
-  maximumSessionMinutes: 120,
+  // Longer blocks by default — one solid sitting beats several fragments.
+  preferredSessionMinutes: 90,
+  maximumSessionMinutes: 180,
   maximumDailyMinutes: 300,
   weeklyTargetMinutes: 600,
   earliestStartTime: "08:00",
   latestEndTime: "21:00",
   preferredDays: [1, 2, 3, 4, 5],
   weekendAllowed: false,
-  breakMethod: "pomodoro",
+  // "My own way": no timer rhythm imposed until the student picks one.
+  breakMethod: "none",
   bufferPercentage: 15,
   planningFlexibility: "balanced",
   energyProfile: { morning: "high", afternoon: "medium", evening: "low" },

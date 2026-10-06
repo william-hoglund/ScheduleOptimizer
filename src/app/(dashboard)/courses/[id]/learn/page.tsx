@@ -5,9 +5,10 @@ import { getFormatter, getTranslations } from "next-intl/server";
 
 import { ButtonLink } from "@/components/common/button-link";
 import { EmptyState } from "@/components/common/empty-state";
+import { DocumentUploadPanel } from "@/components/courses/document-upload-panel";
 import { PageHeader } from "@/components/layout/page-header";
 import { StudyHelper, type StudyMaterialOption } from "@/components/learning/study-helper";
-import { isAiEnabled } from "@/lib/ai";
+import { isAiEnabled, STUDY_HELP_MODES, type StudyHelpMode } from "@/lib/ai";
 import { isLearningMaterial } from "@/lib/validation/course-knowledge";
 import { requireUserContext } from "@/server/auth";
 import { listCourseDocuments } from "@/server/course-knowledge-service";
@@ -32,10 +33,12 @@ export default async function LearnPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ catchUp?: string }>;
+  searchParams: Promise<{ catchUp?: string; mode?: string }>;
 }) {
   const { id } = await params;
-  const { catchUp } = await searchParams;
+  const { catchUp, mode } = await searchParams;
+  // From a session's "Quiz me": open straight in that mode.
+  const initialMode = (STUDY_HELP_MODES as readonly string[]).includes(mode ?? "") ? (mode as StudyHelpMode) : undefined;
   const { user, timeZone } = await requireUserContext();
   const t = await getTranslations("learn");
   const format = await getFormatter();
@@ -99,16 +102,12 @@ export default async function LearnPage({
       {!isAiEnabled() ? (
         <p className="bg-muted rounded-md p-3 text-sm">{t("errors.aiUnavailable")}</p>
       ) : materials.length === 0 ? (
-        <EmptyState
-          icon={GraduationCap}
-          title={t("empty.title")}
-          description={t("empty.description")}
-          action={<ButtonLink href={`/courses/${id}` as Route}>{t("empty.action")}</ButtonLink>}
-        />
+        <EmptyState icon={GraduationCap} title={t("empty.title")} description={t("empty.description")} />
       ) : (
         <StudyHelper
           courseId={id}
           materials={materials}
+          initialMode={initialMode}
           catchUp={
             catchUpEvent
               ? { ...catchUpEvent, request: t("catchUp.request", { title: catchUpEvent.title, when: catchUpEvent.when }) }
@@ -116,6 +115,14 @@ export default async function LearnPage({
           }
         />
       )}
+
+      <section className="space-y-3 rounded-xl border p-4 sm:p-5">
+        <div>
+          <h2 className="label-caps">{t("addMaterial.title")}</h2>
+          <p className="text-muted-foreground text-sm">{t("addMaterial.description")}</p>
+        </div>
+        <DocumentUploadPanel courseId={id} materialOnly />
+      </section>
     </div>
   );
 }

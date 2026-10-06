@@ -336,12 +336,14 @@ describe("9. tasks are split correctly", () => {
   it("gives reading and deep work different session shapes", () => {
     const readingPlan = generatePlan(
       input({
-        tasks: [task({ id: "r", taskType: "reading", estimatedMinutes: 300 })],
+        // Method shapes apply when a task picks a method; without one, the
+        // study style decides (see "study style" tests below).
+        tasks: [task({ id: "r", taskType: "reading", estimatedMinutes: 300, preferredStudyMethod: "spaced_repetition" })],
       }),
     );
     const deepPlan = generatePlan(
       input({
-        tasks: [task({ id: "d", taskType: "project", estimatedMinutes: 300 })],
+        tasks: [task({ id: "d", taskType: "project", estimatedMinutes: 300, preferredStudyMethod: "deep_work" })],
       }),
     );
 

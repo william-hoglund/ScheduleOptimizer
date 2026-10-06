@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 const ISO_WEEKDAYS = [1, 2, 3, 4, 5, 6, 7] as const;
 const ENERGY_SLOTS = ["morning", "afternoon", "evening"] as const;
 const ENERGY_LEVELS = ["high", "medium", "low"] as const;
-const BREAK_METHODS = ["pomodoro", "fifty_ten", "ninety_twenty", "none"] as const;
+const BREAK_METHODS = ["none", "pomodoro", "fifty_ten", "ninety_twenty"] as const;
 const FLEXIBILITY = ["strict", "balanced", "flexible"] as const;
 
 function Section({

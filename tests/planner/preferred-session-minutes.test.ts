@@ -52,7 +52,7 @@ describe("splitTaskIntoSessions — a task's own preferred session length", () =
   });
 
   it("falls back to the account default when the task sets no preference", () => {
-    const prefs = preferences({ preferredSessionMinutes: 50 });
+    const prefs = preferences({ preferredSessionMinutes: 50, breakMethod: "none" });
     const defaultTask = task({ preferredSessionMinutes: null, estimatedMinutes: 300, difficulty: 3 });
     const overriddenTask = task({ preferredSessionMinutes: 100, estimatedMinutes: 300, difficulty: 3 });
 

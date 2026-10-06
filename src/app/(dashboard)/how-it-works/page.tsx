@@ -10,7 +10,7 @@ import { STUDY_METHODS } from "@/lib/validation/task";
  * so a student can pick the help that suits them rather than guess.
  */
 
-const PLANNING_POINTS = ["availability", "classes", "deadlines", "startDate", "logging", "replan"] as const;
+const PLANNING_POINTS = ["availability", "classes", "deadlines", "startDate", "studyStyle", "logging", "replan"] as const;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("howItWorks");

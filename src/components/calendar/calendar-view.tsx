@@ -14,6 +14,8 @@ import listPlugin from "@fullcalendar/list";
 import luxon3Plugin from "@fullcalendar/luxon3";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
+
+import { renderEventContent } from "./event-content";
 import { ArrowLeftRight, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useRef, useState, useTransition } from "react";
@@ -97,6 +99,8 @@ export function CalendarView({
       (!filters.sourceId || event.sourceId === filters.sourceId),
   );
 
+  const courseCodeById = new Map(courses.map((course) => [course.id, course.code]));
+
   const fcEvents: EventInput[] = visible.map((event) => ({
     id: event.id,
     title: event.title,
@@ -114,7 +118,10 @@ export function CalendarView({
       `sp-event-${event.eventType}`,
       event.isFixed ? "" : "sp-event-movable",
     ],
-    extendedProps: { dto: event },
+    extendedProps: {
+      dto: event,
+      courseCode: event.courseId ? (courseCodeById.get(event.courseId) ?? null) : null,
+    },
   }));
 
   function openForEvent(event: CalendarEventDto) {
@@ -232,6 +239,8 @@ export function CalendarView({
           editable
           eventOverlap
           events={fcEvents}
+          eventContent={renderEventContent}
+          eventMinHeight={22}
           datesSet={handleDatesSet}
           eventClick={(arg: EventClickArg) => {
             const dto = arg.event.extendedProps.dto as CalendarEventDto | undefined;

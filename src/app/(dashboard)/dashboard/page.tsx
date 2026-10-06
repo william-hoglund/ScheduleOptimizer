@@ -21,6 +21,7 @@ import { findUnresolvedSessions, listSessionsBetween } from "@/server/session-se
 import { listTasks } from "@/server/task-service";
 import { listTodos } from "@/server/todo-service";
 import { listClassesNeedingAttention } from "@/server/calendar-service";
+import { getStudyPreferences } from "@/server/preference-service";
 
 export const generateMetadata = () => createPageMetadata("dashboard");
 
@@ -44,11 +45,12 @@ export default async function DashboardPage() {
   const dayStart = wallClockToUtc(`${today}T00:00`, timeZone) ?? now;
   const dayEnd = wallClockToUtc(`${today}T23:59`, timeZone) ?? now;
 
-  const [todaySessions, unresolved, courses, tasks] = await Promise.all([
+  const [todaySessions, unresolved, courses, tasks, preferences] = await Promise.all([
     listSessionsBetween(user.id, dayStart, dayEnd),
     findUnresolvedSessions(user.id, now),
     listCourses(user.id),
     listTasks(user.id, { includeCompleted: false }),
+    getStudyPreferences(user.id).catch(() => null),
   ]);
 
   /**
@@ -190,6 +192,8 @@ export default async function DashboardPage() {
           courses={courses}
           nowIso={now}
           timeZone={timeZone}
+          accountStyle={preferences?.break_method ?? "none"}
+          methodByTaskId={Object.fromEntries(tasks.map((task) => [task.id, task.preferred_study_method]))}
         />
       </section>
 

@@ -314,3 +314,14 @@ export async function getAssessmentDetailForTask(
   if (error) throw new Error(`Could not load assessment detail: ${error.message}`);
   return data;
 }
+
+/** Gives a document a new display name (the storage path is unchanged). */
+export async function renameCourseDocument(userId: string, documentId: string, fileName: string): Promise<void> {
+  const supabase = await createServerSupabaseClient();
+  const { error } = await supabase
+    .from("course_documents")
+    .update({ file_name: fileName })
+    .eq("id", documentId)
+    .eq("user_id", userId);
+  if (error) throw new Error(`Could not rename the document: ${error.message}`);
+}

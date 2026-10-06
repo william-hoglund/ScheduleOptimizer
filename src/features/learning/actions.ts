@@ -29,13 +29,19 @@ export async function askStudyHelper(
 }
 
 /** Called right after a lecture-material upload, in place of syllabus extraction. */
-export async function finishLearningMaterialUpload(documentId: string): Promise<ActionResult<undefined>> {
+export async function finishLearningMaterialUpload(
+  documentId: string,
+  options: { autoTitle?: "pasted" | "file" } = {},
+): Promise<ActionResult<undefined>> {
   const { user } = await requireUserContext();
   const document = await getCourseDocument(user.id, documentId);
   if (!document) return actionFailed("notFound");
 
-  const result = await checkLearningMaterial(user.id, documentId);
-  revalidatePath(`/courses/${document.course_id}`);
+  const profile = await getProfile(user.id);
+  const locale = profile?.locale && isLocale(profile.locale) ? profile.locale : defaultLocale;
+  const result = await checkLearningMaterial(user.id, documentId, { autoTitle: options.autoTitle === "pasted" || options.autoTitle === "file" ? options.autoTitle : null, locale });
+  // "layout" so the Learn page under this course refreshes its material list too.
+  revalidatePath(`/courses/${document.course_id}`, "layout");
   if (!result.ok) return actionFailed(result.error);
   return actionOk();
 }

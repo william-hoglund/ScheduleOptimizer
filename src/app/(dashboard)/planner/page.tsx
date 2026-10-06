@@ -11,7 +11,7 @@ import { PlanWarnings } from "@/components/planner/plan-warnings";
 import { AdvisorPanel } from "@/features/ai-advisor/advisor-panel";
 import { isAiEnabled } from "@/lib/ai";
 import { utcToLocalDate } from "@/lib/calendar/time";
-import type { FeasibilityReport, PlannerWarning } from "@/lib/planner/types";
+import type { FeasibilityReport, PlannerInput, PlannerWarning } from "@/lib/planner/types";
 import type { PlanExplanation } from "@/lib/ai";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { requireUserContext } from "@/server/auth";
@@ -20,6 +20,7 @@ import { nowIso } from "@/server/clock";
 import { listCourses } from "@/server/course-service";
 import { getDraftPlan } from "@/server/planner-service";
 import { listTasks } from "@/server/task-service";
+import { PlanNotesSummary } from "@/components/planner/plan-notes-summary";
 
 export const generateMetadata = () => createPageMetadata("planner");
 
@@ -62,19 +63,20 @@ async function loadRunDetails(
   warnings: PlannerWarning[];
   feasibility: FeasibilityReport | null;
   coveragePercent: number;
+  planNotes: PlannerInput["planNotes"] | null;
 }> {
   const supabase = await createServerSupabaseClient();
 
   const { data } = await supabase
     .from("planner_runs")
-    .select("result_snapshot, warnings")
+    .select("result_snapshot, warnings, input_snapshot")
     .eq("user_id", userId)
     .eq("study_plan_id", planId)
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
 
-  if (!data) return { warnings: [], feasibility: null, coveragePercent: 0 };
+  if (!data) return { warnings: [], feasibility: null, coveragePercent: 0, planNotes: null };
 
   const snapshot = data.result_snapshot as {
     feasibility?: FeasibilityReport;
@@ -86,6 +88,7 @@ async function loadRunDetails(
     warnings: snapshot?.warnings ?? [],
     feasibility: snapshot?.feasibility ?? null,
     coveragePercent: Math.round((snapshot?.quality?.coverage ?? 0) * 100),
+    planNotes: (data.input_snapshot as Pick<PlannerInput, "planNotes"> | null)?.planNotes ?? null,
   };
 }
 
@@ -159,6 +162,8 @@ export default async function PlannerPage() {
             <PlanExplanationCard planId={draft.plan.id} initial={cachedExplanation} />
           ) : null}
 
+          {run?.planNotes ? <PlanNotesSummary notes={run.planNotes} /> : null}
+
           <PlanPreview
             planId={draft.plan.id}
             sessions={draft.sessions}
@@ -170,6 +175,8 @@ export default async function PlannerPage() {
               endDate: draft.plan.end_date,
               courseIds: [],
               overrides: {},
+              // So "another option" honours the same note.
+              notes: run?.planNotes?.text,
             }}
             summary={{
               totalMinutes,

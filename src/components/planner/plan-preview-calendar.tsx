@@ -6,6 +6,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import luxon3Plugin from "@fullcalendar/luxon3";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
+
+import { renderEventContent } from "@/components/calendar/event-content";
 import { useLocale } from "next-intl";
 
 import type { CalendarEventRow, CourseRow, StudySessionRow } from "@/lib/supabase/types";
@@ -45,7 +47,8 @@ export function PlanPreviewCalendar({
     const course = session.course_id ? courseById.get(session.course_id) : undefined;
     return {
       id: `session:${session.id}`,
-      title: course?.code ? `${course.code} — ${session.title}` : session.title,
+      title: session.title,
+      extendedProps: { courseCode: course?.code ?? null },
       start: session.start_at,
       end: session.end_at,
       // Styled by class, like `CalendarView`, so the palette follows the
@@ -60,7 +63,8 @@ export function PlanPreviewCalendar({
     const course = event.course_id ? courseById.get(event.course_id) : undefined;
     return {
       id: `event:${event.id}`,
-      title: course?.code ? `${course.code} — ${event.title}` : event.title,
+      title: event.title,
+      extendedProps: { courseCode: course?.code ?? null },
       start: event.start_at,
       end: event.end_at,
       allDay: event.is_all_day,
@@ -96,6 +100,8 @@ export function PlanPreviewCalendar({
         slotMaxTime="23:00:00"
         expandRows
         events={events}
+        eventContent={renderEventContent}
+        eventMinHeight={22}
       />
     </div>
   );

@@ -168,6 +168,12 @@ export type PlannerInput = {
   calendarSources: PlannerCalendarSource[];
   tasks: PlannerTask[];
   existingSessions: ExistingSession[];
+  /**
+   * The student's free-text note for this run and what it became. Already
+   * folded into fixedEvents/tasks by `applyPlanNotes` — the engine ignores
+   * this; it's kept so the snapshot can show and replay it.
+   */
+  planNotes?: { text: string; applied: AppliedPlanNote[]; rejected: string[] };
 };
 
 // ----------------------------------------------------------------- output ---
@@ -273,3 +279,8 @@ export type PlannerResult = {
 };
 
 export const ALGORITHM_VERSION = "v1.0.0";
+
+/** One instruction from a planning note, as actually applied. */
+export type AppliedPlanNote =
+  | { kind: "unavailable"; label: string; startDate: string; endDate: string }
+  | { kind: "finishBy"; label: string; taskTitle: string; date: string };

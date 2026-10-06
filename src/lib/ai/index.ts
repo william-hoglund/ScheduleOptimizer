@@ -7,6 +7,8 @@ import { finalizeAdvisorReply, precheckAdvisorMessage } from "./guardrails";
 import { buildAdvisorPrompt, type AdvisorInput } from "./prompts/advisor";
 import { buildCourseExtractionPrompt, type CourseExtractionInput } from "./prompts/course-extraction";
 import { buildExplainPlanPrompt, type ExplainPlanInput } from "./prompts/explain-plan";
+import { buildMaterialTitlePrompt, type MaterialTitleInput } from "./prompts/material-title";
+import { buildPlanNotesPrompt, type PlanNotesInput } from "./prompts/plan-notes";
 import { buildScheduleExtractionPrompt, type ScheduleExtractionInput } from "./prompts/schedule-extraction";
 import { buildStudyHelpPrompt, type StudyHelpInput } from "./prompts/study-help";
 import { buildTaskBreakdownPrompt, type TaskBreakdownInput } from "./prompts/task-breakdown";
@@ -15,6 +17,8 @@ import { createOpenAiProvider } from "./providers/openai";
 import { advisorReplySchema, type AdvisorReply } from "./schemas/advisor";
 import { courseExtractionSchema, type CourseExtraction } from "./schemas/course-extraction";
 import { planExplanationSchema, type PlanExplanation } from "./schemas/explain-plan";
+import { materialTitleSchema } from "./schemas/material-title";
+import { planNotesSchema, type PlanNotesInterpretation } from "./schemas/plan-notes";
 import { scheduleExtractionSchema, type ScheduleExtraction } from "./schemas/schedule-extraction";
 import { studyHelpSchema, type StudyHelp } from "./schemas/study-help";
 import { taskBreakdownSchema, type TaskBreakdown } from "./schemas/task-breakdown";
@@ -98,6 +102,17 @@ export async function extractCourseKnowledge(
   });
 }
 
+export async function titleMaterial(input: MaterialTitleInput): Promise<string | null> {
+  const { system, prompt } = buildMaterialTitlePrompt(input);
+  const result = await generateWithRetry({ system, prompt, schema: materialTitleSchema, maxOutputTokens: AI_LIMITS.materialTitle });
+  return result?.title.trim() || null;
+}
+
+export async function interpretPlanNotes(input: PlanNotesInput): Promise<PlanNotesInterpretation | null> {
+  const { system, prompt } = buildPlanNotesPrompt(input);
+  return generateWithRetry({ system, prompt, schema: planNotesSchema, maxOutputTokens: AI_LIMITS.planNotes });
+}
+
 export async function generateStudyHelp(input: StudyHelpInput): Promise<StudyHelp | null> {
   const { system, prompt } = buildStudyHelpPrompt(input);
   return generateWithRetry({
@@ -165,3 +180,5 @@ export { boundExplainPlanSessions, type ExplainPlanSession } from "./prompts/exp
 export type { StudyHelp, StudyHelpMode } from "./schemas/study-help";
 export { STUDY_HELP_MODES } from "./schemas/study-help";
 export { boundStudyMaterials, type StudyMaterial } from "./prompts/study-help";
+export type { PlanNotesInterpretation } from "./schemas/plan-notes";
+export type { PlanNotesTask } from "./prompts/plan-notes";

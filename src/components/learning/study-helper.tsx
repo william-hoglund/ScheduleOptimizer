@@ -39,20 +39,25 @@ export function StudyHelper({
   courseId,
   materials,
   catchUp = null,
+  initialMode = "summary",
 }: {
   courseId: string;
   materials: StudyMaterialOption[];
   /** A missed class to catch up on: preset to a summary focused on it. */
   catchUp?: CatchUpTarget | null;
+  initialMode?: StudyHelpMode;
 }) {
   const t = useTranslations("learn");
-  const [mode, setMode] = useState<StudyHelpMode>("summary");
+  const [mode, setMode] = useState<StudyHelpMode>(initialMode);
   const [request, setRequest] = useState(catchUp?.request ?? "");
   const [caughtUp, setCaughtUp] = useState(false);
-  const [selected, setSelected] = useState<Set<string>>(() => {
-    const lecture = materials.filter((m) => m.isLectureMaterial);
-    return new Set((lecture.length > 0 ? lecture : materials).map((m) => m.id));
+  // Tracks what's been *un*ticked, so material added later (an upload on this
+  // page) arrives ticked without any syncing.
+  const [deselected, setDeselected] = useState<Set<string>>(() => {
+    const hasLecture = materials.some((m) => m.isLectureMaterial);
+    return new Set(hasLecture ? materials.filter((m) => !m.isLectureMaterial).map((m) => m.id) : []);
   });
+  const selected = new Set(materials.filter((m) => !deselected.has(m.id)).map((m) => m.id));
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -61,10 +66,10 @@ export function StudyHelper({
   const canSubmit = selected.size > 0 && (!needsRequest || request.trim().length > 0) && !isPending;
 
   function toggle(id: string, on: boolean) {
-    setSelected((current) => {
+    setDeselected((current) => {
       const next = new Set(current);
-      if (on) next.add(id);
-      else next.delete(id);
+      if (on) next.delete(id);
+      else next.add(id);
       return next;
     });
   }

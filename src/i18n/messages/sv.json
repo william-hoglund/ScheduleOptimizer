@@ -492,7 +492,11 @@
       "adjust": "Justera bara för den här gången",
       "adjustHint": "Ändringar här gäller bara den här planen. Dina sparade inställningar påverkas inte.",
       "generate": "Skapa en plan",
-      "generating": "Räknar ut din vecka"
+      "generating": "Räknar ut din vecka",
+      "notesLabel": "Något planen bör veta?",
+      "notesPlaceholder": "t.ex. Jag är i Whitsundays torsdag till måndag — gör klart Uppgift 1 i AI-kursen innan dess.",
+      "notesHint": "Dagar du är borta och \"gör klart X före…\" tillämpas som fasta regler. Du ser exakt vad som tolkades innan du godkänner.",
+      "notesUnavailable": "Din anteckning kunde inte tillämpas den här gången (AI otillgängligt) — planen skapades utan den."
     },
     "summary": {
       "title": "Ditt planförslag",
@@ -564,6 +568,13 @@
       "discard": "Börja om",
       "approved": "Tillagd i kalendern",
       "approvedBody": "Dina pass ligger i kalendern nu. Flytta eller lås det du vill."
+    },
+    "notes": {
+      "title": "Från din anteckning",
+      "nothingApplied": "Inget i anteckningen kunde göras om till en planeringsregel.",
+      "away": "Inget plugg {start} – {end} ({label})",
+      "finishBy": "\"{task}\" klar senast {date}",
+      "notApplied": "Inte tillämpat: {text}"
     }
   },
   "sessions": {
@@ -618,7 +629,38 @@
     "live": {
       "start": "Starta",
       "finish": "Avsluta",
-      "running": "Pågår · {minutes} av {planned} min"
+      "running": "Pågår · {minutes} av {planned} min",
+      "styleLabel": "Studiestil",
+      "styles": {
+        "none": "Mitt eget sätt",
+        "pomodoro": "Pomodoro 25/5",
+        "fifty_ten": "Pomodoro 50/10",
+        "ninety_twenty": "Djupt arbete",
+        "fifty_two": "52/17",
+        "sprint": "Sprint (egen längd)"
+      },
+      "phases": {
+        "free": "Pågår",
+        "focus": "Fokus · omgång {round}",
+        "break": "Paus",
+        "longBreak": "Lång paus",
+        "wrapUp": "Runda av",
+        "overtime": "Tiden är slut"
+      },
+      "notices": {
+        "focus": "Pausen är slut — tillbaka till {title}.",
+        "break": "Fokusomgång klar. Ta en kort paus.",
+        "longBreak": "Fyra omgångar klara — ta en längre paus.",
+        "wrapUp": "10 minuter kvar på {title}. Börja runda av.",
+        "overtime": "Tiden är slut för {title}. Tryck Avsluta när du är klar."
+      },
+      "elapsed": "{minutes} av {planned} min",
+      "mute": "Stäng av timerljud",
+      "unmute": "Slå på timerljud",
+      "sprintMinutes": "Sprintlängd i minuter",
+      "minutesShort": "min",
+      "sprintLabel": "Sprint · {minutes} min",
+      "quizMe": "Förhör mig"
     },
     "attendance": {
       "title": "Senaste lektionerna",
@@ -685,12 +727,12 @@
     "weekendAllowed": "Helger är tillåtna",
     "weekendAllowedHint": "Av som standard. Planeringen använder bara helger om den måste.",
     "breakSection": "Pauser",
-    "breakMethod": "Pausrytm",
+    "breakMethod": "Studiestil",
     "breakMethods": {
-      "pomodoro": "Pomodoro — 25 min fokus, 5 min paus",
-      "fifty_ten": "50 / 10 — längre sjok",
-      "ninety_twenty": "90 / 20 — djupt arbete",
-      "none": "Ingen fast rytm"
+      "none": "Mitt eget sätt — ingen timer, logga bara tiden",
+      "pomodoro": "Pomodoro 25/5 — 25 min fokus, 5 min paus",
+      "fifty_ten": "Pomodoro 50/10 — 50 min fokus, 10 min paus",
+      "ninety_twenty": "Djupt arbete — ett långt block, avrundning 10 min innan slut"
     },
     "energySection": "Energi under dagen",
     "energyHint": "Tyngre arbete placeras där din energi är som högst.",
@@ -837,7 +879,15 @@
         "unexpected": "Något gick fel."
       },
       "materialSaved": "Sparat i kursens studiematerial. Öppna \"Plugga kursen\" för sammanfattningar, förklaringar och quiz.",
-      "materialReady": "Redo att plugga"
+      "materialReady": "Redo att plugga",
+      "pasteNotes": "Klistra in kurstext",
+      "pasteNotesTitle": "Titel, t.ex. \"Anteckningar föreläsning 5\"",
+      "pasteNotesPlaceholder": "Klistra in eller skriv dina anteckningar, en transkription eller annat från kursen…",
+      "pasteNotesSave": "Spara text",
+      "pastedNotesName": "Anteckningar",
+      "materialDescription": "PDF, PowerPoint (.pptx) eller text — du kan välja flera filer samtidigt. De läggs till i kursens studiematerial.",
+      "materialSavedHere": "Tillagt — det är förbockat i materiallistan ovan, redo att användas.",
+      "pasteNotesTitleOptional": "Titel (valfritt — namnges automatiskt utifrån texten om tomt)"
     },
     "review": {
       "title": "Granska vad som hittades",
@@ -1463,7 +1513,7 @@
     "truncated": "Bara en del av det valda materialet fick plats i en förfrågan. Välj färre dokument för full täckning.",
     "empty": {
       "title": "Inget studiematerial än",
-      "description": "Ladda upp föreläsningsbilder eller anteckningar på kurssidan (välj \"Föreläsningsbilder\" som dokumenttyp) och kom sedan tillbaka hit.",
+      "description": "Lägg till föreläsningsbilder eller anteckningar nedan för att börja.",
       "action": "Till kursen"
     },
     "errors": {
@@ -1480,6 +1530,10 @@
       "banner": "Kommer ikapp med \"{title}\" ({when}). Bocka i bilderna för den föreläsningen och sammanfatta — eller fråga om det som är oklart.",
       "markDone": "Markera som ikapp",
       "done": "Markerad som ikapp. Snyggt jobbat."
+    },
+    "addMaterial": {
+      "title": "Lägg till material",
+      "description": "Ladda upp fler föreläsningsbilder eller anteckningar, eller klistra in text. Nytt material visas i listan ovan, redo att användas."
     }
   },
   "howItWorks": {
@@ -1492,6 +1546,7 @@
       "deadlines": "Arbetet sprids ut före varje deadline, med mer tid för större, svårare och viktigare uppgifter.",
       "startDate": "Ge en uppgift ett \"Börja plugga från\"-datum (t.ex. tentaplugg sent i perioden) så schemaläggs inget för den innan dess.",
       "logging": "Tryck Starta på ett pass för att ta tid och Avsluta för att logga de faktiska minuterna. Lektioner från senaste veckan frågar om du var med; en missad får en Kom ikapp-knapp som sammanfattar föreläsningen utifrån bilderna.",
+      "studyStyle": "Din studiestil (Inställningar) styr hur långa blocken blir och hur timern beter sig när du trycker Starta: Mitt eget sätt (90-minutersblock, ingen timer), Pomodoro 25/5 eller 50/10 (2-timmarsblock med fokus- och pausomgångar, med notis och mjukt ljud vid varje byte) eller Djupt arbete (långa block med notis 10 minuter före slut). Pass för samma uppgift som ligger direkt efter varandra slås ihop till ett block. När du trycker Starta kan du också välja 52/17 (52 min fokus, 17 min paus) eller en Sprint av valfri längd. Uppgifter med Aktiv återkallning eller Spridd repetition får en \"Förhör mig\"-knapp som öppnar ett quiz på kursens material.",
       "replan": "Planer är förslag: du granskar en plan innan den tillämpas och kan generera om den när något ändras."
     },
     "learn": {

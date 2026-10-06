@@ -492,7 +492,11 @@
       "adjust": "Adjust just for this run",
       "adjustHint": "Changes here apply to this plan only. Your saved preferences stay as they are.",
       "generate": "Generate a plan",
-      "generating": "Working out your week"
+      "generating": "Working out your week",
+      "notesLabel": "Anything the plan should know?",
+      "notesPlaceholder": "e.g. I'm in the Whitsundays Thursday to Monday — finish Assessment 1 for the AI course before then.",
+      "notesHint": "Days you are away and \"finish X before…\" are applied as hard rules. You will see exactly what was understood before approving.",
+      "notesUnavailable": "Your note could not be applied this time (AI unavailable) — the plan was generated without it."
     },
     "summary": {
       "title": "Your proposed plan",
@@ -564,6 +568,13 @@
       "discard": "Start over",
       "approved": "Added to your calendar",
       "approvedBody": "Your sessions are on the calendar now. Move or lock anything you like."
+    },
+    "notes": {
+      "title": "From your note",
+      "nothingApplied": "Nothing in the note could be turned into a planning rule.",
+      "away": "No studying {start} – {end} ({label})",
+      "finishBy": "\"{task}\" finished by {date}",
+      "notApplied": "Not applied: {text}"
     }
   },
   "sessions": {
@@ -618,7 +629,38 @@
     "live": {
       "start": "Start",
       "finish": "Finish",
-      "running": "In progress · {minutes} of {planned} min"
+      "running": "In progress · {minutes} of {planned} min",
+      "styleLabel": "Study style",
+      "styles": {
+        "none": "My own way",
+        "pomodoro": "Pomodoro 25/5",
+        "fifty_ten": "Pomodoro 50/10",
+        "ninety_twenty": "Deep work",
+        "fifty_two": "52/17",
+        "sprint": "Sprint (custom length)"
+      },
+      "phases": {
+        "free": "In progress",
+        "focus": "Focus · round {round}",
+        "break": "Break",
+        "longBreak": "Long break",
+        "wrapUp": "Wrap up",
+        "overtime": "Time is up"
+      },
+      "notices": {
+        "focus": "Break over — back to {title}.",
+        "break": "Focus round done. Take a short break.",
+        "longBreak": "Four rounds done — take a longer break.",
+        "wrapUp": "10 minutes left on {title}. Start wrapping up.",
+        "overtime": "Time is up for {title}. Press Finish when you are done."
+      },
+      "elapsed": "{minutes} of {planned} min",
+      "mute": "Mute timer sound",
+      "unmute": "Turn timer sound on",
+      "sprintMinutes": "Sprint length in minutes",
+      "minutesShort": "min",
+      "sprintLabel": "Sprint · {minutes} min",
+      "quizMe": "Quiz me"
     },
     "attendance": {
       "title": "Recent classes",
@@ -685,12 +727,12 @@
     "weekendAllowed": "Weekends are allowed",
     "weekendAllowedHint": "Off by default. The planner will only use a weekend if it has to.",
     "breakSection": "Breaks",
-    "breakMethod": "Break rhythm",
+    "breakMethod": "Study style",
     "breakMethods": {
-      "pomodoro": "Pomodoro — 25 min focus, 5 min break",
-      "fifty_ten": "50 / 10 — longer stretches",
-      "ninety_twenty": "90 / 20 — deep work",
-      "none": "No fixed rhythm"
+      "none": "My own way — no timer, just log your time",
+      "pomodoro": "Pomodoro 25/5 — 25 min focus, 5 min break",
+      "fifty_ten": "Pomodoro 50/10 — 50 min focus, 10 min break",
+      "ninety_twenty": "Deep work — one long block, 10-min wrap-up notice"
     },
     "energySection": "Energy through the day",
     "energyHint": "Harder work gets placed where your energy is highest.",
@@ -837,7 +879,15 @@
         "unexpected": "Something went wrong."
       },
       "materialSaved": "Saved to this course's study material. Open \"Study this course\" to get summaries, explanations and quizzes from it.",
-      "materialReady": "Ready to study"
+      "materialReady": "Ready to study",
+      "pasteNotes": "Paste course text",
+      "pasteNotesTitle": "Title, e.g. \"Week 5 lecture notes\"",
+      "pasteNotesPlaceholder": "Paste or type your notes, a transcript, or anything else from this course…",
+      "pasteNotesSave": "Save text",
+      "pastedNotesName": "Notes",
+      "materialDescription": "PDF, PowerPoint (.pptx) or text — you can pick several files at once. They are added to this course's study material.",
+      "materialSavedHere": "Added — it's ticked in the material list above, ready to use.",
+      "pasteNotesTitleOptional": "Title (optional — named automatically from the text if left blank)"
     },
     "review": {
       "title": "Review what was found",
@@ -1463,7 +1513,7 @@
     "truncated": "Only part of the selected material fit in one request. Select fewer documents for full coverage.",
     "empty": {
       "title": "No study material yet",
-      "description": "Upload lecture slides or notes on the course page (choose \"Lecture slides\" as the document type), then come back here.",
+      "description": "Add lecture slides or notes below to start.",
       "action": "Go to course"
     },
     "errors": {
@@ -1480,6 +1530,10 @@
       "banner": "Catching up on \"{title}\" ({when}). Tick the slides for that lecture, then summarise — or ask about anything unclear.",
       "markDone": "Mark caught up",
       "done": "Marked as caught up. Nice work."
+    },
+    "addMaterial": {
+      "title": "Add material",
+      "description": "Upload more lecture slides or notes, or paste text. New material appears in the list above, ready to use."
     }
   },
   "howItWorks": {
@@ -1492,6 +1546,7 @@
       "deadlines": "Work is spread out before each deadline, with more time for bigger, harder and higher-priority tasks.",
       "startDate": "Give a task a \"Start studying from\" date (e.g. exam revision late in the term) and nothing is scheduled for it before then.",
       "logging": "Press Start on a session to time it, and Finish to log the real minutes. Classes from the past week ask whether you attended; a missed one gets a Catch up button that summarises that lecture from its slides.",
+      "studyStyle": "Your study style (Settings) sets how long blocks are and how the timer behaves when you press Start: My own way (90-min blocks, no timer), Pomodoro 25/5 or 50/10 (2-hour blocks with focus and break rounds, with a notice and soft chime at each change), or Deep work (long blocks with a notice 10 minutes before the end). Back-to-back pieces of the same task are joined into one block. When you press Start you can also pick 52/17 (52 min focus, 17 min break) or a Sprint of any length. Tasks set to Active recall or Spaced repetition get a \"Quiz me\" button that opens a quiz on that course's material.",
       "replan": "Plans are proposals: you review a plan before it is applied, and can regenerate it whenever things change."
     },
     "learn": {

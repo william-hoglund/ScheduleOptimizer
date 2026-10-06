@@ -5,6 +5,7 @@ import {
   boundStudyMaterials,
   generateStudyHelp,
   isAiEnabled,
+  titleMaterial,
   type StudyHelp,
   type StudyMaterial,
 } from "@/lib/ai";
@@ -14,10 +15,15 @@ import {
   downloadCourseDocumentBytes,
   getCourseDocument,
   listCourseDocuments,
+  listCourseMilestones,
   markDocumentCompleted,
   markDocumentFailed,
+  renameCourseDocument,
 } from "./course-knowledge-service";
 import { getCourse } from "./course-service";
+import { listTasks } from "./task-service";
+import { fallbackMaterialTitle } from "@/lib/ai/prompts/material-title";
+import type { CourseDocumentRow } from "@/lib/supabase/types";
 
 /**
  * The Learn page's server side: read the chosen course documents and ask the
@@ -88,17 +94,26 @@ export async function generateStudyHelpForCourse({
 export async function checkLearningMaterial(
   userId: string,
   documentId: string,
+  {
+    autoTitle = null,
+    locale = "en",
+  }: {
+    /** "pasted": placeholder name, always replaced. "file": the file's own name is a hint and the no-AI fallback. */
+    autoTitle?: "pasted" | "file" | null;
+    locale?: Locale;
+  } = {},
 ): Promise<{ ok: true } | { ok: false; error: "notFound" | "noText" }> {
   const document = await getCourseDocument(userId, documentId);
   if (!document) return { ok: false, error: "notFound" };
 
   try {
     const bytes = await downloadCourseDocumentBytes(userId, document);
-    const { pages } = await extractDocumentText(bytes, document.mime_type);
+    const { pages, fullText } = await extractDocumentText(bytes, document.mime_type);
     if (pages.every((page) => page.text.trim().length === 0)) {
       await markDocumentFailed(userId, documentId, "No extractable text found in the document");
       return { ok: false, error: "noText" };
     }
+    if (autoTitle) await autoTitleMaterial(userId, document, fullText, locale, autoTitle);
   } catch (cause) {
     const message = cause instanceof DocumentTextExtractionError ? cause.message : "Could not read the document";
     await markDocumentFailed(userId, documentId, message);
@@ -107,4 +122,47 @@ export async function checkLearningMaterial(
 
   await markDocumentCompleted(userId, documentId);
   return { ok: true };
+}
+
+/**
+ * Names untitled material by what it is: AI matches it against the course
+ * outline when it can, otherwise the text's own first line is used. A naming
+ * failure never fails the upload — the placeholder name simply stays.
+ */
+async function autoTitleMaterial(
+  userId: string,
+  document: CourseDocumentRow,
+  text: string,
+  locale: Locale,
+  kind: "pasted" | "file",
+) {
+  try {
+    let title: string | null = null;
+
+    if (isAiEnabled()) {
+      const [course, milestones, tasks, documents] = await Promise.all([
+        getCourse(userId, document.course_id),
+        listCourseMilestones(userId, document.course_id).catch(() => []),
+        listTasks(userId, { includeCompleted: true }),
+        listCourseDocuments(userId, document.course_id),
+      ]);
+      title = await titleMaterial({
+        locale,
+        courseName: course?.name ?? "",
+        outline: [
+          ...milestones.map((m) => `- ${m.milestone_date ?? ""} ${m.title}`.trim()),
+          ...tasks.filter((t) => t.course_id === document.course_id).map((t) => `- Assessment: ${t.title}`),
+        ].slice(0, 40),
+        existingNames: documents.filter((d) => d.id !== document.id).map((d) => d.file_name).slice(0, 20),
+        text,
+        originalName: kind === "file" ? document.file_name : undefined,
+      });
+    }
+
+    // A file keeps its own name when AI can't do better; pasted text has none.
+    if (kind === "pasted") title ??= fallbackMaterialTitle(text);
+    if (title) await renameCourseDocument(userId, document.id, title.replace(/[\\/]/g, "–"));
+  } catch (cause) {
+    console.error("[study-help] could not title material", document.id, cause);
+  }
 }

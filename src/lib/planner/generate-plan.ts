@@ -228,6 +228,14 @@ export function generatePlan(input: PlannerInput): PlannerResult {
     }
   }
 
+  // --- 5b. join back-to-back blocks of the same task -----------------------
+  // Placement works in chunks, which can land as 8:45, 9:30, 10:15 for one
+  // task — three entries where the student sees one sitting. Joined when the
+  // gap is short and is itself free time (so nothing, like a class, is inside).
+  const joined = joinAdjacentSessions(placed, availability.windows);
+  placed.length = 0;
+  placed.push(...joined);
+
   // --- 6. validate ---------------------------------------------------------
   const deadlinesByTask = new Map<string, number | null>(
     openTasks.map((task) => [task.id, task.deadline]),
@@ -474,4 +482,46 @@ function measureQuality({
     longestGapDays,
     totalPlannedMinutes: sessions.reduce((sum, session) => sum + session.minutes, 0),
   };
+}
+
+/** The longest a joined block may become. */
+const MAX_JOINED_MINUTES = 180;
+/** Gaps up to this are joined; they become a break inside the block. */
+const MAX_JOIN_GAP_MINUTES = 15;
+
+export function joinAdjacentSessions(
+  sessions: readonly PlannedSession[],
+  windows: readonly Interval[],
+): PlannedSession[] {
+  const sorted = [...sessions].sort((a, b) => a.start - b.start);
+  const result: PlannedSession[] = [];
+
+  for (const session of sorted) {
+    const previous = result[result.length - 1];
+    const gap = previous ? session.start - previous.end : Infinity;
+    const canJoin =
+      previous !== undefined &&
+      !previous.preserved &&
+      !session.preserved &&
+      !previous.isLocked &&
+      !session.isLocked &&
+      previous.taskId !== null &&
+      previous.taskId === session.taskId &&
+      gap >= 0 &&
+      gap <= MAX_JOIN_GAP_MINUTES &&
+      session.end - previous.start <= MAX_JOINED_MINUTES &&
+      (gap === 0 || windows.some((w) => w.start <= previous.end && session.start <= w.end));
+
+    if (canJoin && previous) {
+      result[result.length - 1] = {
+        ...previous,
+        end: session.end,
+        minutes: previous.minutes + session.minutes,
+      };
+    } else {
+      result.push(session);
+    }
+  }
+
+  return result;
 }

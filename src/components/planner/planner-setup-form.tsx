@@ -7,6 +7,7 @@ import { useState, useTransition } from "react";
 import { FormField } from "@/components/common/form-field";
 import { NativeSelect } from "@/components/common/native-select";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { generateDraftPlan } from "@/features/planner/actions";
 import { useValidationText } from "@/features/shared/use-validation-text";
 import type { CourseRow } from "@/lib/supabase/types";
@@ -57,6 +58,8 @@ export function PlannerSetupForm({
   const [courseIds, setCourseIds] = useState<string[]>(() => courses.map((course) => course.id));
   const [showOverrides, setShowOverrides] = useState(false);
   const [overrides, setOverrides] = useState<PlannerRunInput["overrides"]>({});
+  const [notes, setNotes] = useState("");
+  const [notesUnavailable, setNotesUnavailable] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -77,8 +80,15 @@ export function PlannerSetupForm({
   function submit() {
     setFormError(null);
     startTransition(async () => {
-      const result = await generateDraftPlan({ startDate, endDate, courseIds, overrides });
+      const result = await generateDraftPlan({
+        startDate,
+        endDate,
+        courseIds,
+        overrides,
+        notes: notes.trim() || undefined,
+      });
       if (!result.ok) setFormError(result.error);
+      else setNotesUnavailable(result.data.notesUnavailable);
       // On success the page re-renders with the new draft; no client navigation
       // needed because the action revalidates /planner.
     });
@@ -219,6 +229,23 @@ export function PlannerSetupForm({
             </div>
           </div>
         ) : null}
+      </div>
+
+      <div className="space-y-1.5">
+        <label htmlFor="plan-notes" className="text-sm font-medium">
+          {t("notesLabel")}
+        </label>
+        <Textarea
+          id="plan-notes"
+          rows={2}
+          maxLength={600}
+          placeholder={t("notesPlaceholder")}
+          value={notes}
+          onChange={(event) => setNotes(event.target.value)}
+        />
+        <p className="text-muted-foreground text-xs">
+          {notesUnavailable ? t("notesUnavailable") : t("notesHint")}
+        </p>
       </div>
 
       <Button type="button" onClick={submit} disabled={isPending} className="w-full sm:w-auto">

@@ -28,6 +28,19 @@ const METHOD_SHAPE: Record<StudyMethod, { min: number; ideal: number; max: numbe
   group_work: { min: 60, ideal: 90, max: 150 },
 };
 
+/**
+ * Block length from the student's study style (`breakMethod`), used whenever a
+ * task hasn't asked for a specific method. Longer blocks are the default: a
+ * Pomodoro block holds several rounds (the timer handles the breaks inside
+ * it), and "my own way" follows the student's preferred session length.
+ */
+const STYLE_SHAPE: Record<PlannerPreferences["breakMethod"], { min: number; ideal: number | null; max: number }> = {
+  none: { min: 45, ideal: null, max: 180 },
+  pomodoro: { min: 30, ideal: 120, max: 120 },
+  fifty_ten: { min: 60, ideal: 120, max: 120 },
+  ninety_twenty: { min: 90, ideal: 150, max: 180 },
+};
+
 /** What each kind of work defaults to when the student has not chosen. */
 const TYPE_METHOD: Record<TaskType, StudyMethod> = {
   reading: "pomodoro",
@@ -66,15 +79,20 @@ function chunkLengthFor(
   preferences: PlannerPreferences,
   urgent: boolean,
 ): number {
-  const shape = METHOD_SHAPE[methodFor(task)];
   const explicit = task.preferredSessionMinutes;
+  // A task-level method keeps its own rhythm; otherwise the study style decides.
+  const style = task.preferredStudyMethod === null ? STYLE_SHAPE[preferences.breakMethod] : null;
+  const shape = style
+    ? { min: style.min, ideal: style.ideal ?? preferences.preferredSessionMinutes, max: style.max }
+    : METHOD_SHAPE[methodFor(task)];
 
   // An explicit per-task preference — "long sessions for the final project"
   // — is a deliberate override and wins outright, rather than being blended
   // down by the method's natural rhythm the way the account-wide default is
   // below. Difficulty and urgency still nudge it like any other task.
   let target =
-    explicit ?? Math.round((shape.ideal + preferences.preferredSessionMinutes) / 2);
+    explicit ??
+    (style ? shape.ideal : Math.round((shape.ideal + preferences.preferredSessionMinutes) / 2));
 
   // Hard work benefits from longer runs; light work is fine in shorter ones.
   if (task.difficulty >= 4) target = Math.round(target * 1.2);

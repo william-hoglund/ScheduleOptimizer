@@ -20,6 +20,8 @@ export const plannerRunSchema = z
     endDate: localDate,
     /** Empty means every active course. */
     courseIds: z.array(z.uuid()).default([]),
+    /** Free text for this plan only, e.g. "away Thu–Mon, finish Assessment 1 first". */
+    notes: z.string().trim().max(600, V.tooLong).optional(),
     /** Changes the tie-breaking, which is how "show me another option" works. */
     seed: z.string().max(64).optional(),
     overrides: z

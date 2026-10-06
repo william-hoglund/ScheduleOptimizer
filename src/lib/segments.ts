@@ -49,7 +49,7 @@ export type SegmentDefaults = {
 const DEFAULTS: Record<Segment, SegmentDefaults> = {
   student: {
     weeklyTargetMinutes: 900, // 15h
-    preferredSessionMinutes: 60,
+    preferredSessionMinutes: 90,
     maximumDailyMinutes: 240,
     earliestStartTime: "08:00",
     latestEndTime: "20:00",

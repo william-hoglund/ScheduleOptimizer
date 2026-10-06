@@ -51,6 +51,10 @@ export const AI_LIMITS = {
   maxAdvisorMessageChars: 600,
   /** Summaries and quizzes over several lectures need room. */
   studyHelp: 2500,
+  /** A handful of date ranges and task cutoffs. */
+  planNotes: 600,
+  /** One short title. */
+  materialTitle: 60,
   /** Characters, for the Learn page's topic/question box. */
   maxStudyRequestChars: 600,
   /** Bytes. A vision call's cost scales with image size, not just token count. */

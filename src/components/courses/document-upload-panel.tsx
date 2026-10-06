@@ -1,10 +1,11 @@
 "use client";
 
-import { AlertTriangle, CheckCircle2, FileText, Loader2, Upload } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ClipboardPaste, FileText, Loader2, Upload } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef, useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   confirmExtraction,
   previewExtraction,
@@ -17,6 +18,7 @@ import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import {
   COURSE_DOCUMENT_TYPES,
   isLearningMaterial,
+  LEARNING_MATERIAL_TYPES,
   MAX_DOCUMENT_BYTES,
   SUPPORTED_DOCUMENT_MIME_TYPES,
 } from "@/lib/validation/course-knowledge";
@@ -68,13 +70,26 @@ function sanitizeFileName(name: string): string {
   return name.replace(/[^a-zA-Z0-9.\-_]/g, "_").slice(-150);
 }
 
-export function DocumentUploadPanel({ courseId }: { courseId: string }) {
+export function DocumentUploadPanel({
+  courseId,
+  materialOnly = false,
+}: {
+  courseId: string;
+  /**
+   * The Learn page's version: only lecture slides/notes, several files at
+   * once, and a "paste notes" box — study material, never syllabus extraction.
+   */
+  materialOnly?: boolean;
+}) {
   const t = useTranslations("courseKnowledge.documents");
   const tReview = useTranslations("courseKnowledge.review");
   const fileInput = useRef<HTMLInputElement>(null);
 
   const [stage, setStage] = useState<Stage>({ kind: "idle" });
-  const [documentType, setDocumentType] = useState<CourseDocumentType>("syllabus");
+  const [documentType, setDocumentType] = useState<CourseDocumentType>(materialOnly ? "lecture_slides" : "syllabus");
+  const [pasteTitle, setPasteTitle] = useState("");
+  const [pasteText, setPasteText] = useState("");
+  const typeOptions = materialOnly ? LEARNING_MATERIAL_TYPES : COURSE_DOCUMENT_TYPES;
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -84,7 +99,11 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
     file: Blob,
     fileName: string,
     mimeType: (typeof SUPPORTED_DOCUMENT_MIME_TYPES)[number],
+    typeOverride?: CourseDocumentType,
+    /** How to name it once read: from the file's own name as a hint, from pasted text, or not at all. */
+    autoTitle: "pasted" | "file" | null = "file",
   ): Promise<boolean> {
+    const type = typeOverride ?? documentType;
     setStage({ kind: "uploading" });
 
     const supabase = createBrowserSupabaseClient();
@@ -115,7 +134,7 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
       fileSize: file.size,
       mimeType,
       storagePath,
-      documentType,
+      documentType: type,
     });
     if (!recorded.ok) {
       setError(recorded.error);
@@ -123,9 +142,9 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
       return false;
     }
 
-    if (isLearningMaterial(documentType)) {
+    if (isLearningMaterial(type)) {
       setStage({ kind: "extracting" });
-      const checked = await finishLearningMaterialUpload(recorded.data.id);
+      const checked = await finishLearningMaterialUpload(recorded.data.id, autoTitle ? { autoTitle } : {});
       if (!checked.ok) {
         setError(checked.error);
         setStage({ kind: "idle" });
@@ -148,22 +167,50 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
   }
 
   function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
+    // Several at once only for study material — syllabus extraction reviews one file at a time.
+    const files = [...(event.target.files ?? [])].slice(0, materialOnly ? 20 : 1);
     if (fileInput.current) fileInput.current.value = "";
-    if (!file) return;
+    if (files.length === 0) return;
 
-    if (file.size > MAX_DOCUMENT_BYTES) {
+    if (files.some((file) => file.size > MAX_DOCUMENT_BYTES)) {
       setError("tooLarge");
       return;
     }
-    if (!(SUPPORTED_DOCUMENT_MIME_TYPES as readonly string[]).includes(file.type)) {
+    if (files.some((file) => !(SUPPORTED_DOCUMENT_MIME_TYPES as readonly string[]).includes(file.type))) {
       setError("unsupportedType");
       return;
     }
 
     setError(null);
-    startTransition(() => {
-      void submitDocument(file, file.name, file.type as (typeof SUPPORTED_DOCUMENT_MIME_TYPES)[number]);
+    startTransition(async () => {
+      for (const file of files) {
+        const ok = await submitDocument(file, file.name, file.type as (typeof SUPPORTED_DOCUMENT_MIME_TYPES)[number]);
+        if (!ok) break;
+      }
+    });
+  }
+
+  /** Pasted notes become a plain-text lecture-notes document, like any upload. */
+  function handlePaste() {
+    const text = pasteText.trim();
+    if (!text) return;
+    // No title given: a placeholder now, and the server names it from the text
+    // (matched against the course outline) once it has read it.
+    const untitled = pasteTitle.trim().length === 0;
+    const name = untitled ? t("pastedNotesName") : pasteTitle.trim().slice(0, 120);
+    setError(null);
+    startTransition(async () => {
+      const ok = await submitDocument(
+        new Blob([text], { type: "text/plain" }),
+        name,
+        "text/plain",
+        "lecture_notes",
+        untitled ? "pasted" : null,
+      );
+      if (ok) {
+        setPasteText("");
+        setPasteTitle("");
+      }
     });
   }
 
@@ -214,7 +261,7 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
       <div className="space-y-4">
         <div className="border-success/40 bg-success/5 animate-in fade-in slide-in-from-bottom-2 flex items-start gap-3 rounded-lg border p-4 duration-300">
           <CheckCircle2 className="text-success mt-0.5 size-5 shrink-0" aria-hidden="true" />
-          <p className="text-sm">{t("materialSaved")}</p>
+          <p className="text-sm">{materialOnly ? t("materialSavedHere") : t("materialSaved")}</p>
         </div>
         <Button variant="outline" onClick={() => setStage({ kind: "idle" })}>
           {tReview("startOver")}
@@ -253,7 +300,7 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
             onChange={(event) => setDocumentType(event.target.value as CourseDocumentType)}
             className="border-input bg-background h-9 w-full rounded-md border px-3 text-sm sm:w-auto"
           >
-            {COURSE_DOCUMENT_TYPES.map((type) => (
+            {typeOptions.map((type) => (
               <option key={type} value={type}>
                 {t(`types.${type}`)}
               </option>
@@ -267,6 +314,7 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
             type="file"
             accept=".pdf,.pptx,.txt,.md,application/pdf,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,text/markdown"
             onChange={handleFile}
+            multiple={materialOnly}
             disabled={busy}
             aria-label={t("upload")}
             className="hidden"
@@ -290,10 +338,39 @@ export function DocumentUploadPanel({ courseId }: { courseId: string }) {
         </div>
       </div>
 
+      {materialOnly ? (
+        <div className="space-y-2 border-t pt-4">
+          <label htmlFor="course-paste-text" className="text-sm font-medium">
+            {t("pasteNotes")}
+          </label>
+          <input
+            value={pasteTitle}
+            onChange={(event) => setPasteTitle(event.target.value)}
+            placeholder={t("pasteNotesTitleOptional")}
+            aria-label={t("pasteNotesTitleOptional")}
+            maxLength={120}
+            disabled={busy}
+            className="border-input bg-background h-9 w-full rounded-md border px-3 text-sm"
+          />
+          <Textarea
+            id="course-paste-text"
+            rows={5}
+            value={pasteText}
+            onChange={(event) => setPasteText(event.target.value)}
+            placeholder={t("pasteNotesPlaceholder")}
+            disabled={busy}
+          />
+          <Button size="sm" variant="outline" onClick={handlePaste} disabled={busy || !pasteText.trim()}>
+            <ClipboardPaste className="size-4" aria-hidden="true" />
+            {t("pasteNotesSave")}
+          </Button>
+        </div>
+      ) : null}
+
       {!busy ? (
         <p className="text-muted-foreground flex items-center gap-1.5 text-xs">
           <FileText className="size-3.5 shrink-0" aria-hidden="true" />
-          {t("description")}
+          {materialOnly ? t("materialDescription") : t("description")}
         </p>
       ) : null}
     </div>

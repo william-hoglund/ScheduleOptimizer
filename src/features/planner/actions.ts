@@ -2,7 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 
+import { interpretPlanNotes, isAiEnabled } from "@/lib/ai";
+import { applyPlanNotes } from "@/lib/planner/apply-plan-notes";
 import { generatePlan } from "@/lib/planner/generate-plan";
+import { epochMinutesToLocalDate } from "@/lib/planner/time-grid";
 import { actionOk, fromZodError, guarded, type ActionResult } from "@/lib/validation/action-result";
 import { plannerRunSchema } from "@/lib/validation/planner";
 import { requireUserContext } from "@/server/auth";
@@ -26,7 +29,7 @@ import {
 
 export async function generateDraftPlan(
   rawInput: unknown,
-): Promise<ActionResult<{ planId: string }>> {
+): Promise<ActionResult<{ planId: string; notesUnavailable: boolean }>> {
   const { user, timeZone } = await requireUserContext();
 
   const parsed = plannerRunSchema.safeParse(rawInput);
@@ -40,7 +43,7 @@ export async function generateDraftPlan(
     // alternative gives the same plan back, which is far less confusing.
     const seed = options.seed ?? `${options.startDate}:${options.endDate}`;
 
-    const { input } = await buildPlannerInput({
+    const { input: baseInput, courses } = await buildPlannerInput({
       userId: user.id,
       timeZone,
       horizon: { startDate: options.startDate, endDate: options.endDate },
@@ -48,6 +51,34 @@ export async function generateDraftPlan(
       seed,
       courseFilter: options.courseIds,
     });
+
+    // The student's note, turned into hard rules. Without AI (or if the model
+    // fails) the plan still generates — the note just can't be applied, and
+    // the form says so.
+    let input = baseInput;
+    let notesUnavailable = false;
+    if (options.notes) {
+      const interpretation = isAiEnabled()
+        ? await interpretPlanNotes({
+            note: options.notes,
+            today: epochMinutesToLocalDate(baseInput.now, timeZone),
+            horizonStart: options.startDate,
+            horizonEnd: options.endDate,
+            tasks: baseInput.tasks.map((task) => ({
+              id: task.id,
+              title: task.title,
+              courseName: courses.find((course) => course.id === task.courseId)?.name ?? null,
+              deadline: task.deadline === null ? null : epochMinutesToLocalDate(task.deadline, timeZone),
+            })),
+          })
+        : null;
+      if (interpretation) {
+        const notes = applyPlanNotes(baseInput, interpretation);
+        input = { ...notes.input, planNotes: { text: options.notes, applied: notes.applied, rejected: notes.rejected } };
+      } else {
+        notesUnavailable = true;
+      }
+    }
 
     // One-off adjustments, applied on top of saved preferences without
     // changing them.
@@ -69,7 +100,7 @@ export async function generateDraftPlan(
     });
 
     revalidatePath("/planner");
-    return { planId };
+    return { planId, notesUnavailable };
   });
 }
 
@@ -77,7 +108,7 @@ export async function generateDraftPlan(
 export async function generateAlternativePlan(
   rawInput: unknown,
   previousPlanId: string,
-): Promise<ActionResult<{ planId: string }>> {
+): Promise<ActionResult<{ planId: string; notesUnavailable: boolean }>> {
   const { user } = await requireUserContext();
 
   const parsed = plannerRunSchema.safeParse(rawInput);
