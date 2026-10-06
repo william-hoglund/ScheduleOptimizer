@@ -190,6 +190,8 @@ export type PlannedSession = {
   reason: SessionReason;
   /** True for sessions carried over from the previous plan, not newly placed. */
   preserved: boolean;
+  /** Guided phase for coursework/exams: get started, work, or finish & review. */
+  phase?: "intro" | "work" | "finish";
   isLocked: boolean;
 };
 

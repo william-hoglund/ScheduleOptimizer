@@ -617,7 +617,11 @@
       "apply": "Genomför ändringarna",
       "applying": "Uppdaterar din plan",
       "cancel": "Låt det vara",
-      "applied": "Din plan har uppdaterats"
+      "applied": "Din plan har uppdaterats",
+      "chooseDayTitle": "Flytta passet",
+      "chooseDayDescription": "Välj en dag som passar. Passet läggs i en ledig lucka den dagen, och resten av planen undviker den.",
+      "chooseDayLabel": "Dag",
+      "findTime": "Hitta en tid"
     },
     "status": {
       "planned": "Planerat",
@@ -670,6 +674,42 @@
       "missedLabel": "missad",
       "catchUp": "Kom ikapp",
       "caughtUp": "Ikapp"
+    },
+    "guidance": {
+      "coursework": {
+        "intro": {
+          "label": "Kom igång",
+          "todo": "Läs uppgiftsbeskrivningen och bedömningskriterierna, notera alla krav och deadline, samla det du behöver (data, källor, verktyg) och skriv ner öppna frågor."
+        },
+        "work": {
+          "label": "Jobba med den",
+          "todo": "Fortsätt där du slutade och gör klart en konkret del — ett avsnitt, en analys, ett utkast."
+        },
+        "finish": {
+          "label": "Gör klart & granska",
+          "todo": "Kontrollera allt mot bedömningskriterierna, putsa och korrekturläs, och lämna sedan in."
+        }
+      },
+      "exam": {
+        "intro": {
+          "label": "Planera repetitionen",
+          "todo": "Lista ämnena, hitta vilka föreläsningar som tar upp dem och markera dem du kan sämst."
+        },
+        "work": {
+          "label": "Repetera",
+          "todo": "Arbeta igenom dina svagaste ämnen och förhör dig sedan med Förhör mig på Plugga-sidan."
+        },
+        "finish": {
+          "label": "Provkörning",
+          "todo": "Gör en gammal tenta eller förhör dig på allt, på tid, och notera vad du behöver titta på igen."
+        }
+      }
+    },
+    "upcoming": {
+      "title": "Kommande denna vecka"
+    },
+    "move": {
+      "cantDoThis": "Kan inte då"
     }
   },
   "notifications": {
@@ -1545,6 +1585,7 @@
       "classes": "Föreläsningar, seminarier, övningar, labbar och tentor i din kalender blockerar alltid studietid — ett studiepass hamnar aldrig samtidigt som en lektion.",
       "deadlines": "Arbetet sprids ut före varje deadline, med mer tid för större, svårare och viktigare uppgifter.",
       "startDate": "Ge en uppgift ett \"Börja plugga från\"-datum (t.ex. tentaplugg sent i perioden) så schemaläggs inget för den innan dess.",
+      "guided": "Uppgifter och tentor planeras som guidade pass: ett kort \"Kom igång\"-pass ungefär två veckor före deadline (läs uppgiften, samla det du behöver), arbetspass efter det och ett sista \"Gör klart & granska\". Varje pass säger vad du ska göra. Kan du inte? Tryck \"Kan inte då\", välj en dag, så flyttas passet dit och resten av planen undviker det.",
       "logging": "Tryck Starta på ett pass för att ta tid och Avsluta för att logga de faktiska minuterna. Lektioner från senaste veckan frågar om du var med; en missad får en Kom ikapp-knapp som sammanfattar föreläsningen utifrån bilderna.",
       "studyStyle": "Din studiestil (Inställningar) styr hur långa blocken blir och hur timern beter sig när du trycker Starta: Mitt eget sätt (90-minutersblock, ingen timer), Pomodoro 25/5 eller 50/10 (2-timmarsblock med fokus- och pausomgångar, med notis och mjukt ljud vid varje byte) eller Djupt arbete (långa block med notis 10 minuter före slut). Pass för samma uppgift som ligger direkt efter varandra slås ihop till ett block. När du trycker Starta kan du också välja 52/17 (52 min fokus, 17 min paus) eller en Sprint av valfri längd. Uppgifter med Aktiv återkallning eller Spridd repetition får en \"Förhör mig\"-knapp som öppnar ett quiz på kursens material.",
       "replan": "Planer är förslag: du granskar en plan innan den tillämpas och kan generera om den när något ändras."

@@ -617,7 +617,11 @@
       "apply": "Make these changes",
       "applying": "Updating your plan",
       "cancel": "Leave it as it is",
-      "applied": "Your plan has been updated"
+      "applied": "Your plan has been updated",
+      "chooseDayTitle": "Move this session",
+      "chooseDayDescription": "Pick a day that works. It is placed in a free slot that day, and the rest of your plan stays clear of it.",
+      "chooseDayLabel": "Day",
+      "findTime": "Find a time"
     },
     "status": {
       "planned": "Planned",
@@ -670,6 +674,42 @@
       "missedLabel": "missed",
       "catchUp": "Catch up",
       "caughtUp": "Caught up"
+    },
+    "guidance": {
+      "coursework": {
+        "intro": {
+          "label": "Get started",
+          "todo": "Read the brief and marking criteria, note every requirement and the deadline, gather what you need (data, sources, tools) and write down open questions."
+        },
+        "work": {
+          "label": "Work on it",
+          "todo": "Pick up where you left off and finish one concrete part — a section, an analysis, a draft."
+        },
+        "finish": {
+          "label": "Finish & review",
+          "todo": "Check everything against the marking criteria, polish and proofread, then submit."
+        }
+      },
+      "exam": {
+        "intro": {
+          "label": "Plan your revision",
+          "todo": "List the topics, find which lectures cover them, and mark the ones you know least."
+        },
+        "work": {
+          "label": "Revise",
+          "todo": "Work through your weakest topics, then test yourself with Quiz me on the Learn page."
+        },
+        "finish": {
+          "label": "Practice run",
+          "todo": "Do a past paper or quiz yourself on everything, under time, and note what to look at once more."
+        }
+      }
+    },
+    "upcoming": {
+      "title": "Coming up this week"
+    },
+    "move": {
+      "cantDoThis": "Can't do this"
     }
   },
   "notifications": {
@@ -1545,6 +1585,7 @@
       "classes": "Lectures, seminars, tutorials, labs and exams on your calendar always block study time — a study session never lands on top of a class.",
       "deadlines": "Work is spread out before each deadline, with more time for bigger, harder and higher-priority tasks.",
       "startDate": "Give a task a \"Start studying from\" date (e.g. exam revision late in the term) and nothing is scheduled for it before then.",
+      "guided": "Assignments and exams are planned as guided sessions: a short \"Get started\" session about two weeks before the deadline (read the brief, gather what you need), working sessions after it, and a final \"Finish & review\". Each session says what to do. Can't make one? Press \"Can't do this\", pick a day, and it moves there while the rest of the plan stays clear of it.",
       "logging": "Press Start on a session to time it, and Finish to log the real minutes. Classes from the past week ask whether you attended; a missed one gets a Catch up button that summarises that lecture from its slides.",
       "studyStyle": "Your study style (Settings) sets how long blocks are and how the timer behaves when you press Start: My own way (90-min blocks, no timer), Pomodoro 25/5 or 50/10 (2-hour blocks with focus and break rounds, with a notice and soft chime at each change), or Deep work (long blocks with a notice 10 minutes before the end). Back-to-back pieces of the same task are joined into one block. When you press Start you can also pick 52/17 (52 min focus, 17 min break) or a Sprint of any length. Tasks set to Active recall or Spaced repetition get a \"Quiz me\" button that opens a quiz on that course's material.",
       "replan": "Plans are proposals: you review a plan before it is applied, and can regenerate it whenever things change."

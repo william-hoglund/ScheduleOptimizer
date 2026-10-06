@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { generatePlan } from "@/lib/planner/generate-plan";
+import { splitTaskIntoSessions } from "@/lib/planner/tasks/split-task-into-sessions";
 import { rescheduleMissedSessions } from "@/lib/planner/rescheduling/reschedule-missed-session";
 import { epochMinutesToLocalDate, minutesIntoLocalDay } from "@/lib/planner/time-grid";
 import {
@@ -334,24 +335,19 @@ describe("9. tasks are split correctly", () => {
   });
 
   it("gives reading and deep work different session shapes", () => {
-    const readingPlan = generatePlan(
-      input({
-        // Method shapes apply when a task picks a method; without one, the
-        // study style decides (see "study style" tests below).
-        tasks: [task({ id: "r", taskType: "reading", estimatedMinutes: 300, preferredStudyMethod: "spaced_repetition" })],
-      }),
+    // Compared at the chunking step: in a finished plan, adjacent short
+    // pieces may be joined into one block, which is a separate rule.
+    const reading = splitTaskIntoSessions(
+      task({ taskType: "reading", estimatedMinutes: 300, preferredStudyMethod: "spaced_repetition" }),
+      300,
+      preferences(),
     );
-    const deepPlan = generatePlan(
-      input({
-        tasks: [task({ id: "d", taskType: "project", estimatedMinutes: 300, preferredStudyMethod: "deep_work" })],
-      }),
+    const deep = splitTaskIntoSessions(
+      task({ taskType: "project", estimatedMinutes: 300, preferredStudyMethod: "deep_work" }),
+      300,
+      preferences(),
     );
-
-    const readingLength = readingPlan.sessions[0]?.minutes ?? 0;
-    const deepLength = deepPlan.sessions[0]?.minutes ?? 0;
-
-    // Project work gets longer blocks than reading.
-    expect(deepLength).toBeGreaterThan(readingLength);
+    expect(deep[0]?.minutes ?? 0).toBeGreaterThan(reading[0]?.minutes ?? 0);
   });
 
   it("never leaves a stub shorter than the student's minimum", () => {

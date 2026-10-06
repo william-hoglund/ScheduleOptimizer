@@ -77,7 +77,7 @@ describe("joining back-to-back sessions", () => {
     const sorted = [...result.sessions].sort((a, b) => a.start - b.start);
     for (let i = 1; i < sorted.length; i++) {
       const gap = sorted[i]!.start - sorted[i - 1]!.end;
-      if (sorted[i]!.taskId === sorted[i - 1]!.taskId) expect(gap > 15 || sorted[i]!.end - sorted[i - 1]!.start > 180).toBe(true);
+      if (sorted[i]!.taskId === sorted[i - 1]!.taskId && sorted[i]!.phase === sorted[i - 1]!.phase) expect(gap > 15 || sorted[i]!.end - sorted[i - 1]!.start > 180).toBe(true);
     }
   });
 });

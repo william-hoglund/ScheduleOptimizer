@@ -7,6 +7,7 @@ import { DailyBriefingPanel } from "@/components/dashboard/daily-briefing";
 import { PageHeader } from "@/components/layout/page-header";
 import { createPageMetadata } from "@/components/layout/placeholder-page";
 import { TodaySessions } from "@/components/sessions/today-sessions";
+import { UpcomingSessions } from "@/components/sessions/upcoming-sessions";
 import { ClassAttendance } from "@/components/sessions/class-attendance";
 import { UnresolvedSessions } from "@/components/sessions/unresolved-sessions";
 import { greetingBandFor, type DailyBriefing } from "@/lib/briefing/build-daily-briefing";
@@ -45,13 +46,17 @@ export default async function DashboardPage() {
   const dayStart = wallClockToUtc(`${today}T00:00`, timeZone) ?? now;
   const dayEnd = wallClockToUtc(`${today}T23:59`, timeZone) ?? now;
 
-  const [todaySessions, unresolved, courses, tasks, preferences] = await Promise.all([
+  const weekEnd = new Date(Date.parse(dayEnd) + 7 * 86_400_000).toISOString();
+  const [todaySessions, unresolved, courses, tasks, preferences, nextWeek] = await Promise.all([
     listSessionsBetween(user.id, dayStart, dayEnd),
     findUnresolvedSessions(user.id, now),
     listCourses(user.id),
     listTasks(user.id, { includeCompleted: false }),
     getStudyPreferences(user.id).catch(() => null),
+    listSessionsBetween(user.id, dayEnd, weekEnd),
   ]);
+  const upcoming = nextWeek.filter((session) => session.status === "planned" && session.start_at > dayEnd);
+  const typeByTaskId = Object.fromEntries(tasks.map((task) => [task.id, task.task_type]));
 
   /**
    * To-dos depend on a migration that may not be applied yet, and they are the
@@ -194,8 +199,18 @@ export default async function DashboardPage() {
           timeZone={timeZone}
           accountStyle={preferences?.break_method ?? "none"}
           methodByTaskId={Object.fromEntries(tasks.map((task) => [task.id, task.preferred_study_method]))}
+          typeByTaskId={typeByTaskId}
+          today={today}
         />
       </section>
+
+      <UpcomingSessions
+        sessions={upcoming}
+        courses={courses}
+        timeZone={timeZone}
+        today={today}
+        typeByTaskId={typeByTaskId}
+      />
 
       {todaySessions.length === 0 && tasks.length > 0 ? (
         <p className="text-muted-foreground flex items-center gap-2 text-sm">

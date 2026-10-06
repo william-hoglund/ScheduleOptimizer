@@ -1,11 +1,12 @@
 "use client";
 
 import type { Route } from "next";
-import { CalendarCheck, Check, Circle, Clock, ListChecks, Play, Square, Volume2, VolumeX } from "lucide-react";
+import { CalendarCheck, CalendarX, Check, Circle, Clock, ListChecks, Play, Square, Volume2, VolumeX } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useTransition } from "react";
 
 import { RescheduleDialog } from "./reschedule-dialog";
+import { SessionGuidance } from "./session-guidance";
 import { SessionOutcome } from "./session-outcome";
 import { ButtonLink } from "@/components/common/button-link";
 import { EmptyState } from "@/components/common/empty-state";
@@ -28,6 +29,8 @@ export function TodaySessions({
   timeZone,
   accountStyle = "none",
   methodByTaskId = {},
+  typeByTaskId = {},
+  today,
 }: {
   sessions: StudySessionRow[];
   courses: CourseRow[];
@@ -37,11 +40,16 @@ export function TodaySessions({
   accountStyle?: StudyStyle;
   /** A task's own study method, which can imply a different style. */
   methodByTaskId?: Record<string, string | null>;
+  /** Task types, for which guidance a session gets. */
+  typeByTaskId?: Record<string, string>;
+  /** The student's local date, the earliest day "Can't do this" can move to. */
+  today?: string;
 }) {
   const t = useTranslations("sessions");
   const format = useFormatter();
   const [resolved, setResolved] = useState<Set<string>>(new Set());
   const [reschedulingId, setReschedulingId] = useState<string | null>(null);
+  const [movingId, setMovingId] = useState<string | null>(null);
 
   const courseById = new Map(courses.map((course) => [course.id, course]));
   const now = new Date(nowIso).getTime();
@@ -119,6 +127,13 @@ export function TodaySessions({
                     ) : null}
                   </div>
 
+                  {!isDone ? (
+                    <SessionGuidance
+                      generationReason={session.generation_reason}
+                      taskType={session.task_id ? typeByTaskId[session.task_id] : null}
+                    />
+                  ) : null}
+
                   {!isDone && session.started_at ? (
                     <RunningSession
                       session={session}
@@ -133,10 +148,18 @@ export function TodaySessions({
                   ) : null}
 
                   {!isDone && !session.started_at ? (
-                    <StartButton
-                      sessionId={session.id}
-                      defaultStyle={defaultStyleFor(session.task_id ? methodByTaskId[session.task_id] : null, accountStyle)}
-                    />
+                    <div className="flex flex-wrap items-end gap-2">
+                      <StartButton
+                        sessionId={session.id}
+                        defaultStyle={defaultStyleFor(session.task_id ? methodByTaskId[session.task_id] : null, accountStyle)}
+                      />
+                      {!hasStarted ? (
+                        <Button size="sm" variant="ghost" onClick={() => setMovingId(session.id)}>
+                          <CalendarX className="size-3.5" aria-hidden="true" />
+                          {t("move.cantDoThis")}
+                        </Button>
+                      ) : null}
+                    </div>
                   ) : null}
 
                   {isDone ? (
@@ -171,6 +194,17 @@ export function TodaySessions({
           );
         })}
       </ul>
+
+      <RescheduleDialog
+        open={movingId !== null}
+        onOpenChange={(open) => {
+          if (!open) setMovingId(null);
+        }}
+        sessionIds={movingId ? [movingId] : []}
+        timeZone={timeZone}
+        chooseDay
+        today={today}
+      />
 
       <RescheduleDialog
         open={reschedulingId !== null}

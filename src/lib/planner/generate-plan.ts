@@ -11,6 +11,7 @@ import {
   remainingMinutesFor,
   type TaskPriority,
 } from "./tasks/calculate-task-urgency";
+import { phaseChunks } from "./tasks/session-phases";
 import { splitTaskIntoSessions, type SessionChunk } from "./tasks/split-task-into-sessions";
 import { epochMinutesToLocalDate, localDatesInRange, localToEpochMinutes } from "./time-grid";
 import {
@@ -202,11 +203,23 @@ export function generatePlan(input: PlannerInput): PlannerResult {
     if (!priority) continue;
 
     const urgent = priority.daysUntilTarget !== null && priority.daysUntilTarget <= 3;
-    const chunks = splitTaskIntoSessions(task, priority.remainingMinutes, preferences, { urgent });
+    const { chunks, introNotBefore } = phaseChunks(
+      task,
+      splitTaskIntoSessions(task, priority.remainingMinutes, preferences, { urgent }),
+      now,
+      preferences.minimumSessionMinutes,
+    );
+    // The intro waits until about two weeks out; everything after it waits
+    // for the intro, so "get started" really comes first.
+    let introEnd: number | null = null;
 
     for (const chunk of chunks) {
-      const session = placeChunk({
-        task,
+      const floor =
+        chunk.phase === "intro"
+          ? Math.max(task.notBefore ?? -Infinity, introNotBefore ?? -Infinity)
+          : Math.max(task.notBefore ?? -Infinity, introEnd ?? -Infinity);
+      const placed_ = placeChunk({
+        task: { ...task, notBefore: Number.isFinite(floor) ? floor : (task.notBefore ?? null) },
         chunk,
         priority,
         dailyCapByDate: availability.dailyCapByDate,
@@ -219,7 +232,15 @@ export function generatePlan(input: PlannerInput): PlannerResult {
         dailyPaceTarget,
       });
 
-      if (!session) break; // No room left for this task; later chunks will not fit either.
+      if (!placed_) break; // No room left for this task; later chunks will not fit either.
+      const session: PlannedSession = chunk.phase
+        ? {
+            ...placed_,
+            phase: chunk.phase,
+            reason: { ...placed_.reason, details: { ...placed_.reason.details, phase: chunk.phase } },
+          }
+        : placed_;
+      if (chunk.phase === "intro") introEnd = session.end;
 
       placed.push(session);
       const date = epochMinutesToLocalDate(session.start, timeZone);
@@ -507,6 +528,8 @@ export function joinAdjacentSessions(
       !session.isLocked &&
       previous.taskId !== null &&
       previous.taskId === session.taskId &&
+      // Phases stay separate sessions: "get started" is its own sitting.
+      (previous.phase ?? null) === (session.phase ?? null) &&
       gap >= 0 &&
       gap <= MAX_JOIN_GAP_MINUTES &&
       session.end - previous.start <= MAX_JOINED_MINUTES &&

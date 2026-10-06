@@ -38,10 +38,13 @@ function RescheduleBody({
   sessionIds,
   timeZone,
   onClose,
+  targetDate,
 }: {
   sessionIds: string[];
   timeZone: string;
   onClose: () => void;
+  /** A day the student picked; the engine looks only there. */
+  targetDate?: string;
 }) {
   const t = useTranslations("sessions.reschedule");
   const format = useFormatter();
@@ -54,7 +57,7 @@ function RescheduleBody({
     let cancelled = false;
 
     // A real planning run, so it happens on open rather than up front.
-    void previewReschedule(sessionIds).then((result) => {
+    void previewReschedule(sessionIds, targetDate ? { targetDate } : {}).then((result) => {
       if (cancelled) return;
       if (result.ok) setPreview(result.data);
       setLoading(false);
@@ -63,7 +66,7 @@ function RescheduleBody({
     return () => {
       cancelled = true;
     };
-  }, [sessionIds]);
+  }, [sessionIds, targetDate]);
 
   const time = (iso: string) =>
     format.dateTime(new Date(iso), {
@@ -175,24 +178,92 @@ export function RescheduleDialog({
   onOpenChange,
   sessionIds,
   timeZone,
+  chooseDay = false,
+  today,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   sessionIds: string[];
   timeZone: string;
+  /** "Can't do this": ask which day first, then find a time on it. */
+  chooseDay?: boolean;
+  /** The student's local date, the earliest day that can be picked. */
+  today?: string;
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         {open ? (
-          <RescheduleBody
-            key={sessionIds.join(",")}
-            sessionIds={sessionIds}
-            timeZone={timeZone}
-            onClose={() => onOpenChange(false)}
-          />
+          chooseDay ? (
+            <ChooseDayBody
+              key={sessionIds.join(",")}
+              sessionIds={sessionIds}
+              timeZone={timeZone}
+              today={today}
+              onClose={() => onOpenChange(false)}
+            />
+          ) : (
+            <RescheduleBody
+              key={sessionIds.join(",")}
+              sessionIds={sessionIds}
+              timeZone={timeZone}
+              onClose={() => onOpenChange(false)}
+            />
+          )
         ) : null}
       </DialogContent>
     </Dialog>
+  );
+}
+
+/** Pick a day, then the normal preview-and-confirm for that day. */
+function ChooseDayBody({
+  sessionIds,
+  timeZone,
+  today,
+  onClose,
+}: {
+  sessionIds: string[];
+  timeZone: string;
+  today?: string;
+  onClose: () => void;
+}) {
+  const t = useTranslations("sessions.reschedule");
+  const [day, setDay] = useState("");
+  const [confirmedDay, setConfirmedDay] = useState<string | null>(null);
+
+  if (confirmedDay) {
+    return <RescheduleBody sessionIds={sessionIds} timeZone={timeZone} onClose={onClose} targetDate={confirmedDay} />;
+  }
+
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle>{t("chooseDayTitle")}</DialogTitle>
+        <DialogDescription>{t("chooseDayDescription")}</DialogDescription>
+      </DialogHeader>
+      <div className="py-2">
+        <label htmlFor="reschedule-day" className="text-sm font-medium">
+          {t("chooseDayLabel")}
+        </label>
+        <input
+          id="reschedule-day"
+          type="date"
+          min={today}
+          value={day}
+          onChange={(event) => setDay(event.target.value)}
+          className="border-input bg-background mt-1.5 block h-9 w-full rounded-md border px-3 text-sm"
+        />
+      </div>
+      <DialogFooter>
+        <Button variant="ghost" onClick={onClose}>
+          {t("cancel")}
+        </Button>
+        <Button disabled={!day} onClick={() => setConfirmedDay(day)}>
+          <CalendarClock className="size-4" aria-hidden="true" />
+          {t("findTime")}
+        </Button>
+      </DialogFooter>
+    </>
   );
 }

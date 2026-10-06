@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
+import { utcToLocalDate } from "@/lib/calendar/time";
 import { fromEpochMinutes } from "@/lib/planner/time-grid";
 import { finishOutcome } from "@/lib/sessions/finish-outcome";
 import { rescheduleMissedSessions } from "@/lib/planner/rescheduling/reschedule-missed-session";
@@ -94,6 +95,7 @@ export type ReschedulePreview = {
  */
 export async function previewReschedule(
   sessionIds: string[],
+  options: { targetDate?: string } = {},
 ): Promise<ActionResult<ReschedulePreview>> {
   const { user, timeZone } = await requireUserContext();
 
@@ -108,17 +110,24 @@ export async function previewReschedule(
 
     // Plan from today to a fortnight out: far enough to find room, near enough
     // that the work does not drift out of sight.
-    const startDate = now.slice(0, 10);
-    const endDate = new Date(Date.parse(`${startDate}T00:00:00Z`) + 14 * 86_400_000)
-      .toISOString()
-      .slice(0, 10);
+    // A day the student picked ("I can't today — do it Thursday") narrows the
+    // search to that day; otherwise the next fortnight.
+    const today = utcToLocalDate(now, timeZone);
+    const picked =
+      options.targetDate && /^\d{4}-\d{2}-\d{2}$/.test(options.targetDate) && options.targetDate >= today
+        ? options.targetDate
+        : null;
+    const startDate = picked ?? now.slice(0, 10);
+    const endDate =
+      picked ??
+      new Date(Date.parse(`${startDate}T00:00:00Z`) + 14 * 86_400_000).toISOString().slice(0, 10);
 
     const { input } = await buildPlannerInput({
       userId: user.id,
       timeZone,
       horizon: { startDate, endDate },
       nowIso: now,
-      seed: `reschedule:${sessionIds.join(",")}`,
+      seed: `reschedule:${sessionIds.join(",")}:${picked ?? ""}`,
     });
 
     /**
